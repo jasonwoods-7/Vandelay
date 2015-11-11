@@ -5,7 +5,7 @@ using Mono.Cecil;
 
 namespace Vandelay.Fody
 {
-  public class ModuleWeaver
+  public partial class ModuleWeaver
   {
     public Action<string> LogInfo { get; set; }
     public Action<string> LogWarn { get; set; }
@@ -45,6 +45,8 @@ namespace Vandelay.Fody
           type.CustomAttributes.Add(export);
         }
       }
+
+      CleanReferences();
     }
   }
 }
