@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Linq;
 using Mono.Cecil;
+using Mono.Collections.Generic;
 
 namespace Vandelay.Fody
 {
@@ -18,6 +19,15 @@ namespace Vandelay.Fody
       return typeDefinition.CustomAttributes.Any(a =>
         a.AttributeType.FullName == typeof(ExportAttribute).FullName &&
         a.ConstructorArguments.Any(c => ((TypeReference)c.Value).FullName == exportedType.FullName));
+    }
+
+    public static void RemoveExportable(this Collection<CustomAttribute> attributes)
+    {
+      foreach (var attribute in attributes.Where(a =>
+        a.AttributeType.FullName == "Vandelay.ExportableAttribute").ToList())
+      {
+        attributes.Remove(attribute);
+      }
     }
   }
 }
