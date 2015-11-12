@@ -1,7 +1,7 @@
 ﻿using AssemblyToProcess.SimpleCase;
 using Vandelay;
 
-[assembly: Exportable(typeof(IExportable))]
+[assembly: Exporter(typeof(IExportable))]
 
 namespace AssemblyToProcess.SimpleCase
 {

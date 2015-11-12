@@ -6,7 +6,7 @@ namespace Vandelay.Fody
   {
     void CleanReferences()
     {
-      ModuleDefinition.Assembly.CustomAttributes.RemoveExportable();
+      ModuleDefinition.Assembly.CustomAttributes.RemoveExporter();
 
       var referenceToRemove = ModuleDefinition.AssemblyReferences.FirstOrDefault(r => r.Name == "Vandelay");
       if (null == referenceToRemove)

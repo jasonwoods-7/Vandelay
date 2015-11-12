@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using NUnit.Framework;
@@ -15,6 +16,10 @@ namespace Vandelay.Fody
     ModuleWeaverTestHelper _unsignedWeaver;
     Type _coreExportableType;
 
+    ModuleWeaverTestHelper _multipleWeaver;
+    Type _fooExporterType;
+    Type _barExporterType;
+
     [TestFixtureSetUp]
     public void TestFixtureSetUp()
     {
@@ -29,9 +34,23 @@ namespace Vandelay.Fody
         @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.Unsigned.dll");
       Assert.That(_simpleCaseWeaver.Errors, Is.Null.Or.Empty);
 
+      var directoryName = Path.GetDirectoryName(_unsignedWeaver.Assembly.Location);
+      Debug.Assert(null != directoryName);
+
       _coreExportableType = Assembly.LoadFile(Path.GetFullPath(
-        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.Core.dll"))
+        Path.Combine(directoryName, "AssemblyToProcess.Core.dll")))
         .GetType("AssemblyToProcess.Core.IExportable", true);
+
+      AppDomain.CurrentDomain.AssemblyResolve += (_, e) => Assembly.LoadFile(
+        Path.Combine(directoryName, $"{e.Name.Split(',')[0]}.dll"));
+
+      _multipleWeaver = new ModuleWeaverTestHelper(
+        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.MultipleExports.dll");
+      Assert.That(_simpleCaseWeaver.Errors, Is.Null.Or.Empty);
+      _fooExporterType = GetType(_multipleWeaver,
+        "AssemblyToProcess.MultipleExports.IFooExporter");
+      _barExporterType = GetType(_multipleWeaver,
+        "AssemblyToProcess.MultipleExports.IBarExporter");
     }
 
     [TestCase("AssemblyToProcess.SimpleCase.AbstractExportable")]
@@ -81,6 +100,25 @@ namespace Vandelay.Fody
       Assert.That(attribute, Has.Property("ContractType").EqualTo(_simpleCaseExportableType));
     }
 
+    [TestCase("AssemblyToProcess.Unsigned.ExportableInstance")]
+    [TestCase("AssemblyToProcess.Unsigned.AlreadyExportedInstance")]
+    public void InstanceTest_Unsigned(string className)
+    {
+      // Arrange
+      var type = GetType(_unsignedWeaver, className);
+
+      // Act
+      var exports = type.GetCustomAttributes(typeof(ExportAttribute), false);
+
+      // Assert
+      Assert.That(exports, Is.Not.Null);
+      Assert.That(exports, Has.Length.EqualTo(1));
+
+      var attribute = exports[0] as ExportAttribute;
+      Assert.That(attribute, Is.Not.Null);
+      Assert.That(attribute, Has.Property("ContractType").EqualTo(_coreExportableType));
+    }
+
     [Test]
     public void PeVerify()
     {
@@ -92,6 +130,9 @@ namespace Vandelay.Fody
 
       Verifier.Verify(_unsignedWeaver.BeforeAssemblyPath,
         _unsignedWeaver.AfterAssemblyPath);
+
+      Verifier.Verify(_multipleWeaver.BeforeAssemblyPath,
+        _multipleWeaver.AfterAssemblyPath);
 
       // Assert
     }

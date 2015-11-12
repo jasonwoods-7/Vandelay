@@ -8,7 +8,7 @@ using Scalpel;
 namespace Vandelay.Fody
 {
   [Remove]
-  public class ModuleWeaverTestHelper
+  class ModuleWeaverTestHelper
   {
     public readonly string BeforeAssemblyPath;
     public readonly string AfterAssemblyPath;

@@ -21,10 +21,26 @@ namespace Vandelay.Fody
         a.ConstructorArguments.Any(c => ((TypeReference)c.Value).FullName == exportedType.FullName));
     }
 
-    public static void RemoveExportable(this Collection<CustomAttribute> attributes)
+    public static bool ImplementsInterface(this TypeDefinition typeDefinition,
+      TypeReference interfaceType)
+    {
+      if (typeDefinition?.BaseType == null)
+      {
+        return false;
+      }
+
+      if (typeDefinition.Interfaces.Any(i => i.FullName == interfaceType.FullName))
+      {
+        return true;
+      }
+
+      return typeDefinition.BaseType.Resolve().ImplementsInterface(interfaceType);
+    }
+
+    public static void RemoveExporter(this Collection<CustomAttribute> attributes)
     {
       foreach (var attribute in attributes.Where(a =>
-        a.AttributeType.FullName == "Vandelay.ExportableAttribute").ToList())
+        a.AttributeType.FullName == "Vandelay.ExporterAttribute").ToList())
       {
         attributes.Remove(attribute);
       }

@@ -24,7 +24,7 @@ namespace Vandelay.Fody
     public void Execute()
     {
       foreach (var exportable in ModuleDefinition.Assembly.CustomAttributes.Where(a =>
-        a.AttributeType.Name == nameof(ExportableAttribute)))
+        a.AttributeType.Name == nameof(ExporterAttribute)))
       {
         var exportType = ModuleDefinition.ImportReference(
           (TypeReference)exportable.ConstructorArguments.Single().Value);
@@ -40,7 +40,8 @@ namespace Vandelay.Fody
           ModuleDefinition.ImportReference(exportType)));
 
         foreach (var type in ModuleDefinition.GetTypes().Where(t =>
-          t.IsClass() && !t.IsAbstract && !t.ExportsType(exportType)))
+          t.IsClass() && !t.IsAbstract && !t.ExportsType(exportType) &&
+          t.ImplementsInterface(exportType)))
         {
           type.CustomAttributes.Add(export);
         }

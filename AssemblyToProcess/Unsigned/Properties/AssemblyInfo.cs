@@ -36,4 +36,4 @@ using Vandelay;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[assembly: Exportable(typeof(IExportable))]
+[assembly: Exporter(typeof(IExportable))]
