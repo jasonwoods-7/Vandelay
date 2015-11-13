@@ -11,6 +11,7 @@ namespace Vandelay.Fody
   public class ExternalAssemblyTests
   {
     ModuleWeaverTestHelper _unsignedWeaver;
+    ModuleWeaverTestHelper _signedWeaver;
     Type _coreExportableType;
 
     [TestFixtureSetUp]
@@ -19,6 +20,10 @@ namespace Vandelay.Fody
       _unsignedWeaver = new ModuleWeaverTestHelper(
         @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.Unsigned.dll");
       Assert.That(_unsignedWeaver.Errors, Is.Null.Or.Empty);
+
+      _signedWeaver = new ModuleWeaverTestHelper(
+        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.Signed.dll");
+      Assert.That(_signedWeaver.Errors, Is.Null.Or.Empty);
 
       var directoryName = Path.GetDirectoryName(_unsignedWeaver.Assembly.Location);
       Debug.Assert(null != directoryName);
@@ -32,10 +37,11 @@ namespace Vandelay.Fody
     }
 
     [TestCase("AssemblyToProcess.Unsigned.AbstractExportable")]
+    [TestCase("AssemblyToProcess.Signed.AbstractExportable")]
     public void AbstractTest(string className)
     {
       // Arrange
-      var type = _unsignedWeaver.GetType(className);
+      var type = GetTestHelper(className).GetType(className);
 
       // Act
       var exports = type.GetCustomAttributes(typeof(ExportAttribute), false);
@@ -47,10 +53,12 @@ namespace Vandelay.Fody
 
     [TestCase("AssemblyToProcess.Unsigned.ExportableInstance")]
     [TestCase("AssemblyToProcess.Unsigned.AlreadyExportedInstance")]
+    [TestCase("AssemblyToProcess.Signed.ExportableInstance")]
+    [TestCase("AssemblyToProcess.Signed.AlreadyExportedInstance")]
     public void InstanceTest(string className)
     {
       // Arrange
-      var type = _unsignedWeaver.GetType(className);
+      var type = GetTestHelper(className).GetType(className);
 
       // Act
       var exports = type.GetCustomAttributes(typeof(ExportAttribute), false);
@@ -73,7 +81,15 @@ namespace Vandelay.Fody
       Verifier.Verify(_unsignedWeaver.BeforeAssemblyPath,
         _unsignedWeaver.AfterAssemblyPath);
 
+      Verifier.Verify(_signedWeaver.BeforeAssemblyPath,
+        _signedWeaver.AfterAssemblyPath);
+
       // Assert
+    }
+
+    ModuleWeaverTestHelper GetTestHelper(string className)
+    {
+      return className.Contains("Unsigned") ? _unsignedWeaver : _signedWeaver;
     }
   }
 }
