@@ -80,7 +80,9 @@
     <Compile Include="MockAssemblyResolver.cs" />
     <Compile Include="ModuleWeaver.cs" />
     <Compile Include="ModuleWeaverTestHelper.cs" />
-    <Compile Include="ModuleWeaverTests.cs" />
+    <Compile Include="ModuleWeaverTests.SimpleCase.cs" />
+    <Compile Include="ModuleWeaverTests.ExternalAssembly.cs" />
+    <Compile Include="ModuleWeaverTests.MultipleExports.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferenceCleaner.cs" />
     <Compile Include="Verifier.cs" />

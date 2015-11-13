@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="BarExporterA.cs" />
     <Compile Include="BarExporterB.cs" />
+    <Compile Include="FooBar.cs" />
     <Compile Include="FooExporterA.cs" />
     <Compile Include="FooExporterB.cs" />
     <Compile Include="IBarExporter.cs" />

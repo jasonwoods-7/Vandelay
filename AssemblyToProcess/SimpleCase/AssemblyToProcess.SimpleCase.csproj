@@ -45,6 +45,9 @@
     <Compile Include="AlreadyExportedInstance.cs" />
     <Compile Include="ExportableInstance.cs" />
     <Compile Include="IExportable.cs" />
+    <Compile Include="IExtendedInterface.cs" />
+    <Compile Include="ImplementsExtended.cs" />
+    <Compile Include="NonPublicExported.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

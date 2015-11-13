@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Mono.Cecil;
@@ -55,6 +56,11 @@ namespace Vandelay.Fody
         moduleDefinition.Write(AfterAssemblyPath);
       }
       Assembly = Assembly.LoadFile(AfterAssemblyPath);
+    }
+
+    public Type GetType(string className)
+    {
+      return Assembly.GetType(className, true);
     }
   }
 }
