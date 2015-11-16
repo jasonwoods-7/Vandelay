@@ -20,7 +20,7 @@ namespace Vandelay.Fody
     {
       BeforeAssemblyPath = Path.GetFullPath(inputAssembly);
 #if (!DEBUG)
-    BeforeAssemblyPath = BeforeAssemblyPath.Replace("Debug", "Release");
+      BeforeAssemblyPath = BeforeAssemblyPath.Replace("Debug", "Release");
 #endif
       AfterAssemblyPath = BeforeAssemblyPath.Replace(".dll", "2.dll");
       var oldPdb = BeforeAssemblyPath.Replace(".dll", ".pdb");
