@@ -79,6 +79,22 @@ namespace Vandelay.Fody
       Assert.That(exports, Has.Some.Property("ContractType").EqualTo(_fooExporterType));
     }
 
+    [TestCase("AssemblyToProcess.MultipleExports.BarImporter")]
+    [TestCase("AssemblyToProcess.MultipleExports.FooImporter")]
+    public void Importer(string className)
+    {
+      // Arrange
+      var type = _multipleWeaver.GetType(className);
+      var instance = (dynamic)Activator.CreateInstance(type);
+
+      // Act
+      var imports = instance.Imports;
+
+      // Assert
+      Assert.That(imports, Is.Not.Null.Or.Empty);
+      Assert.That(imports, Has.Length.EqualTo(3));
+    }
+
     [Test]
     public void PeVerify()
     {

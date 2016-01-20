@@ -85,6 +85,9 @@
     <Compile Include="ModuleWeaver.Exporter.cs">
       <DependentUpon>ModuleWeaver.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModuleWeaver.Importer.cs">
+      <DependentUpon>ModuleWeaver.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModuleWeaverTestHelper.cs" />
     <Compile Include="ModuleWeaverTests.SimpleCase.cs" />
     <Compile Include="ModuleWeaverTests.ExternalAssembly.cs" />
@@ -94,6 +97,7 @@
       <DependentUpon>ModuleWeaver.cs</DependentUpon>
     </Compile>
     <Compile Include="Verifier.cs" />
+    <Compile Include="WeavingException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="FodyWeavers.xml" />

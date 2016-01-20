@@ -48,7 +48,9 @@
     <Compile Include="FooBar.cs" />
     <Compile Include="FooExporterA.cs" />
     <Compile Include="FooExporterB.cs" />
+    <Compile Include="FooImporter.cs" />
     <Compile Include="IBarExporter.cs" />
+    <Compile Include="BarImporter.cs" />
     <Compile Include="IFooExporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

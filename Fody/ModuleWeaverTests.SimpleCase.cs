@@ -56,6 +56,22 @@ namespace Vandelay.Fody
       Assert.That(attribute, Has.Property("ContractType").EqualTo(_simpleCaseExportableType));
     }
 
+    [TestCase("AssemblyToProcess.SimpleCase.ImporterSingleSearchPattern")]
+    [TestCase("AssemblyToProcess.SimpleCase.ImporterMultipleSearchPatterns")]
+    public void ImportMany(string searchPattern)
+    {
+      // Arrange
+      var importsType = _simpleCaseWeaver.GetType(searchPattern);
+      var importsInstance = (dynamic)Activator.CreateInstance(importsType);
+
+      // Act
+      var imports = importsInstance.Imports;
+
+      // Assert
+      Assert.That(imports, Is.Not.Null.Or.Empty);
+      Assert.That(imports, Has.Length.EqualTo(4));
+    }
+
     [Test]
     public void PeVerify()
     {

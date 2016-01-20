@@ -22,6 +22,7 @@ namespace Vandelay.Fody
     public void Execute()
     {
       HandleExports();
+      HandleImports();
 
       CleanReferences();
     }

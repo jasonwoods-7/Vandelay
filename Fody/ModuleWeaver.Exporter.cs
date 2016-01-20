@@ -16,13 +16,9 @@ namespace Vandelay.Fody
           (TypeReference)exportable.ConstructorArguments.Single().Value);
 
         var export = new CustomAttribute(ModuleDefinition.ImportReference(
-          AssemblyResolver.Resolve(typeof(ExportAttribute).Assembly.FullName)
-          .MainModule.Types.First(t => t.Name == nameof(ExportAttribute)).Methods
-          .First(m => m.IsConstructor && m.Parameters.Count == 1 &&
-            m.Parameters[0].Name == "contractType")));
+          typeof(ExportAttribute).GetConstructor(new[] { typeof(Type) })));
         export.ConstructorArguments.Add(new CustomAttributeArgument(
-          ModuleDefinition.ImportReference(AssemblyResolver.Resolve("mscorlib")
-          .MainModule.Types.First(t => t.Name == nameof(Type))),
+          ModuleDefinition.TypeSystem.TypedReference,
           ModuleDefinition.ImportReference(exportType)));
 
         foreach (var type in ModuleDefinition.GetTypes().Where(t =>

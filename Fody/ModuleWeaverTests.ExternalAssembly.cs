@@ -72,6 +72,22 @@ namespace Vandelay.Fody
       Assert.That(attribute, Has.Property("ContractType").EqualTo(_coreExportableType));
     }
 
+    [TestCase("AssemblyToProcess.Unsigned.Importer")]
+    [TestCase("AssemblyToProcess.Signed.Importer")]
+    public void ImportMany(string className)
+    {
+      // Arrange
+      var importsType = GetTestHelper(className).GetType(className);
+      var importsInstance = (dynamic)Activator.CreateInstance(importsType);
+
+      // Act
+      var imports = importsInstance.Imports;
+
+      // Assert
+      Assert.That(imports, Is.Not.Null.Or.Empty);
+      Assert.That(imports, Has.Length.EqualTo(4));
+    }
+
     [Test]
     public void PeVerify()
     {
