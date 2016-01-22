@@ -18,8 +18,7 @@ namespace Vandelay.Fody
         var export = new CustomAttribute(ModuleDefinition.ImportReference(
           typeof(ExportAttribute).GetConstructor(new[] { typeof(Type) })));
         export.ConstructorArguments.Add(new CustomAttributeArgument(
-          ModuleDefinition.TypeSystem.TypedReference,
-          ModuleDefinition.ImportReference(exportType)));
+          ModuleDefinition.TypeSystem.TypedReference, exportType));
 
         foreach (var type in ModuleDefinition.GetTypes().Where(t =>
           t.IsClass() && !t.IsAbstract && !t.ExportsType(exportType) &&

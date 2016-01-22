@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.ComponentModel.Composition;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Vandelay.Fody
@@ -70,6 +72,25 @@ namespace Vandelay.Fody
       // Assert
       Assert.That(imports, Is.Not.Null.Or.Empty);
       Assert.That(imports, Has.Length.EqualTo(4));
+    }
+
+    [Test]
+    public void ImportManyWithImport()
+    {
+      // Arrange
+      var importsType = _simpleCaseWeaver.GetType(
+        "AssemblyToProcess.SimpleCase.ImporterSingleSearchPatternWithImport");
+      var importsInstance = (dynamic)Activator.CreateInstance(importsType);
+
+      // Act
+      var imports = (ICollection)importsInstance.Imports;
+
+      // Assert
+      Assert.That(imports, Is.Not.Null.Or.Empty);
+      Assert.That(imports, Has.Length.EqualTo(5));
+
+      var greeting = (dynamic)imports.Cast<object>().First(i => i.GetType().Name == "ExportableWithImport");
+      Assert.That(greeting.Greeting, Is.Not.Null.Or.Empty);
     }
 
     [Test]

@@ -55,6 +55,7 @@ namespace Vandelay.Fody
         weavingTask.Execute();
         moduleDefinition.Write(AfterAssemblyPath);
       }
+
       Assembly = Assembly.LoadFile(AfterAssemblyPath);
     }
 

@@ -47,6 +47,7 @@
     <Compile Include="AbstractExportable.cs" />
     <Compile Include="AlreadyExportedInstance.cs" />
     <Compile Include="ExportableInstance.cs" />
+    <Compile Include="ExportableWithImport.cs" />
     <Compile Include="IExportable.cs" />
     <Compile Include="IExtendedInterface.cs" />
     <Compile Include="ImplementsExtended.cs" />
