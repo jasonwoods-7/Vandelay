@@ -2,4 +2,5 @@
 <Weavers>
   <Scalpel />
   <AssertMessage />
+  <Tail />
 </Weavers>
