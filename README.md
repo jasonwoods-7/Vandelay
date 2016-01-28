@@ -4,6 +4,12 @@
 
 Vandelay is an extension to the [Fody](https://github.com/Fody/Fody) aspect weaving project framework.  Vandelay is an Importer\Exporter.
 
+## The nuget package [![NuGet Status](http://img.shields.io/nuget/v/Vandelay.Fody.svg?style=flat)](https://www.nuget.org/packages/Vandelay.Fody/)
+
+https://www.nuget.org/packages/Vandelay.Fody/
+
+    PM> Install-Package Vandelay.Fody
+
 ## What type of problem does Vandelay solve?
 
 Vandelay aims to solve the Open Closed Principle from the SOLID principles.  Behind the scenes, it uses the Managed Extensibility Framework (MEF) to provide importing\exporting.
