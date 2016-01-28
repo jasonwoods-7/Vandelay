@@ -33,7 +33,7 @@ namespace Vandelay.Fody
       var fieldTuple = InjectImportsField(importType);
       targetType.Fields.Add(fieldTuple.Item1);
 
-      var constructor = InjectConstructor(searchPatterns, CreateCompositionBatch);
+      var constructor = InjectConstructor(searchPatterns);
       targetType.Methods.Add(constructor);
 
       var retrieverProperty = InjectRetrieverProperty(importType, fieldTuple.Item2,
@@ -74,9 +74,7 @@ namespace Vandelay.Fody
       return Tuple.Create(fieldDefinition, importerCollectionType);
     }
 
-    MethodDefinition InjectConstructor(
-      IReadOnlyCollection<string> searchPatterns,
-      MethodReference compositionBatch)
+    MethodDefinition InjectConstructor(IReadOnlyCollection<string> searchPatterns)
     {
       const MethodAttributes methodAttributes = MethodAttributes.SpecialName |
         MethodAttributes.RTSpecialName | MethodAttributes.HideBySig |
@@ -132,7 +130,7 @@ namespace Vandelay.Fody
       // compositionContainer.Compose(CompositionBatchHelper.Create(array));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldloc_1));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_1));
-      constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call, compositionBatch));
+      constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call, CreateCompositionBatch));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
         ModuleDefinition.ImportReference(typeof(CompositionContainer)
         .GetMethod("Compose"))));
