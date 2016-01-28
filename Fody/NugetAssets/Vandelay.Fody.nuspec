@@ -8,6 +8,7 @@
     <owners>Jason Woods</owners>
     <developmentDependency>true</developmentDependency>
     <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <projectUrl>https://github.com/jasonwoods-7/Vandelay</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Fody add-in that helps with importing/exporting MEF interfaces.</description>
     <language>en-US</language>
