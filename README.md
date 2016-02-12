@@ -1,6 +1,6 @@
-# Vandelay.Fody
+# Vandelay
 
-## What is Vandelay.Fody?
+## What is Vandelay?
 
 Vandelay is an extension to the [Fody](https://github.com/Fody/Fody) aspect weaving project framework.  Vandelay is an Importer\Exporter.
 
@@ -117,7 +117,7 @@ internal sealed class IFooRetriever
   {
     using (var aggregateCatalog = new AggregateCatalog)
     {
-(*)   aggregateCatalog.Catalogs.Add(new DirectoryCatalog(
+      aggregateCatalog.Catalogs.Add(new DirectoryCatalog(           // *
         Directory.GetParent(new Uri(Assembly.GetExecutingAssembly()
         .EscapedCodeBase).LocalPath).FullName));
       using (var compositionContainer = new CompositionContainer(
