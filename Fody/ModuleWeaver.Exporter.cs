@@ -22,7 +22,7 @@ namespace Vandelay.Fody
 
         foreach (var type in ModuleDefinition.GetTypes().Where(t =>
           t.IsClass() && !t.IsAbstract && !t.ExportsType(exportType) &&
-          t.ImplementsInterface(exportType)))
+          (t.ImplementsInterface(exportType) || t.InheritsBase(exportType))))
         {
           type.CustomAttributes.Add(export);
         }

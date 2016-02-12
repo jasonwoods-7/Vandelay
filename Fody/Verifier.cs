@@ -8,7 +8,7 @@ using Scalpel;
 namespace Vandelay.Fody
 {
   [Remove]
-  public static class Verifier
+  static class Verifier
   {
     public static void Verify(string beforeAssemblyPath, string afterAssemblyPath)
     {
@@ -25,17 +25,22 @@ namespace Vandelay.Fody
       {
         return string.Empty;
       }
-      var process = Process.Start(new ProcessStartInfo(exePath, "\"" + assemblyPath2 + "\"")
+
+      using (var process = Process.Start(new ProcessStartInfo(exePath, "\"" + assemblyPath2 + "\"")
       {
         RedirectStandardOutput = true,
         UseShellExecute = false,
         CreateNoWindow = true
-      });
+      }))
+      {
+        Debug.Assert(process != null);
+        process.WaitForExit(10000);
 
-      process.WaitForExit(10000);
-      return process.StandardOutput.ReadToEnd().Trim().Replace(assemblyPath2, "");
+        return process.StandardOutput.ReadToEnd().Trim().Replace(assemblyPath2, "");
+      }
     }
 
+    // ReSharper disable once InconsistentNaming
     static string GetPathToPEVerify()
     {
       var exePath = Environment.ExpandEnvironmentVariables(

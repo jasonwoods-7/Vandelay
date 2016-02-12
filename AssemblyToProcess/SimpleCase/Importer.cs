@@ -32,4 +32,10 @@ namespace AssemblyToProcess.SimpleCase
     public IEnumerable<IExportable> Imports { get; } =
       Vandelay.Importer.ImportMany<IExportable>("*2.dll|*2.exe");
   }
+
+  public class ImporterInheritsBase
+  {
+    public IEnumerable<ExportBase> Imports { get; } =
+      Vandelay.Importer.ImportMany<ExportBase>("*2.dll");
+  }
 }

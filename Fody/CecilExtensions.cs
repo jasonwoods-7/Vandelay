@@ -5,7 +5,7 @@ using Mono.Collections.Generic;
 
 namespace Vandelay.Fody
 {
-  public static class CecilExtensions
+  static class CecilExtensions
   {
     public static bool IsClass(this TypeDefinition typeDefinition)
     {
@@ -24,6 +24,11 @@ namespace Vandelay.Fody
     public static bool ImplementsInterface(this TypeDefinition typeDefinition,
       TypeReference interfaceType)
     {
+      if (!interfaceType.Resolve().IsInterface)
+      {
+        return false;
+      }
+
       if (typeDefinition?.BaseType == null)
       {
         return false;
@@ -35,6 +40,27 @@ namespace Vandelay.Fody
       }
 
       return typeDefinition.BaseType.Resolve().ImplementsInterface(interfaceType);
+    }
+
+    public static bool InheritsBase(this TypeDefinition typeDefinition,
+      TypeReference baseType)
+    {
+      if (baseType.Resolve().IsInterface)
+      {
+        return false;
+      }
+
+      if (typeDefinition?.BaseType == null)
+      {
+        return false;
+      }
+
+      if (typeDefinition.BaseType.FullName == baseType.FullName)
+      {
+        return true;
+      }
+
+      return typeDefinition.BaseType.Resolve().InheritsBase(baseType);
     }
 
     public static void RemoveExporter(this Collection<CustomAttribute> attributes)

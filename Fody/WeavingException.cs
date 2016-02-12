@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using Mono.Cecil.Cil;
+// ReSharper disable MemberCanBeInternal
 
 namespace Vandelay.Fody
 {
