@@ -37,11 +37,15 @@ namespace Vandelay.Fody
 
       using (var symbolStream = File.OpenRead(newPdb))
       {
+        var resolver = new DefaultAssemblyResolver();
+        resolver.AddSearchDirectory(Directory.GetParent(BeforeAssemblyPath).FullName);
+
         var readerParameters = new ReaderParameters
         {
           ReadSymbols = true,
           SymbolStream = symbolStream,
-          SymbolReaderProvider = new PdbReaderProvider()
+          SymbolReaderProvider = new PdbReaderProvider(),
+          AssemblyResolver = resolver
         };
         var moduleDefinition = ModuleDefinition.ReadModule(AfterAssemblyPath, readerParameters);
 
