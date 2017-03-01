@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace Vandelay.Fody
@@ -7,9 +8,16 @@ namespace Vandelay.Fody
   [TestFixture]
   public class MultipleExportsTests
   {
+    // ReSharper disable NotNullMemberIsNotInitialized
+    [NotNull]
     ModuleWeaverTestHelper _multipleWeaver;
+
+    [NotNull]
     Type _fooExporterType;
+
+    [NotNull]
     Type _barExporterType;
+    // ReSharper restore NotNullMemberIsNotInitialized
 
     [TestFixtureSetUp]
     public void TestFixtureSetUp()
@@ -26,7 +34,7 @@ namespace Vandelay.Fody
 
     [TestCase("AssemblyToProcess.MultipleExports.FooExporterA")]
     [TestCase("AssemblyToProcess.MultipleExports.FooExporterB")]
-    public void InstanceTest_Foo(string className)
+    public void InstanceTest_Foo([NotNull] string className)
     {
       // Arrange
       var type = _multipleWeaver.GetType(className);
@@ -45,7 +53,7 @@ namespace Vandelay.Fody
 
     [TestCase("AssemblyToProcess.MultipleExports.BarExporterA")]
     [TestCase("AssemblyToProcess.MultipleExports.BarExporterB")]
-    public void InstanceTest_Bar(string className)
+    public void InstanceTest_Bar([NotNull] string className)
     {
       // Arrange
       var type = _multipleWeaver.GetType(className);
@@ -81,7 +89,7 @@ namespace Vandelay.Fody
 
     [TestCase("AssemblyToProcess.MultipleExports.BarImporter")]
     [TestCase("AssemblyToProcess.MultipleExports.FooImporter")]
-    public void Importer(string className)
+    public void Importer([NotNull] string className)
     {
       // Arrange
       var type = _multipleWeaver.GetType(className);

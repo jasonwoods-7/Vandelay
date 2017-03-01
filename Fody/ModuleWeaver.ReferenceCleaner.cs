@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Vandelay.Fody.Extensions;
 
 namespace Vandelay.Fody
 {
@@ -8,7 +9,8 @@ namespace Vandelay.Fody
     {
       ModuleDefinition.Assembly.CustomAttributes.RemoveExporter();
 
-      var referenceToRemove = ModuleDefinition.AssemblyReferences.FirstOrDefault(r => r.Name == "Vandelay");
+      var referenceToRemove = ModuleDefinition.AssemblyReferences
+        .FirstOrDefault(r => r.Name == "Vandelay");
       if (null == referenceToRemove)
       {
         LogInfo("\tNo reference to 'Vandelay' found. References not modified.");

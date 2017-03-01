@@ -4,14 +4,17 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.Linq;
+using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
+using Vandelay.Fody.Extensions;
 
 namespace Vandelay.Fody
 {
   partial class ModuleWeaver
   {
+    [CanBeNull]
     MethodReference CreateCompositionBatch { get; set; }
 
     void InjectCompositionBatchHelper()
@@ -35,6 +38,7 @@ namespace Vandelay.Fody
       ModuleDefinition.Types.Add(compositionBatch);
     }
 
+    [NotNull]
     MethodDefinition InjectCreate()
     {
       // public static CompositionBatch Create(object[] array)
@@ -43,6 +47,7 @@ namespace Vandelay.Fody
         ModuleDefinition.ImportReference(typeof(CompositionBatch)));
       compositionBatch.Parameters.Add(new ParameterDefinition(
         ModuleDefinition.ImportReference(typeof(object[]))));
+      compositionBatch.CustomAttributes.MarkAsGeneratedCode();
 
       compositionBatch.Body.Variables.Add(new VariableDefinition(
         ModuleDefinition.ImportReference(typeof(CompositionBatch))));
@@ -103,7 +108,7 @@ namespace Vandelay.Fody
       compositionBatch.Body.Instructions.Add(Instruction.Create(OpCodes.Ldloc_3));
       compositionBatch.Body.Instructions.Add(Instruction.Create(OpCodes.Call,
         ModuleDefinition.ImportReference(typeof(AttributedModelServices)
-        .GetMethod("GetTypeIdentity", new[] {typeof(Type)}))));
+        .GetMethod("GetTypeIdentity", new[] { typeof(Type) }))));
       compositionBatch.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
         ModuleDefinition.ImportReference(typeof(Dictionary<string, object>)
         .GetProperty("Item").GetSetMethod())));
@@ -118,7 +123,7 @@ namespace Vandelay.Fody
         ExportValueProvider.Methods.First(m => !m.IsConstructor)));
       compositionBatch.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj,
         ModuleDefinition.ImportReference(typeof(Func<object>)
-        .GetConstructor(new[] {typeof(object), typeof(IntPtr)}))));
+        .GetConstructor(new[] { typeof(object), typeof(IntPtr) }))));
 
       // var export = new Export(contractName, metaData, valueFunc);
       compositionBatch.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj,
@@ -132,7 +137,7 @@ namespace Vandelay.Fody
       // compositionBatch.AddExport(export);
       compositionBatch.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
         ModuleDefinition.ImportReference(typeof(CompositionBatch)
-        .GetMethod("AddExport", new[] {typeof(Export)}))));
+        .GetMethod("AddExport", new[] { typeof(Export) }))));
       compositionBatch.Body.Instructions.Add(Instruction.Create(OpCodes.Pop));
 
       // i++;

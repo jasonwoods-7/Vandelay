@@ -1,10 +1,13 @@
-﻿using Mono.Cecil;
+﻿using JetBrains.Annotations;
+using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Vandelay.Fody.Extensions;
 
 namespace Vandelay.Fody
 {
   partial class ModuleWeaver
   {
+    [CanBeNull]
     TypeDefinition ExportValueProvider { get; set; }
 
     void InjectExportValueProvider()
@@ -32,6 +35,7 @@ namespace Vandelay.Fody
       ModuleDefinition.Types.Add(ExportValueProvider);
     }
 
+    [NotNull]
     FieldDefinition InjectValueField()
     {
       // private readonly object _value;
@@ -42,7 +46,8 @@ namespace Vandelay.Fody
       return valueField;
     }
 
-    MethodDefinition InjectValueConstructor(FieldReference valueField)
+    [NotNull]
+    MethodDefinition InjectValueConstructor([NotNull] FieldReference valueField)
     {
       const MethodAttributes methodAttributes = MethodAttributes.SpecialName |
         MethodAttributes.RTSpecialName | MethodAttributes.HideBySig;
@@ -52,6 +57,7 @@ namespace Vandelay.Fody
         ModuleDefinition.TypeSystem.Void);
       constructor.Parameters.Add(new ParameterDefinition(
         ModuleDefinition.TypeSystem.Object));
+      constructor.CustomAttributes.MarkAsGeneratedCode();
 
       // base.ctor();
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
@@ -69,11 +75,13 @@ namespace Vandelay.Fody
       return constructor;
     }
 
-    MethodDefinition InjectValueFunc(FieldReference valueField)
+    [NotNull]
+    MethodDefinition InjectValueFunc([NotNull] FieldReference valueField)
     {
       // public object GetValue()
       var func = new MethodDefinition("GetValue", MethodAttributes.Public,
         ModuleDefinition.TypeSystem.Object);
+      func.CustomAttributes.MarkAsGeneratedCode();
 
       // return this._value;
       func.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using JetBrains.Annotations;
 using Mono.Cecil;
 using Scalpel;
 
@@ -9,13 +11,18 @@ namespace Vandelay.Fody
   [Remove]
   class MockAssemblyResolver : IAssemblyResolver
   {
+    [CanBeNull]
+    public string Directory;
+
     public AssemblyDefinition Resolve(AssemblyNameReference name)
     {
+      Debug.Assert(null != Directory);
       var fileName = Path.Combine(Directory, name.Name) + ".dll";
       if (File.Exists(fileName))
       {
         return AssemblyDefinition.ReadAssembly(fileName);
       }
+
       try
       {
         var assembly = Assembly.Load(name.FullName);
@@ -51,7 +58,5 @@ namespace Vandelay.Fody
     {
       throw new NotSupportedException();
     }
-
-    public string Directory;
   }
 }

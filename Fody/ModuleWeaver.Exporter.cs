@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using System.Linq;
 using Mono.Cecil;
+using Vandelay.Fody.Extensions;
 
 namespace Vandelay.Fody
 {

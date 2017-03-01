@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 using NUnit.Framework;
 using Scalpel;
 
@@ -10,7 +11,8 @@ namespace Vandelay.Fody
   [Remove]
   static class Verifier
   {
-    public static void Verify(string beforeAssemblyPath, string afterAssemblyPath)
+    public static void Verify([NotNull] string beforeAssemblyPath,
+      [NotNull] string afterAssemblyPath)
     {
       var before = Validate(beforeAssemblyPath);
       var after = Validate(afterAssemblyPath);
@@ -18,7 +20,8 @@ namespace Vandelay.Fody
       Assert.AreEqual(TrimLineNumbers(before), TrimLineNumbers(after), message);
     }
 
-    static string Validate(string assemblyPath2)
+    [NotNull]
+    static string Validate([NotNull] string assemblyPath2)
     {
       var exePath = GetPathToPEVerify();
       if (!File.Exists(exePath))
@@ -26,7 +29,7 @@ namespace Vandelay.Fody
         return string.Empty;
       }
 
-      using (var process = Process.Start(new ProcessStartInfo(exePath, "\"" + assemblyPath2 + "\"")
+      using (var process = Process.Start(new ProcessStartInfo(exePath, $"\"{assemblyPath2}\"")
       {
         RedirectStandardOutput = true,
         UseShellExecute = false,
@@ -41,6 +44,7 @@ namespace Vandelay.Fody
     }
 
     // ReSharper disable once InconsistentNaming
+    [NotNull]
     static string GetPathToPEVerify()
     {
       var exePath = Environment.ExpandEnvironmentVariables(
@@ -54,7 +58,8 @@ namespace Vandelay.Fody
       return exePath;
     }
 
-    static string TrimLineNumbers(string foo)
+    [NotNull]
+    static string TrimLineNumbers([NotNull] string foo)
     {
       return Regex.Replace(foo, @"0x.*]", "");
     }

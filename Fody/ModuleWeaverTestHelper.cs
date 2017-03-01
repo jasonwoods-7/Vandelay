@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Pdb;
 using Scalpel;
@@ -11,12 +12,19 @@ namespace Vandelay.Fody
   [Remove]
   class ModuleWeaverTestHelper
   {
+    [NotNull]
     public readonly string BeforeAssemblyPath;
+
+    [NotNull]
     public readonly string AfterAssemblyPath;
+
+    [NotNull]
     public readonly Assembly Assembly;
+
+    [NotNull]
     public readonly List<string> Errors;
 
-    public ModuleWeaverTestHelper(string inputAssembly)
+    public ModuleWeaverTestHelper([NotNull] string inputAssembly)
     {
       BeforeAssemblyPath = Path.GetFullPath(inputAssembly);
 #if (!DEBUG)
@@ -63,7 +71,8 @@ namespace Vandelay.Fody
       Assembly = Assembly.LoadFile(AfterAssemblyPath);
     }
 
-    public Type GetType(string className)
+    [NotNull]
+    public Type GetType([NotNull] string className)
     {
       return Assembly.GetType(className, true);
     }

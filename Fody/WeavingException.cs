@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using JetBrains.Annotations;
 using Mono.Cecil.Cil;
-// ReSharper disable MemberCanBeInternal
 
 namespace Vandelay.Fody
 {
   [Serializable]
-  public class WeavingException : Exception
+  class WeavingException : Exception
   {
+    [UsedImplicitly, CanBeNull]
     public SequencePoint SequencePoint;
 
-    public WeavingException(string message)
+    public WeavingException([NotNull] string message)
       : base(message)
     {
     }
 
-    protected WeavingException(SerializationInfo info, StreamingContext context)
+    protected WeavingException([NotNull] SerializationInfo info, StreamingContext context)
       : base(info, context)
     {
     }

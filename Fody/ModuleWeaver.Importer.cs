@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Vandelay.Fody.Extensions;
 
 namespace Vandelay.Fody
 {
@@ -18,7 +20,7 @@ namespace Vandelay.Fody
       }
     }
 
-    void Process(MethodDefinition method)
+    void Process([NotNull] MethodDefinition method)
     {
       var instructions = method.Body.Instructions
         .Where(i => i.OpCode == OpCodes.Call).ToList();
@@ -29,7 +31,8 @@ namespace Vandelay.Fody
       }
     }
 
-    void ProcessInstruction(MethodDefinition method, Instruction instruction)
+    void ProcessInstruction([NotNull] MethodDefinition method,
+      [NotNull] Instruction instruction)
     {
       var methodReference = instruction.Operand as GenericInstanceMethod;
       if (null == methodReference)
@@ -53,8 +56,8 @@ namespace Vandelay.Fody
       ProcessImportMany(method, instruction, methodReference);
     }
 
-    void ProcessImportMany(MethodDefinition method, Instruction instruction,
-      IGenericInstance methodReference)
+    void ProcessImportMany([NotNull] MethodDefinition method,
+      [NotNull] Instruction instruction, [NotNull] IGenericInstance methodReference)
     {
       InjectExportValueProvider();
       InjectCompositionBatchHelper();
@@ -62,12 +65,13 @@ namespace Vandelay.Fody
       var searchPatternInstruction = SearchPatternInstruction(instruction.Previous);
       instruction.Operand = InjectRetriever(methodReference.GenericArguments[0],
         ((searchPatternInstruction.Operand as string) ??
-         string.Empty).Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries));
+         string.Empty).Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
 
       method.Body.GetILProcessor().Remove(searchPatternInstruction);
     }
 
-    static Instruction SearchPatternInstruction(Instruction instruction)
+    [NotNull]
+    static Instruction SearchPatternInstruction([NotNull] Instruction instruction)
     {
       if (Code.Ldstr == instruction.OpCode.Code)
       {

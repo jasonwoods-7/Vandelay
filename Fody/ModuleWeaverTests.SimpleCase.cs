@@ -2,6 +2,7 @@
 using System.Collections;
 using System.ComponentModel.Composition;
 using System.Linq;
+using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace Vandelay.Fody
@@ -9,8 +10,13 @@ namespace Vandelay.Fody
   [TestFixture]
   public class SimpleCaseTests
   {
+    // ReSharper disable NotNullMemberIsNotInitialized
+    [NotNull]
     ModuleWeaverTestHelper _simpleCaseWeaver;
+
+    [NotNull]
     Type _simpleCaseExportableType;
+    // ReSharper restore NotNullMemberIsNotInitialized
 
     [TestFixtureSetUp]
     public void TestFixtureSetUp()
@@ -24,7 +30,7 @@ namespace Vandelay.Fody
     }
 
     [TestCase("AssemblyToProcess.SimpleCase.AbstractExportable")]
-    public void AbstractTest(string className)
+    public void AbstractTest([NotNull] string className)
     {
       // Arrange
       var type = _simpleCaseWeaver.GetType(className);
@@ -41,7 +47,7 @@ namespace Vandelay.Fody
     [TestCase("AssemblyToProcess.SimpleCase.AlreadyExportedInstance")]
     [TestCase("AssemblyToProcess.SimpleCase.NonPublicExported")]
     [TestCase("AssemblyToProcess.SimpleCase.ImplementsExtended")]
-    public void InstanceTest(string className)
+    public void InstanceTest([NotNull] string className)
     {
       // Arrange
       var type = _simpleCaseWeaver.GetType(className);
@@ -60,7 +66,7 @@ namespace Vandelay.Fody
 
     [TestCase("AssemblyToProcess.SimpleCase.ImporterSingleSearchPattern")]
     [TestCase("AssemblyToProcess.SimpleCase.ImporterMultipleSearchPatterns")]
-    public void ImportMany(string searchPattern)
+    public void ImportMany([NotNull] string searchPattern)
     {
       // Arrange
       var importsType = _simpleCaseWeaver.GetType(searchPattern);

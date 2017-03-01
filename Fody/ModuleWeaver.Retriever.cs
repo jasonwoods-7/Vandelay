@@ -6,9 +6,11 @@ using System.ComponentModel.Composition.Primitives;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
+using Vandelay.Fody.Extensions;
 using FieldAttributes = Mono.Cecil.FieldAttributes;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
 using MethodBody = Mono.Cecil.Cil.MethodBody;
@@ -18,8 +20,9 @@ namespace Vandelay.Fody
 {
   partial class ModuleWeaver
   {
-    MethodDefinition InjectRetriever(TypeReference importType,
-      IReadOnlyCollection<string> searchPatterns)
+    [NotNull]
+    MethodDefinition InjectRetriever([NotNull] TypeReference importType,
+      [NotNull] IReadOnlyCollection<string> searchPatterns)
     {
       const TypeAttributes typeAttributes = TypeAttributes.AnsiClass |
         TypeAttributes.Sealed | TypeAttributes.AutoClass;
@@ -43,7 +46,8 @@ namespace Vandelay.Fody
       return retrieverProperty;
     }
 
-    string TargetName(string targetName, int counter)
+    [NotNull]
+    string TargetName([NotNull] string targetName, int counter)
     {
       var suggestedName = -1 == counter ? targetName : $"{targetName}_{counter}";
       if (null == ModuleDefinition.Types.FirstOrDefault(t => t.Name == suggestedName))
@@ -54,8 +58,9 @@ namespace Vandelay.Fody
       return TargetName(targetName, counter + 1);
     }
 
+    [NotNull]
     Tuple<FieldDefinition, GenericInstanceType>
-      InjectImportsField(TypeReference importType)
+      InjectImportsField([NotNull] TypeReference importType)
     {
       // [ImportMany(typeof(ImportType))]
       // private IEnumerable<ImportType> _imports;
@@ -65,7 +70,7 @@ namespace Vandelay.Fody
         FieldAttributes.Private, importerCollectionType);
 
       var importAttribute = new CustomAttribute(ModuleDefinition.ImportReference(
-        typeof(ImportManyAttribute).GetConstructor(new[] {typeof(Type)})));
+        typeof(ImportManyAttribute).GetConstructor(new[] { typeof(Type) })));
       importAttribute.ConstructorArguments.Add(new CustomAttributeArgument(
         ModuleDefinition.TypeSystem.TypedReference, importType));
 
@@ -74,7 +79,9 @@ namespace Vandelay.Fody
       return Tuple.Create(fieldDefinition, importerCollectionType);
     }
 
-    MethodDefinition InjectConstructor(IReadOnlyCollection<string> searchPatterns)
+    [NotNull]
+    MethodDefinition InjectConstructor(
+      [NotNull] IReadOnlyCollection<string> searchPatterns)
     {
       const MethodAttributes methodAttributes = MethodAttributes.SpecialName |
         MethodAttributes.RTSpecialName | MethodAttributes.HideBySig |
@@ -85,6 +92,7 @@ namespace Vandelay.Fody
         ModuleDefinition.TypeSystem.Void);
       constructor.Parameters.Add(new ParameterDefinition(
         ModuleDefinition.ImportReference(typeof(object[]))));
+      constructor.CustomAttributes.MarkAsGeneratedCode();
 
       constructor.Body.MaxStackSize = 5;
       constructor.Body.Variables.Add(new VariableDefinition(
@@ -97,12 +105,13 @@ namespace Vandelay.Fody
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call,
         new MethodReference(".ctor", ModuleDefinition.TypeSystem.Void,
-        ModuleDefinition.TypeSystem.Object) {HasThis = true}));
+        ModuleDefinition.TypeSystem.Object)
+        { HasThis = true }));
 
       // using (var aggregateCatalog = new AggregateCatalog())
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj,
         ModuleDefinition.ImportReference(typeof(AggregateCatalog)
-        .GetConstructor(new Type[] {}))));
+        .GetConstructor(new Type[] { }))));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Stloc_0));
 
       var catalogBodyStart = Instruction.Create(OpCodes.Nop);
@@ -162,8 +171,8 @@ namespace Vandelay.Fody
       return constructor;
     }
 
-    void InjectSearchPatterns(MethodDefinition constructor,
-      IReadOnlyCollection<string> searchPatterns)
+    void InjectSearchPatterns([NotNull] MethodDefinition constructor,
+      [NotNull] IReadOnlyCollection<string> searchPatterns)
     {
       if (searchPatterns.Count == 0)
       {
@@ -175,7 +184,7 @@ namespace Vandelay.Fody
         InjectCatalogPath(constructor);
         constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj,
           ModuleDefinition.ImportReference(typeof(DirectoryCatalog)
-          .GetConstructor(new[] {typeof(string)}))));
+          .GetConstructor(new[] { typeof(string) }))));
         constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
           ModuleDefinition.ImportReference(typeof(ICollection<ComposablePartCatalog>)
           .GetMethod("Add"))));
@@ -198,7 +207,7 @@ namespace Vandelay.Fody
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldstr, searchPattern));
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj,
             ModuleDefinition.ImportReference(typeof(DirectoryCatalog)
-            .GetConstructor(new[] {typeof(string), typeof(string)}))));
+            .GetConstructor(new[] { typeof(string), typeof(string) }))));
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
             ModuleDefinition.ImportReference(typeof(ICollection<ComposablePartCatalog>)
             .GetMethod("Add"))));
@@ -206,7 +215,7 @@ namespace Vandelay.Fody
       }
     }
 
-    void InjectCatalogPath(MethodDefinition constructor)
+    void InjectCatalogPath([NotNull] MethodDefinition constructor)
     {
       // var catalogPath = Directory.GetParent(new Uri(Assembly.GetExecutingAssembly()
       //   .EscapedCodeBase).LocalPath).FullName;
@@ -230,8 +239,8 @@ namespace Vandelay.Fody
         .GetProperty("FullName").GetGetMethod())));
     }
 
-    void InjectUsingStatement(MethodBody methodBody, Instruction bodyStart,
-      OpCode loadLocation, Instruction handlerEnd, Instruction leave)
+    void InjectUsingStatement([NotNull] MethodBody methodBody, [NotNull] Instruction bodyStart,
+      OpCode loadLocation, [NotNull] Instruction handlerEnd, [NotNull] Instruction leave)
     {
       var startFinally = Instruction.Create(loadLocation);
       var endFinally = Instruction.Create(OpCodes.Endfinally);
@@ -257,9 +266,10 @@ namespace Vandelay.Fody
       methodBody.ExceptionHandlers.Add(handler);
     }
 
-    MethodDefinition InjectRetrieverProperty(MemberReference importerType,
-      TypeReference importerCollectionType, MethodReference ctor,
-      FieldReference fieldDefinition)
+    [NotNull]
+    MethodDefinition InjectRetrieverProperty([NotNull] MemberReference importerType,
+      [NotNull] TypeReference importerCollectionType, [NotNull] MethodReference ctor,
+      [NotNull] FieldReference fieldDefinition)
     {
       // public static IEnumerable<ImportType> ImportTypeRetriever(object[] array)
       var retriever = new MethodDefinition($"{importerType.Name}Retriever",
@@ -267,6 +277,7 @@ namespace Vandelay.Fody
         MethodAttributes.HideBySig, importerCollectionType);
       retriever.Parameters.Add(new ParameterDefinition(
         ModuleDefinition.ImportReference(typeof(object[]))));
+      retriever.CustomAttributes.MarkAsGeneratedCode();
 
       // return new ImportTypeRetriever(array)._imports;
       retriever.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));

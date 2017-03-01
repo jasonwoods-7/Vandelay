@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace Vandelay.Fody
@@ -10,9 +11,16 @@ namespace Vandelay.Fody
   [TestFixture]
   public class ExternalAssemblyTests
   {
+    [NotNull]
+    // ReSharper disable NotNullMemberIsNotInitialized
     ModuleWeaverTestHelper _unsignedWeaver;
+
+    [NotNull]
     ModuleWeaverTestHelper _signedWeaver;
+
+    [NotNull]
     Type _coreExportableType;
+    // ReSharper restore NotNullMemberIsNotInitialized
 
     [TestFixtureSetUp]
     public void TestFixtureSetUp()
@@ -38,7 +46,7 @@ namespace Vandelay.Fody
 
     [TestCase("AssemblyToProcess.Unsigned.AbstractExportable")]
     [TestCase("AssemblyToProcess.Signed.AbstractExportable")]
-    public void AbstractTest(string className)
+    public void AbstractTest([NotNull] string className)
     {
       // Arrange
       var type = GetTestHelper(className).GetType(className);
@@ -55,7 +63,7 @@ namespace Vandelay.Fody
     [TestCase("AssemblyToProcess.Unsigned.AlreadyExportedInstance")]
     [TestCase("AssemblyToProcess.Signed.ExportableInstance")]
     [TestCase("AssemblyToProcess.Signed.AlreadyExportedInstance")]
-    public void InstanceTest(string className)
+    public void InstanceTest([NotNull] string className)
     {
       // Arrange
       var type = GetTestHelper(className).GetType(className);
@@ -74,7 +82,7 @@ namespace Vandelay.Fody
 
     [TestCase("AssemblyToProcess.Unsigned.Importer")]
     [TestCase("AssemblyToProcess.Signed.Importer")]
-    public void ImportMany(string className)
+    public void ImportMany([NotNull] string className)
     {
       // Arrange
       var importsType = GetTestHelper(className).GetType(className);
@@ -103,7 +111,8 @@ namespace Vandelay.Fody
       // Assert
     }
 
-    ModuleWeaverTestHelper GetTestHelper(string className)
+    [NotNull]
+    ModuleWeaverTestHelper GetTestHelper([NotNull] string className)
     {
       return className.Contains("Unsigned") ? _unsignedWeaver : _signedWeaver;
     }

@@ -42,6 +42,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=10.3.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.3.0\lib\net\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\packages\FodyCecil.1.29.4\lib\net40\Mono.Cecil.dll</HintPath>
       <Private>True</Private>
@@ -80,7 +84,9 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CecilExtensions.cs" />
+    <Compile Include="Extensions\CollectionCustomAttributeExtensions.cs" />
+    <Compile Include="Extensions\MethodReferenceExtensions.cs" />
+    <Compile Include="Extensions\TypeDefinitionExtensions.cs" />
     <Compile Include="MockAssemblyResolver.cs" />
     <Compile Include="ModuleWeaver.CompositionBatch.cs">
       <DependentUpon>ModuleWeaver.cs</DependentUpon>
@@ -106,6 +112,7 @@
     <Compile Include="ModuleWeaver.ReferenceCleaner.cs">
       <DependentUpon>ModuleWeaver.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReferenceFinder.cs" />
     <Compile Include="Verifier.cs" />
     <Compile Include="WeavingException.cs" />
   </ItemGroup>
