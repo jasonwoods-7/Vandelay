@@ -110,6 +110,22 @@ namespace Vandelay.Fody
     }
 
     [Test]
+    public void ImportInheritedExport()
+    {
+      // Arrange
+      var importsType = _simpleCaseWeaver.GetType(
+        "AssemblyToProcess.SimpleCase.ImporterInheritedExport");
+      var importsInstance = (dynamic)Activator.CreateInstance(importsType);
+
+      // Act
+      var imports = (ICollection)importsInstance.Imports;
+
+      // Assert
+      Assert.That(imports, Is.Not.Null.Or.Empty);
+      Assert.That(imports, Has.Length.EqualTo(1));
+    }
+
+    [Test]
     public void PeVerify()
     {
       // Arrange

@@ -47,6 +47,8 @@
     </Compile>
     <Compile Include="AbstractExportable.cs" />
     <Compile Include="AlreadyExportedInstance.cs" />
+    <Compile Include="IInheritedExport.cs" />
+    <Compile Include="InheritedExport.cs" />
     <Compile Include="InheritsExport.cs" />
     <Compile Include="ExportableInstance.cs" />
     <Compile Include="ExportableWithImport.cs" />

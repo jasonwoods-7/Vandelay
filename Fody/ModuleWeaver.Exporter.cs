@@ -15,6 +15,13 @@ namespace Vandelay.Fody
         var exportType = ModuleDefinition.ImportReference(
           (TypeReference)exportable.ConstructorArguments.Single().Value);
 
+        if (exportType.Resolve().CustomAttributes.Any(a =>
+          a.AttributeType.FullName == typeof(InheritedExportAttribute).FullName &&
+          a.ConstructorArguments.Count == 0))
+        {
+          continue;
+        }
+
         var export = new CustomAttribute(ModuleDefinition.ImportReference(
           typeof(ExportAttribute).GetConstructor(new[] { typeof(Type) })));
         export.ConstructorArguments.Add(new CustomAttributeArgument(
