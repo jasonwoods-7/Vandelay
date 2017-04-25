@@ -32,9 +32,6 @@ namespace Vandelay.Fody
 #endif
       AfterAssemblyPath = BeforeAssemblyPath.Replace(".dll", "2.dll");
       var oldPdb = BeforeAssemblyPath.Replace(".dll", ".pdb");
-      var newPdb = BeforeAssemblyPath.Replace(".dll", "2.pdb");
-      File.Copy(BeforeAssemblyPath, AfterAssemblyPath, true);
-      File.Copy(oldPdb, newPdb, true);
 
       Errors = new List<string>();
 
@@ -43,7 +40,7 @@ namespace Vandelay.Fody
         Directory = Path.GetDirectoryName(BeforeAssemblyPath)
       };
 
-      using (var symbolStream = File.OpenRead(newPdb))
+      using (var symbolStream = File.OpenRead(oldPdb))
       {
         var resolver = new DefaultAssemblyResolver();
         resolver.AddSearchDirectory(Directory.GetParent(BeforeAssemblyPath).FullName);
@@ -55,17 +52,19 @@ namespace Vandelay.Fody
           SymbolReaderProvider = new PdbReaderProvider(),
           AssemblyResolver = resolver
         };
-        var moduleDefinition = ModuleDefinition.ReadModule(AfterAssemblyPath, readerParameters);
-
-        var weavingTask = new ModuleWeaver
+        using (var moduleDefinition = ModuleDefinition.ReadModule(
+          BeforeAssemblyPath, readerParameters))
         {
-          ModuleDefinition = moduleDefinition,
-          AssemblyResolver = assemblyResolver,
-          LogError = s => Errors.Add(s)
-        };
+          var weavingTask = new ModuleWeaver
+          {
+            ModuleDefinition = moduleDefinition,
+            AssemblyResolver = assemblyResolver,
+            LogError = s => Errors.Add(s)
+          };
 
-        weavingTask.Execute();
-        moduleDefinition.Write(AfterAssemblyPath);
+          weavingTask.Execute();
+          moduleDefinition.Write(AfterAssemblyPath);
+        }
       }
 
       Assembly = Assembly.LoadFile(AfterAssemblyPath);

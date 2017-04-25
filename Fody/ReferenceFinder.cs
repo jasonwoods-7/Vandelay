@@ -1,9 +1,11 @@
 ﻿// Copyright (c) 2017 Applied Systems, Inc.
 
-using System.Diagnostics;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Mono.Cecil;
+using Mono.Collections.Generic;
 using Vandelay.Fody.Extensions;
 
 // ReSharper disable MissingAnnotation
@@ -28,59 +30,101 @@ namespace Vandelay.Fody
       public static MethodReference Constructor;
     }
 
-    [CanBeNull]
-    static ModuleDefinition _moduleDefinition;
-
-    public static void SetModule([NotNull] ModuleDefinition module)
+    public static void FindReferences([NotNull] IAssemblyResolver assemblyResolver,
+      [NotNull] ModuleDefinition moduleDefinition)
     {
-      _moduleDefinition = module;
-    }
+      var baseLibTypes = GetBaseLibTypes(assemblyResolver);
 
-    public static void FindReferences([NotNull] IAssemblyResolver assemblyResolver)
-    {
-      var baseLib = assemblyResolver.Resolve("mscorlib");
-      var baseLibTypes = baseLib.MainModule.Types;
-
-      var systemLib = assemblyResolver.Resolve(
-        "system, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
-      var systemLibTypes = systemLib.MainModule.Types;
-
-      var winrt = baseLibTypes.All(type => type.Name != "Object");
-      if (winrt)
-      {
-        baseLib = assemblyResolver.Resolve("System.Runtime");
-        baseLibTypes = baseLib.MainModule.Types;
-      }
-
-      Debug.Assert(null != _moduleDefinition);
-      String.TypeReference = _moduleDefinition.ImportReference(
+      String.TypeReference = moduleDefinition.ImportReference(
         baseLibTypes.First(t => t.Name == "String"));
 
-      var generatedCodeType = systemLibTypes.FirstOrDefault(t =>
-        t.Name == "GeneratedCodeAttribute");
-      if (generatedCodeType == null)
-      {
-        var systemDiagnosticsTools = assemblyResolver.Resolve("System.Diagnostics.Tools");
-        generatedCodeType = systemDiagnosticsTools.MainModule.Types.First(t =>
-          t.Name == "GeneratedCodeAttribute");
-      }
-      GeneratedCodeAttribute.TypeReference = _moduleDefinition.ImportReference(generatedCodeType);
-      GeneratedCodeAttribute.ConstructorStringString = _moduleDefinition.ImportReference(
+      GeneratedCodeAttribute.TypeReference = moduleDefinition.ImportReference(
+        GetGeneratedCodeType(assemblyResolver));
+      GeneratedCodeAttribute.ConstructorStringString = moduleDefinition.ImportReference(
         GeneratedCodeAttribute.TypeReference.Resolve()
         .FindMethod(".ctor", "String", "String"));
 
+      DebuggerNonUserCodeAttribute.TypeReference = moduleDefinition
+        .ImportReference(GetDebuggerNonUserCodeType(assemblyResolver, baseLibTypes));
+      DebuggerNonUserCodeAttribute.Constructor = moduleDefinition.ImportReference(
+        DebuggerNonUserCodeAttribute.TypeReference.Resolve().FindMethod(".ctor"));
+    }
+
+    [NotNull]
+    static Collection<TypeDefinition> GetBaseLibTypes(
+      [NotNull] IAssemblyResolver assemblyResolver)
+    {
+      using (var baseLib = assemblyResolver.Resolve(
+        new AssemblyNameReference("mscorlib", null)))
+      {
+        var baseLibTypes = baseLib.MainModule.Types;
+
+        var winrt = baseLibTypes.All(type => type.Name != "Object");
+        if (winrt)
+        {
+          using (var runtimeLib = assemblyResolver.Resolve(
+            new AssemblyNameReference("System.Runtime", null)))
+          {
+            baseLibTypes = runtimeLib.MainModule.Types;
+          }
+        }
+
+        return baseLibTypes;
+      }
+    }
+
+    [NotNull]
+    static IEnumerable<TypeDefinition> GetSystemLibTypes(
+      [NotNull] IAssemblyResolver assemblyResolver)
+    {
+      using (var systemLib = assemblyResolver.Resolve(
+        new AssemblyNameReference("System", new Version("4.0.0.0"))
+        {
+          PublicKeyToken = new byte[] { 0xb7, 0x7a, 0x5c, 0x56, 0x19, 0x34, 0xe0, 0x89 }
+        }))
+      {
+        return systemLib.MainModule.Types;
+      }
+    }
+
+    [NotNull]
+    static TypeDefinition GetGeneratedCodeType([NotNull] IAssemblyResolver assemblyResolver)
+    {
+      var generatedCodeType = GetSystemLibTypes(assemblyResolver)
+        .FirstOrDefault(t => t.Name == "GeneratedCodeAttribute");
+
+      if (generatedCodeType == null)
+      {
+        using (var systemDiagnosticsTools = assemblyResolver.Resolve(
+          new AssemblyNameReference("System.Diagnostics.Tools", null)))
+        {
+          generatedCodeType = systemDiagnosticsTools.MainModule.Types.First(t =>
+            t.Name == "GeneratedCodeAttribute");
+        }
+      }
+
+      return generatedCodeType;
+    }
+
+    [NotNull]
+    static TypeDefinition GetDebuggerNonUserCodeType(
+      [NotNull] IAssemblyResolver assemblyResolver,
+      [NotNull] IEnumerable<TypeDefinition> baseLibTypes)
+    {
       var debuggerNonUserCodeType = baseLibTypes.FirstOrDefault(t =>
         t.Name == "DebuggerNonUserCodeAttribute");
+
       if (debuggerNonUserCodeType == null)
       {
-        var systemDiagnosticsDebug = assemblyResolver.Resolve("System.Diagnostics.Debug");
-        debuggerNonUserCodeType = systemDiagnosticsDebug.MainModule.Types
-          .First(t => t.Name == "DebuggerNonUserCodeAttribute");
+        using (var systemDiagnosticsDebug = assemblyResolver.Resolve(
+          new AssemblyNameReference("System.Diagnostics.Debug", null)))
+        {
+          debuggerNonUserCodeType = systemDiagnosticsDebug.MainModule.Types
+            .First(t => t.Name == "DebuggerNonUserCodeAttribute");
+        }
       }
-      DebuggerNonUserCodeAttribute.TypeReference = _moduleDefinition
-        .ImportReference(debuggerNonUserCodeType);
-      DebuggerNonUserCodeAttribute.Constructor = _moduleDefinition.ImportReference(
-        DebuggerNonUserCodeAttribute.TypeReference.Resolve().FindMethod(".ctor"));
+
+      return debuggerNonUserCodeType;
     }
   }
 }

@@ -34,7 +34,8 @@ namespace Vandelay.Fody.Extensions
         return false;
       }
 
-      if (typeDefinition.Interfaces.Any(i => i.FullName == interfaceType.FullName))
+      if (typeDefinition.Interfaces.Any(i =>
+        i.InterfaceType.FullName == interfaceType.FullName))
       {
         return true;
       }

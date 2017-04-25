@@ -47,10 +47,7 @@ namespace Vandelay.Fody
 
       if (methodReference.Name != "ImportMany")
       {
-        throw new WeavingException($"Unsupported method '{methodReference.FullName}'.")
-        {
-          SequencePoint = instruction.SequencePoint
-        };
+        throw new WeavingException($"Unsupported method '{methodReference.FullName}'.");
       }
 
       ProcessImportMany(method, instruction, methodReference);

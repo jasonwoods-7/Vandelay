@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using JetBrains.Annotations;
@@ -13,6 +12,10 @@ namespace Vandelay.Fody
   {
     [CanBeNull]
     public string Directory;
+
+    public void Dispose()
+    {
+    }
 
     public AssemblyDefinition Resolve(AssemblyNameReference name)
     {
@@ -37,26 +40,7 @@ namespace Vandelay.Fody
 
     public AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters)
     {
-      throw new NotSupportedException();
-    }
-
-    public AssemblyDefinition Resolve(string fullName)
-    {
-      try
-      {
-        var codeBase = Assembly.Load(fullName).CodeBase.Replace("file:///", "");
-
-        return AssemblyDefinition.ReadAssembly(codeBase);
-      }
-      catch (FileNotFoundException)
-      {
-        return null;
-      }
-    }
-
-    public AssemblyDefinition Resolve(string fullName, ReaderParameters parameters)
-    {
-      throw new NotSupportedException();
+      return Resolve(name);
     }
   }
 }

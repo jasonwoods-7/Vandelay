@@ -33,8 +33,7 @@ namespace Vandelay.Fody
     [UsedImplicitly]
     public void Execute()
     {
-      ReferenceFinder.SetModule(ModuleDefinition);
-      ReferenceFinder.FindReferences(AssemblyResolver);
+      ReferenceFinder.FindReferences(AssemblyResolver, ModuleDefinition);
 
       HandleExports();
       HandleImports();
