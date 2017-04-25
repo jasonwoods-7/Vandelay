@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.IO;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
@@ -19,11 +20,12 @@ namespace Vandelay.Fody
     Type _barExporterType;
     // ReSharper restore NotNullMemberIsNotInitialized
 
-    [TestFixtureSetUp]
-    public void TestFixtureSetUp()
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
     {
       _multipleWeaver = new ModuleWeaverTestHelper(
-        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.MultipleExports.dll");
+        Path.Combine(TestContext.CurrentContext.TestDirectory,
+        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.MultipleExports.dll"));
       Assert.That(_multipleWeaver.Errors, Is.Null.Or.Empty);
 
       _fooExporterType = _multipleWeaver.GetType(

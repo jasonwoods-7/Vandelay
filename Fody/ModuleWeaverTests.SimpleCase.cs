@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using NUnit.Framework;
@@ -18,11 +19,12 @@ namespace Vandelay.Fody
     Type _simpleCaseExportableType;
     // ReSharper restore NotNullMemberIsNotInitialized
 
-    [TestFixtureSetUp]
-    public void TestFixtureSetUp()
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
     {
       _simpleCaseWeaver = new ModuleWeaverTestHelper(
-        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.SimpleCase.dll");
+        Path.Combine(TestContext.CurrentContext.TestDirectory,
+        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.SimpleCase.dll"));
       Assert.That(_simpleCaseWeaver.Errors, Is.Null.Or.Empty);
 
       _simpleCaseExportableType = _simpleCaseWeaver.GetType(

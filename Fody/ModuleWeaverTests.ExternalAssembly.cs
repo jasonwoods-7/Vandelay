@@ -22,15 +22,17 @@ namespace Vandelay.Fody
     Type _coreExportableType;
     // ReSharper restore NotNullMemberIsNotInitialized
 
-    [TestFixtureSetUp]
-    public void TestFixtureSetUp()
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
     {
       _unsignedWeaver = new ModuleWeaverTestHelper(
-        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.Unsigned.dll");
+        Path.Combine(TestContext.CurrentContext.TestDirectory,
+        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.Unsigned.dll"));
       Assert.That(_unsignedWeaver.Errors, Is.Null.Or.Empty);
 
       _signedWeaver = new ModuleWeaverTestHelper(
-        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.Signed.dll");
+        Path.Combine(TestContext.CurrentContext.TestDirectory,
+        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.Signed.dll"));
       Assert.That(_signedWeaver.Errors, Is.Null.Or.Empty);
 
       var directoryName = Path.GetDirectoryName(_unsignedWeaver.Assembly.Location);
