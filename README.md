@@ -4,7 +4,9 @@
 
 Vandelay is an extension to the [Fody](https://github.com/Fody/Fody) aspect weaving project framework.  Vandelay is an Importer\Exporter.
 
-## The nuget package [![NuGet Status](http://img.shields.io/nuget/v/Vandelay.Fody.svg?style=flat)](https://www.nuget.org/packages/Vandelay.Fody/)
+## AppVeyor Build Status [![Build status](https://ci.appveyor.com/api/projects/status/uvm747hjwyus7wba?svg=true)](https://ci.appveyor.com/project/jasonwoods-7/vandelay)
+
+## The NuGet Package [![NuGet Status](http://img.shields.io/nuget/v/Vandelay.Fody.svg?style=flat)](https://www.nuget.org/packages/Vandelay.Fody/)
 
 https://www.nuget.org/packages/Vandelay.Fody/
 
