@@ -146,7 +146,6 @@
     <Copy SourceFiles="$(ProjectDir)NugetAssets\Vandelay.Fody.nuspec" DestinationFolder="$(SolutionDir)NuGetBuild" />
     <Copy SourceFiles="$(OutputPath)Vandelay.Fody.dll" DestinationFolder="$(SolutionDir)NuGetBuild" />
     <Copy SourceFiles="$(OutputPath)Vandelay.Fody.pdb" DestinationFolder="$(SolutionDir)NuGetBuild" />
-    <Copy SourceFiles="$(OutputPath)nunit.framework.dll" DestinationFolder="$(SolutionDir)NuGetBuild" Condition="$(Configuration)!='Deployable'" />
     <Copy SourceFiles="$(ProjectDir)NugetAssets\install.ps1" DestinationFolder="$(SolutionDir)NuGetBuild\Tools" />
     <Copy SourceFiles="$(ProjectDir)NugetAssets\uninstall.ps1" DestinationFolder="$(SolutionDir)NuGetBuild\Tools" />
     <PepitaPackage.CreatePackageTask NuGetBuildDirectory="$(SolutionDir)NuGetBuild" MetadataAssembly="$(OutputPath)Vandelay.Fody.dll" />
