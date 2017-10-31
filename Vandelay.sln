@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fody", "Fody\Fody.csproj", "{3B6240F6-5AB6-402A-B42C-23A53BD4B5FC}"
 EndProject
@@ -21,6 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyToProcess.Signed", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{340D86C6-CEDC-42B1-BF98-E1B8405ADBEC}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -83,5 +84,8 @@ Global
 		{287BCF0A-FA5A-43A0-B8BA-90C02B59B2D4} = {A0EF7438-B537-4ED4-9C28-875C3FD7BD3D}
 		{94456241-8E5D-4C99-907E-A56134A60576} = {A0EF7438-B537-4ED4-9C28-875C3FD7BD3D}
 		{A4CF746A-8828-4684-AC03-E6E90713109C} = {A0EF7438-B537-4ED4-9C28-875C3FD7BD3D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B2560FB-1215-421F-B3AB-B0C403AB5276}
 	EndGlobalSection
 EndGlobal

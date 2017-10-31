@@ -42,26 +42,26 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=10.4.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.10.4.0\lib\net\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\packages\FodyCecil.2.0.2\lib\net40\Mono.Cecil.dll</HintPath>
+      <HintPath>..\packages\FodyCecil.2.2.0\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Mdb, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\packages\FodyCecil.2.0.2\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+      <HintPath>..\packages\FodyCecil.2.2.0\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Pdb, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\packages\FodyCecil.2.0.2\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+      <HintPath>..\packages\FodyCecil.2.2.0\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil.Rocks, Version=0.10.0.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <HintPath>..\packages\FodyCecil.2.0.2\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+      <HintPath>..\packages\FodyCecil.2.2.0\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=3.6.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.6.1\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.8.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.8.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="Scalpel, Version=1.1.0.0, Culture=neutral, PublicKeyToken=1d3f964f81f300dd, processorArchitecture=MSIL">
-      <HintPath>..\packages\Scalpel.Fody.1.1.0\lib\portable-net4+sl4+wp7+win8+MonoAndroid16+MonoTouch40\Scalpel.dll</HintPath>
+    <Reference Include="Scalpel, Version=1.1.1.0, Culture=neutral, PublicKeyToken=1d3f964f81f300dd, processorArchitecture=MSIL">
+      <HintPath>..\packages\Scalpel.Fody.1.1.1\lib\portable-net4+sl4+wp7+win8+MonoAndroid16+MonoTouch40\Scalpel.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -150,15 +150,15 @@
     <Copy SourceFiles="$(ProjectDir)NugetAssets\uninstall.ps1" DestinationFolder="$(SolutionDir)NuGetBuild\Tools" />
     <PepitaPackage.CreatePackageTask NuGetBuildDirectory="$(SolutionDir)NuGetBuild" MetadataAssembly="$(OutputPath)Vandelay.Fody.dll" />
   </Target>
+  <Import Project="..\packages\Fody.2.2.0\build\net452\Fody.targets" Condition="Exists('..\packages\Fody.2.2.0\build\net452\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\PepitaPackage.1.21.4\build\PepitaPackage.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PepitaPackage.1.21.4\build\PepitaPackage.targets'))" />
-    <Error Condition="!Exists('..\packages\Fody.2.0.3\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.2.0.3\build\dotnet\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.2.2.0\build\net452\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.2.2.0\build\net452\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\PepitaPackage.1.21.6\build\PepitaPackage.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PepitaPackage.1.21.6\build\PepitaPackage.targets'))" />
   </Target>
-  <Import Project="..\packages\PepitaPackage.1.21.4\build\PepitaPackage.targets" Condition="Exists('..\packages\PepitaPackage.1.21.4\build\PepitaPackage.targets')" />
-  <Import Project="..\packages\Fody.2.0.3\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.2.0.3\build\dotnet\Fody.targets')" />
+  <Import Project="..\packages\PepitaPackage.1.21.6\build\PepitaPackage.targets" Condition="Exists('..\packages\PepitaPackage.1.21.6\build\PepitaPackage.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

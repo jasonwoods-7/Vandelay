@@ -6,6 +6,8 @@ namespace AssemblyToProcess.Signed
   public class Importer
   {
     public IEnumerable<IExportable> Imports { get; } =
-      Vandelay.Importer.ImportMany<IExportable>("*2.dll");
+      Vandelay.Importer.ImportMany<IExportable>(
+        "AssemblyToProcess.Signed2.dll|" +
+        "AssemblyToProcess.Unsigned2.dll");
   }
 }
