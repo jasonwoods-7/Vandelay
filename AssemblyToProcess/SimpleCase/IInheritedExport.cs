@@ -1,6 +1,4 @@
-﻿// Copyright (c) 2017 Applied Systems, Inc.
-
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using AssemblyToProcess.SimpleCase;
 using Vandelay;
 
