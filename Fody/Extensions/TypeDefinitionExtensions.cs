@@ -7,19 +7,16 @@ namespace Vandelay.Fody.Extensions
 {
   static class TypeDefinitionExtensions
   {
-    public static bool IsClass([NotNull] this TypeDefinition typeDefinition)
-    {
-      return (typeDefinition.BaseType != null) &&
-        !typeDefinition.IsEnum && !typeDefinition.IsInterface;
-    }
+    public static bool IsClass([NotNull] this TypeDefinition typeDefinition) =>
+      typeDefinition.BaseType != null &&
+        !typeDefinition.IsEnum &&
+        !typeDefinition.IsInterface;
 
     public static bool ExportsType([NotNull] this TypeDefinition typeDefinition,
-      [NotNull] TypeReference exportedType)
-    {
-      return typeDefinition.CustomAttributes.Any(a =>
+      [NotNull] TypeReference exportedType) =>
+      typeDefinition.CustomAttributes.Any(a =>
         a.AttributeType.FullName == typeof(ExportAttribute).FullName &&
         a.ConstructorArguments.Any(c => ((TypeReference)c.Value).FullName == exportedType.FullName));
-    }
 
     public static bool ImplementsInterface([CanBeNull] this TypeDefinition typeDefinition,
       [NotNull] TypeReference interfaceType)
@@ -68,11 +65,9 @@ namespace Vandelay.Fody.Extensions
     public static MethodDefinition FindMethod(
       [NotNull] this TypeDefinition typeDefinition,
       [NotNull] string method,
-      [NotNull] params string[] paramTypes)
-    {
-      return typeDefinition.Methods.First(x =>
+      [NotNull] params string[] paramTypes) =>
+      typeDefinition.Methods.First(x =>
         x.Name == method &&
         x.IsMatch(paramTypes));
-    }
   }
 }

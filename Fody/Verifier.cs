@@ -59,9 +59,7 @@ namespace Vandelay.Fody
     }
 
     [NotNull]
-    static string TrimLineNumbers([NotNull] string foo)
-    {
-      return Regex.Replace(foo, @"0x.*]", "");
-    }
+    static string TrimLineNumbers([NotNull] string foo) =>
+      Regex.Replace(foo, "0x.*]", "");
   }
 }

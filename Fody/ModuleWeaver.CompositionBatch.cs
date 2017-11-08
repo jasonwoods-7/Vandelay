@@ -67,6 +67,7 @@ namespace Vandelay.Fody
       return compositionBatch;
     }
 
+    [NotNull]
     IEnumerable<Instruction> GetInstructions()
     {
       // var compositionBatch = new CompositionBatch();

@@ -59,7 +59,7 @@ namespace Vandelay.Fody
           {
             ModuleDefinition = moduleDefinition,
             AssemblyResolver = assemblyResolver,
-            LogError = s => Errors.Add(s)
+            LogError = Errors.Add
           };
 
           weavingTask.Execute();
@@ -71,9 +71,7 @@ namespace Vandelay.Fody
     }
 
     [NotNull]
-    public Type GetType([NotNull] string className)
-    {
-      return Assembly.GetType(className, true);
-    }
+    public Type GetType([NotNull] string className) =>
+      Assembly.GetType(className, true);
   }
 }

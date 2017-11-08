@@ -42,7 +42,7 @@ namespace Vandelay.Fody.Extensions
       [NotNull] this Collection<CustomAttribute> attributes)
     {
       foreach (var attribute in attributes.Where(a =>
-        a.AttributeType.FullName == "Vandelay.ExporterAttribute").ToList())
+        a.AttributeType.FullName == typeof(ExporterAttribute).FullName).ToList())
       {
         attributes.Remove(attribute);
       }

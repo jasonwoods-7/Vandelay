@@ -36,15 +36,11 @@ namespace Vandelay.Fody
     }
 
     [NotNull]
-    FieldDefinition InjectValueField()
-    {
+    FieldDefinition InjectValueField() =>
       // private readonly object _value;
-      var valueField = new FieldDefinition("_value",
+      new FieldDefinition("_value",
         FieldAttributes.Private | FieldAttributes.InitOnly,
         ModuleDefinition.TypeSystem.Object);
-
-      return valueField;
-    }
 
     [NotNull]
     MethodDefinition InjectValueConstructor([NotNull] FieldReference valueField)

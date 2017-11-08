@@ -114,9 +114,7 @@ namespace Vandelay.Fody
     }
 
     [NotNull]
-    ModuleWeaverTestHelper GetTestHelper([NotNull] string className)
-    {
-      return className.Contains("Unsigned") ? _unsignedWeaver : _signedWeaver;
-    }
+    ModuleWeaverTestHelper GetTestHelper([NotNull] string className) =>
+      className.Contains("Unsigned") ? _unsignedWeaver : _signedWeaver;
   }
 }

@@ -11,10 +11,10 @@ namespace Vandelay.Fody
     void HandleExports()
     {
       foreach (var exportable in ModuleDefinition.Assembly.CustomAttributes.Where(a =>
-        a.AttributeType.Name == nameof(ExporterAttribute)))
+        a.AttributeType.FullName == typeof(ExporterAttribute).FullName))
       {
         var exportType = ModuleDefinition.ImportReference(
-          (TypeReference)exportable.ConstructorArguments.Single().Value);
+          (TypeReference)exportable.ConstructorArguments[0].Value);
 
         if (exportType.Resolve().CustomAttributes.Any(a =>
           a.AttributeType.FullName == typeof(InheritedExportAttribute).FullName &&

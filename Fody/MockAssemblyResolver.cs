@@ -38,9 +38,7 @@ namespace Vandelay.Fody
       }
     }
 
-    public AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters)
-    {
-      return Resolve(name);
-    }
+    public AssemblyDefinition Resolve(AssemblyNameReference name, ReaderParameters parameters) =>
+      Resolve(name);
   }
 }
