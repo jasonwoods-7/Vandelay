@@ -18,7 +18,7 @@ namespace Vandelay.Fody
       }
 
       // internal sealed class ExportValueProvider
-      var valueProvider = new TypeDefinition($"{ModuleDefinition.Name}.Retriever",
+      var valueProvider = new TypeDefinition("Vandelay",
         "ExportValueProvider", TypeAttributes.Sealed | TypeAttributes.AutoClass,
         ModuleDefinition.TypeSystem.Object);
 

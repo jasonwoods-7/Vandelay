@@ -26,7 +26,7 @@ namespace Vandelay.Fody
 
       // internal static class CompositionBatchHelper
       var compositionBatch = new TypeDefinition(
-        $"{ModuleDefinition.Name}.Retriever", "CompositionBatchHelper",
+        "Vandelay", "CompositionBatchHelper",
         TypeAttributes.AnsiClass | TypeAttributes.Sealed |
         TypeAttributes.AutoClass | TypeAttributes.Abstract,
         ModuleDefinition.TypeSystem.Object);

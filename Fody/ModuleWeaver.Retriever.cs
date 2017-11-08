@@ -28,7 +28,7 @@ namespace Vandelay.Fody
         TypeAttributes.Sealed | TypeAttributes.AutoClass;
 
       // internal sealed class ImportTypeRetriever
-      var targetType = new TypeDefinition($"{ModuleDefinition.Name}.Retriever",
+      var targetType = new TypeDefinition("Vandelay",
         TargetName($"{importType.Name}Retriever", -1), typeAttributes,
         ModuleDefinition.TypeSystem.Object);
       ModuleDefinition.Types.Add(targetType);
