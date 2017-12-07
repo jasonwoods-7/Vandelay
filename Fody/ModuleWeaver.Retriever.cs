@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
-using System.ComponentModel.Composition.Primitives;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -59,7 +54,7 @@ namespace Vandelay.Fody
     }
 
     [NotNull]
-    Tuple<FieldDefinition, GenericInstanceType>
+    (FieldDefinition, GenericInstanceType)
       InjectImportsField([NotNull] TypeReference importType)
     {
       // [ImportMany(typeof(ImportType))]
@@ -70,13 +65,14 @@ namespace Vandelay.Fody
         FieldAttributes.Private, importerCollectionType);
 
       var importAttribute = new CustomAttribute(ModuleDefinition.ImportReference(
-        typeof(ImportManyAttribute).GetConstructor(new[] { typeof(Type) })));
+        Info.OfConstructor("System.ComponentModel.Composition",
+        "System.ComponentModel.Composition.ImportManyAttribute", "Type")));
       importAttribute.ConstructorArguments.Add(new CustomAttributeArgument(
         ModuleDefinition.TypeSystem.TypedReference, importType));
 
       fieldDefinition.CustomAttributes.Add(importAttribute);
 
-      return Tuple.Create(fieldDefinition, importerCollectionType);
+      return (fieldDefinition, importerCollectionType);
     }
 
     [NotNull]
@@ -110,8 +106,9 @@ namespace Vandelay.Fody
 
       // using (var aggregateCatalog = new AggregateCatalog())
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj,
-        ModuleDefinition.ImportReference(typeof(AggregateCatalog)
-        .GetConstructor(new Type[] { }))));
+        ModuleDefinition.ImportReference(Info.OfConstructor(
+          "System.ComponentModel.Composition",
+          "System.ComponentModel.Composition.Hosting.AggregateCatalog"))));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Stloc_0));
 
       var catalogBodyStart = Instruction.Create(OpCodes.Nop);
@@ -125,12 +122,10 @@ namespace Vandelay.Fody
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newarr,
         ModuleDefinition.ImportReference(typeof(ExportProvider))));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj,
-        ModuleDefinition.ImportReference(typeof(CompositionContainer)
-        .GetConstructor(new[]
-        {
-          typeof(ComposablePartCatalog),
-          typeof(ExportProvider[])
-        }))));
+        ModuleDefinition.ImportReference(Info.OfConstructor(
+          "System.ComponentModel.Composition",
+          "System.ComponentModel.Composition.Hosting.CompositionContainer",
+          "ComposablePartCatalog,ExportProvider[]"))));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Stloc_1));
 
       var compositionContainerStart = Instruction.Create(OpCodes.Nop);
@@ -141,8 +136,10 @@ namespace Vandelay.Fody
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_1));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call, CreateCompositionBatch));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
-        ModuleDefinition.ImportReference(typeof(CompositionContainer)
-        .GetMethod("Compose"))));
+        ModuleDefinition.ImportReference(Info.OfMethod(
+          "System.ComponentModel.Composition",
+          "System.ComponentModel.Composition.Hosting.CompositionContainer",
+          "Compose", "CompositionBatch"))));
 
       // compositionContainer.ComposeParts(this);
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldloc_1));
@@ -154,8 +151,10 @@ namespace Vandelay.Fody
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Stelem_Ref));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call,
-        ModuleDefinition.ImportReference(typeof(AttributedModelServices)
-        .GetMethod("ComposeParts"))));
+        ModuleDefinition.ImportReference(Info.OfMethod(
+          "System.ComponentModel.Composition",
+          "System.ComponentModel.Composition.AttributedModelServices",
+          "ComposeParts", "CompositionContainer,Object[]"))));
 
       var ret = Instruction.Create(OpCodes.Ret);
       var catalogLeave = Instruction.Create(OpCodes.Leave, ret);
@@ -179,15 +178,21 @@ namespace Vandelay.Fody
         // aggregateCatalog.Catalogs.Add(new DirectoryCatalog(catalogPath));
         constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldloc_0));
         constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
-          ModuleDefinition.ImportReference(typeof(AggregateCatalog)
-          .GetProperty("Catalogs").GetGetMethod())));
+          ModuleDefinition.ImportReference(Info.OfPropertyGet(
+            "System.ComponentModel.Composition",
+            "System.ComponentModel.Composition.Hosting.AggregateCatalog",
+            "Catalogs"))));
         InjectCatalogPath(constructor);
         constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj,
-          ModuleDefinition.ImportReference(typeof(DirectoryCatalog)
-          .GetConstructor(new[] { typeof(string) }))));
+          ModuleDefinition.ImportReference(Info.OfConstructor(
+            "System.ComponentModel.Composition",
+            "System.ComponentModel.Composition.Hosting.DirectoryCatalog",
+            "String"))));
         constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
-          ModuleDefinition.ImportReference(typeof(ICollection<ComposablePartCatalog>)
-          .GetMethod("Add"))));
+          ModuleDefinition.ImportReference(Info.OfMethod("mscorlib",
+            "System.Collections.Generic.ICollection`1<System.ComponentModel.Composition|" +
+            "System.ComponentModel.Composition.Primitives.ComposablePartCatalog>",
+            "Add", "T"))));
       }
       else
       {
@@ -201,16 +206,22 @@ namespace Vandelay.Fody
           // aggregateCatalog.Catalogs.Add(new DirectoryCatalog(catalogPath, "search.pattern"));
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldloc_0));
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
-            ModuleDefinition.ImportReference(typeof(AggregateCatalog)
-            .GetProperty("Catalogs").GetGetMethod())));
+            ModuleDefinition.ImportReference(Info.OfPropertyGet(
+              "System.ComponentModel.Composition",
+              "System.ComponentModel.Composition.Hosting.AggregateCatalog",
+              "Catalogs"))));
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldloc_2));
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldstr, searchPattern));
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj,
-            ModuleDefinition.ImportReference(typeof(DirectoryCatalog)
-            .GetConstructor(new[] { typeof(string), typeof(string) }))));
+            ModuleDefinition.ImportReference(Info.OfConstructor(
+              "System.ComponentModel.Composition",
+              "System.ComponentModel.Composition.Hosting.DirectoryCatalog",
+              "String,String"))));
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
-            ModuleDefinition.ImportReference(typeof(ICollection<ComposablePartCatalog>)
-            .GetMethod("Add"))));
+            ModuleDefinition.ImportReference(Info.OfMethod("mscorlib",
+              "System.Collections.Generic.ICollection`1<System.ComponentModel.Composition|" +
+              "System.ComponentModel.Composition.Primitives.ComposablePartCatalog>",
+              "Add", "T"))));
         }
       }
     }
@@ -220,23 +231,23 @@ namespace Vandelay.Fody
       // var catalogPath = Directory.GetParent(new Uri(Assembly.GetExecutingAssembly()
       //   .EscapedCodeBase).LocalPath).FullName;
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call,
-        ModuleDefinition.ImportReference(typeof(Assembly)
-        .GetMethod("GetExecutingAssembly"))));
+        ModuleDefinition.ImportReference(Info.OfMethod("mscorlib",
+        "System.Reflection.Assembly", "GetExecutingAssembly"))));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
-        ModuleDefinition.ImportReference(typeof(Assembly)
-        .GetProperty("EscapedCodeBase").GetGetMethod())));
+        ModuleDefinition.ImportReference(Info.OfPropertyGet("mscorlib",
+        "System.Reflection.Assembly", "EscapedCodeBase"))));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj,
-        ModuleDefinition.ImportReference(typeof(Uri)
-        .GetConstructor(new[] { typeof(string) }))));
+        ModuleDefinition.ImportReference(Info.OfConstructor(
+          "System", "System.Uri", "String"))));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call,
-        ModuleDefinition.ImportReference(typeof(Uri)
-        .GetProperty("LocalPath").GetGetMethod())));
+        ModuleDefinition.ImportReference(Info.OfPropertyGet(
+          "System", "System.Uri", "LocalPath"))));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call,
-        ModuleDefinition.ImportReference(typeof(Directory)
-        .GetMethod("GetParent"))));
+        ModuleDefinition.ImportReference(Info.OfMethod("mscorlib",
+        "System.IO.Directory", "GetParent", "String"))));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
-        ModuleDefinition.ImportReference(typeof(FileSystemInfo)
-        .GetProperty("FullName").GetGetMethod())));
+        ModuleDefinition.ImportReference(Info.OfPropertyGet("mscorlib",
+        "System.IO.FileSystemInfo", "FullName"))));
     }
 
     void InjectUsingStatement([NotNull] MethodBody methodBody, [NotNull] Instruction bodyStart,
@@ -251,7 +262,8 @@ namespace Vandelay.Fody
 
       methodBody.Instructions.Add(Instruction.Create(loadLocation));
       methodBody.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
-        ModuleDefinition.ImportReference(typeof(IDisposable).GetMethod("Dispose"))));
+        ModuleDefinition.ImportReference(Info.OfMethod("mscorlib",
+        "System.IDisposable", "Dispose"))));
 
       methodBody.Instructions.Add(endFinally);
 

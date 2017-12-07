@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Linq;
 using Mono.Cecil;
 using Vandelay.Fody.Extensions;
@@ -24,7 +23,8 @@ namespace Vandelay.Fody
         }
 
         var export = new CustomAttribute(ModuleDefinition.ImportReference(
-          typeof(ExportAttribute).GetConstructor(new[] { typeof(Type) })));
+          Info.OfConstructor("System.ComponentModel.Composition",
+          "System.ComponentModel.Composition.ExportAttribute", "Type")));
         export.ConstructorArguments.Add(new CustomAttributeArgument(
           ModuleDefinition.TypeSystem.TypedReference, exportType));
 

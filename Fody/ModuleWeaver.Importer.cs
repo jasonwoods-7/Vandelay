@@ -34,18 +34,17 @@ namespace Vandelay.Fody
     void ProcessInstruction([NotNull] MethodDefinition method,
       [NotNull] Instruction instruction)
     {
-      var methodReference = instruction.Operand as GenericInstanceMethod;
-      if (null == methodReference)
+      if (!(instruction.Operand is GenericInstanceMethod methodReference))
       {
         return;
       }
 
-      if (methodReference.DeclaringType.FullName != "Vandelay.Importer")
+      if (methodReference.DeclaringType.FullName != typeof(Importer).FullName)
       {
         return;
       }
 
-      if (methodReference.Name != "ImportMany")
+      if (methodReference.Name != nameof(Importer.ImportMany))
       {
         throw new WeavingException($"Unsupported method '{methodReference.FullName}'.");
       }
@@ -61,8 +60,8 @@ namespace Vandelay.Fody
 
       var searchPatternInstruction = SearchPatternInstruction(instruction.Previous);
       instruction.Operand = InjectRetriever(methodReference.GenericArguments[0],
-        ((searchPatternInstruction.Operand as string) ??
-         string.Empty).Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
+        (searchPatternInstruction.Operand as string ?? string.Empty)
+        .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
 
       method.Body.GetILProcessor().Remove(searchPatternInstruction);
     }

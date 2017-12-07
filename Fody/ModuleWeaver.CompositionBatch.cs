@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using JetBrains.Annotations;
 using Mono.Cecil;
@@ -72,8 +70,9 @@ namespace Vandelay.Fody
     {
       // var compositionBatch = new CompositionBatch();
       yield return Instruction.Create(OpCodes.Newobj,
-        ModuleDefinition.ImportReference(typeof(CompositionBatch)
-        .GetConstructor(new Type[0])));
+        ModuleDefinition.ImportReference(Info.OfConstructor(
+          "System.ComponentModel.Composition",
+          "System.ComponentModel.Composition.Hosting.CompositionBatch")));
       yield return Instruction.Create(OpCodes.Stloc_0);
 
       // var i = 0;
@@ -97,33 +96,39 @@ namespace Vandelay.Fody
       // var type = obj.GetType();
       yield return Instruction.Create(OpCodes.Ldloc_2);
       yield return Instruction.Create(OpCodes.Callvirt,
-        ModuleDefinition.ImportReference(typeof(object).GetMethod("GetType")));
+        ModuleDefinition.ImportReference(Info.OfMethod(
+          "mscorlib", "System.Object", "GetType")));
       yield return Instruction.Create(OpCodes.Stloc_3);
 
       // var contractName = AttributedModelServices.GetContractName(type);
       yield return Instruction.Create(OpCodes.Ldloc_0);
       yield return Instruction.Create(OpCodes.Ldloc_3);
       yield return Instruction.Create(OpCodes.Call,
-        ModuleDefinition.ImportReference(typeof(AttributedModelServices)
-        .GetMethod("GetContractName")));
+        ModuleDefinition.ImportReference(Info.OfMethod(
+          "System.ComponentModel.Composition",
+          "System.ComponentModel.Composition.AttributedModelServices",
+          "GetContractName", "Type")));
 
       // var metaData = new Dictionary<string, object>
       // {
       //   ["ExportTypeIdentity"] = AttributedModelServices.GetTypeIdentity(type)
       // }
       yield return Instruction.Create(OpCodes.Newobj,
-        ModuleDefinition.ImportReference(typeof(Dictionary<string, object>)
-        .GetConstructor(new Type[0])));
+        ModuleDefinition.ImportReference(Info.OfConstructor("mscorlib", "System.Collections.Generic.Dictionary`2<" +
+          "mscorlib|System.String,mscorlib|System.Object>")));
       yield return Instruction.Create(OpCodes.Dup);
       yield return Instruction.Create(OpCodes.Ldstr,
         "ExportTypeIdentity");
       yield return Instruction.Create(OpCodes.Ldloc_3);
       yield return Instruction.Create(OpCodes.Call,
-        ModuleDefinition.ImportReference(typeof(AttributedModelServices)
-        .GetMethod("GetTypeIdentity", new[] { typeof(Type) })));
+        ModuleDefinition.ImportReference(Info.OfMethod(
+          "System.ComponentModel.Composition",
+          "System.ComponentModel.Composition.AttributedModelServices",
+          "GetTypeIdentity", "Type")));
       yield return Instruction.Create(OpCodes.Callvirt,
-        ModuleDefinition.ImportReference(typeof(Dictionary<string, object>)
-        .GetProperty("Item").GetSetMethod()));
+        ModuleDefinition.ImportReference(Info.OfPropertySet("mscorlib",
+        "System.Collections.Generic.Dictionary`2<" +
+        "mscorlib|System.String,mscorlib|System.Object>", "Item")));
 
       // var valueProvider = new ExportValueProvider(obj);
       yield return Instruction.Create(OpCodes.Ldloc_2);
@@ -134,22 +139,22 @@ namespace Vandelay.Fody
       yield return Instruction.Create(OpCodes.Ldftn,
         ExportValueProvider.Methods.First(m => !m.IsConstructor));
       yield return Instruction.Create(OpCodes.Newobj,
-        ModuleDefinition.ImportReference(typeof(Func<object>)
-        .GetConstructor(new[] { typeof(object), typeof(IntPtr) })));
+        ModuleDefinition.ImportReference(Info.OfConstructor("mscorlib",
+        "System.Func`1<mscorlib|System.Object>", "Object,IntPtr")));
 
       // var export = new Export(contractName, metaData, valueFunc);
       yield return Instruction.Create(OpCodes.Newobj,
-        ModuleDefinition.ImportReference(typeof(Export).GetConstructor(new[]
-        {
-          typeof(string),
-          typeof(Dictionary<string, object>),
-          typeof(Func<object>)
-        })));
+        ModuleDefinition.ImportReference(Info.OfConstructor(
+          "System.ComponentModel.Composition",
+          "System.ComponentModel.Composition.Primitives.Export",
+          "String,IDictionary`2,Func`1")));
 
       // compositionBatch.AddExport(export);
       yield return Instruction.Create(OpCodes.Callvirt,
-        ModuleDefinition.ImportReference(typeof(CompositionBatch)
-          .GetMethod("AddExport", new[] { typeof(Export) })));
+        ModuleDefinition.ImportReference(Info.OfMethod(
+          "System.ComponentModel.Composition",
+          "System.ComponentModel.Composition.Hosting.CompositionBatch",
+          "AddExport", "Export")));
       yield return Instruction.Create(OpCodes.Pop);
 
       // i++;
