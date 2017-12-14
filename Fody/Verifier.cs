@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using NUnit.Framework;
@@ -11,6 +12,25 @@ namespace Vandelay.Fody
   [Remove]
   static class Verifier
   {
+    [NotNull] static readonly string ExePath;
+
+    static Verifier()
+    {
+      var windowsSdk = Environment.ExpandEnvironmentVariables(
+        @"%programfiles(x86)%\Microsoft SDKs\Windows\");
+
+      var exePath = Directory.EnumerateFiles(windowsSdk, "PEVerify.exe",
+          SearchOption.AllDirectories)
+        .OrderByDescending(x =>
+        {
+          var fileVersionInfo = FileVersionInfo.GetVersionInfo(x);
+          return new Version(fileVersionInfo.FileMajorPart,
+            fileVersionInfo.FileMinorPart, fileVersionInfo.FileBuildPart);
+        }).FirstOrDefault();
+
+      ExePath = exePath ?? throw new Exception("Could not find path to PEVerify");
+    }
+
     public static void Verify([NotNull] string beforeAssemblyPath,
       [NotNull] string afterAssemblyPath)
     {
@@ -23,13 +43,7 @@ namespace Vandelay.Fody
     [NotNull]
     static string Validate([NotNull] string assemblyPath2)
     {
-      var exePath = GetPathToPEVerify();
-      if (!File.Exists(exePath))
-      {
-        return string.Empty;
-      }
-
-      using (var process = Process.Start(new ProcessStartInfo(exePath, $"\"{assemblyPath2}\"")
+      using (var process = Process.Start(new ProcessStartInfo(ExePath, $"\"{assemblyPath2}\"")
       {
         RedirectStandardOutput = true,
         UseShellExecute = false,
@@ -41,21 +55,6 @@ namespace Vandelay.Fody
 
         return process.StandardOutput.ReadToEnd().Trim().Replace(assemblyPath2, "");
       }
-    }
-
-    // ReSharper disable once InconsistentNaming
-    [NotNull]
-    static string GetPathToPEVerify()
-    {
-      var exePath = Environment.ExpandEnvironmentVariables(
-        @"%programfiles(x86)%\Microsoft SDKs\Windows\v7.0A\Bin\NETFX 4.0 Tools\PEVerify.exe");
-
-      if (!File.Exists(exePath))
-      {
-        exePath = Environment.ExpandEnvironmentVariables(
-          @"%programfiles(x86)%\Microsoft SDKs\Windows\v8.0A\Bin\NETFX 4.0 Tools\PEVerify.exe");
-      }
-      return exePath;
     }
 
     [NotNull]
