@@ -133,6 +133,7 @@
     <ProjectReference Include="..\ReferenceAssembly\ReferenceAssembly.csproj">
       <Project>{d45a227b-261d-4131-9d12-fb8cb17920a8}</Project>
       <Name>ReferenceAssembly</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
