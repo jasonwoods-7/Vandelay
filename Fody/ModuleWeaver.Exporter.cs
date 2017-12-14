@@ -9,8 +9,9 @@ namespace Vandelay.Fody
   {
     void HandleExports()
     {
+      var exporterName = $"Vandelay.{nameof(ExporterAttribute)}";
       foreach (var exportable in ModuleDefinition.Assembly.CustomAttributes.Where(a =>
-        a.AttributeType.FullName == typeof(ExporterAttribute).FullName))
+        a.AttributeType.FullName == exporterName))
       {
         var exportType = ModuleDefinition.ImportReference(
           (TypeReference)exportable.ConstructorArguments[0].Value);

@@ -39,7 +39,7 @@ namespace Vandelay.Fody
         return;
       }
 
-      if (methodReference.DeclaringType.FullName != typeof(Importer).FullName)
+      if (methodReference.DeclaringType.FullName != $"Vandelay.{nameof(Importer)}")
       {
         return;
       }

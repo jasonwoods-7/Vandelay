@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using JetBrains.Annotations;
@@ -54,7 +55,7 @@ namespace Vandelay.Fody
     }
 
     [NotNull]
-    (FieldDefinition, GenericInstanceType)
+    Tuple<FieldDefinition, GenericInstanceType>
       InjectImportsField([NotNull] TypeReference importType)
     {
       // [ImportMany(typeof(ImportType))]
@@ -72,7 +73,7 @@ namespace Vandelay.Fody
 
       fieldDefinition.CustomAttributes.Add(importAttribute);
 
-      return (fieldDefinition, importerCollectionType);
+      return Tuple.Create(fieldDefinition, importerCollectionType);
     }
 
     [NotNull]
