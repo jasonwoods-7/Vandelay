@@ -41,8 +41,9 @@ namespace Vandelay.Fody.Extensions
     public static void RemoveExporter(
       [NotNull] this Collection<CustomAttribute> attributes)
     {
+      var exporterName = $"Vandelay.{nameof(ExporterAttribute)}";
       foreach (var attribute in attributes.Where(a =>
-        a.AttributeType.FullName == typeof(ExporterAttribute).FullName).ToList())
+        a.AttributeType.FullName == exporterName).ToList())
       {
         attributes.Remove(attribute);
       }
