@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using Fody;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
@@ -104,10 +105,10 @@ namespace Vandelay.Fody
       // Arrange
 
       // Act
-      Verifier.Verify(_unsignedWeaver.BeforeAssemblyPath,
+      PeVerifier.ThrowIfDifferent(_unsignedWeaver.BeforeAssemblyPath,
         _unsignedWeaver.AfterAssemblyPath);
 
-      Verifier.Verify(_signedWeaver.BeforeAssemblyPath,
+      PeVerifier.ThrowIfDifferent(_signedWeaver.BeforeAssemblyPath,
         _signedWeaver.AfterAssemblyPath);
 
       // Assert

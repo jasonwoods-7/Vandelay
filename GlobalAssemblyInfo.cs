@@ -1,5 +1,5 @@
 using System.Reflection;
 
-[assembly: AssemblyVersion("0.4.2.0")]
-[assembly: AssemblyFileVersion("0.4.2.0")]
-[assembly: AssemblyCopyright("Copyright © 2015-2017")]
+[assembly: AssemblyVersion("0.5.0.0")]
+[assembly: AssemblyFileVersion("0.5.0.0")]
+[assembly: AssemblyCopyright("Copyright © 2015-2018")]

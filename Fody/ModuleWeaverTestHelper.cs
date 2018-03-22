@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using Fody;
 using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Pdb;
@@ -35,11 +37,6 @@ namespace Vandelay.Fody
 
       Errors = new List<string>();
 
-      var assemblyResolver = new MockAssemblyResolver
-      {
-        Directory = Path.GetDirectoryName(BeforeAssemblyPath)
-      };
-
       using (var symbolStream = File.OpenRead(oldPdb))
       {
         var resolver = new DefaultAssemblyResolver();
@@ -58,9 +55,12 @@ namespace Vandelay.Fody
           var weavingTask = new ModuleWeaver
           {
             ModuleDefinition = moduleDefinition,
-            AssemblyResolver = assemblyResolver,
             LogError = Errors.Add
           };
+
+          var typeCache = CacheTypes(weavingTask);
+          var findType = Info.OfMethod("FodyHelpers", "TypeCache", "FindType", "String");
+          weavingTask.FindType = s => (TypeDefinition)findType.Invoke(typeCache, new object[] { s });
 
           weavingTask.Execute();
           moduleDefinition.Write(AfterAssemblyPath);
@@ -73,5 +73,22 @@ namespace Vandelay.Fody
     [NotNull]
     public Type GetType([NotNull] string className) =>
       Assembly.GetType(className, true);
+
+    [NotNull]
+    static object CacheTypes([NotNull] BaseModuleWeaver weavingTask)
+    {
+      var typeCache = Info.OfConstructor("FodyHelpers", "TypeCache").Invoke(null);
+
+      var assemblyResolver = Info.OfConstructor("FodyHelpers", "Fody.MockAssemblyResolver").Invoke(null);
+      var resolve = Info.OfMethod("FodyHelpers", "Fody.MockAssemblyResolver", "Resolve", "String");
+      Info.OfMethod("FodyHelpers", "TypeCache", "Initialise", "IEnumerable`1")
+        .Invoke(typeCache, new object[]
+        {
+          weavingTask.GetAssembliesForScanning()
+            .Select(a => (AssemblyDefinition)resolve.Invoke(assemblyResolver, new object[] {a}))
+            .Where(d => d != null)
+        });
+      return typeCache;
+    }
   }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Fody;
 using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
