@@ -1,5 +1,6 @@
 ﻿using Fody;
 using JetBrains.Annotations;
+using Vandelay.Fody.Extensions;
 
 namespace Vandelay.Fody
 {
@@ -14,7 +15,9 @@ namespace Vandelay.Fody
       HandleExports();
       HandleImports();
 
-      CleanReferences();
+      ModuleDefinition.Assembly.CustomAttributes.RemoveExporter();
     }
+
+    public override bool ShouldCleanReference => true;
   }
 }
