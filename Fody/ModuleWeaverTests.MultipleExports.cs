@@ -107,6 +107,20 @@ namespace Vandelay.Fody
     }
 
     [Test]
+    public void IterateFooBars()
+    {
+      // Arrange
+      var type = _multipleWeaver.GetType(
+        "AssemblyToProcess.MultipleExports.FooBarImporter");
+      var instance = (dynamic)Activator.CreateInstance(type);
+
+      // Act
+      instance.IterateFooBars();
+
+      // Assert
+    }
+
+    [Test]
     public void PeVerify()
     {
       // Arrange

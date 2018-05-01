@@ -67,6 +67,9 @@ namespace Vandelay.Fody
         (searchPatternInstruction.Operand as string ?? string.Empty)
         .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
 
+      method.Body.UpdateInstructions(searchPatternInstruction,
+        searchPatternInstruction.Next);
+
       method.Body.GetILProcessor().Remove(searchPatternInstruction);
     }
 

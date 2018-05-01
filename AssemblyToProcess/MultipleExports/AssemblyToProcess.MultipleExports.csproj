@@ -47,6 +47,7 @@
     <Compile Include="BarExporterA.cs" />
     <Compile Include="BarExporterB.cs" />
     <Compile Include="FooBar.cs" />
+    <Compile Include="FooBarImporter.cs" />
     <Compile Include="FooExporterA.cs" />
     <Compile Include="FooExporterB.cs" />
     <Compile Include="FooImporter.cs" />

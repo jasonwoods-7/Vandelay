@@ -89,6 +89,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Extensions\CollectionCustomAttributeExtensions.cs" />
+    <Compile Include="Extensions\MethodBodyExtensions.cs" />
     <Compile Include="Extensions\MethodReferenceExtensions.cs" />
     <Compile Include="Extensions\TypeDefinitionExtensions.cs" />
     <Compile Include="ModuleWeaver.CompositionBatch.cs">
