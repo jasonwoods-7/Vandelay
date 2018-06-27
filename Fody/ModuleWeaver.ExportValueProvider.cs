@@ -20,7 +20,7 @@ namespace Vandelay.Fody
       // internal sealed class ExportValueProvider
       var valueProvider = new TypeDefinition("Vandelay",
         "ExportValueProvider", TypeAttributes.Sealed | TypeAttributes.AutoClass,
-        ModuleDefinition.TypeSystem.Object);
+        TypeSystem.ObjectReference);
 
       var valueField = InjectValueField();
       valueProvider.Fields.Add(valueField);
@@ -40,7 +40,7 @@ namespace Vandelay.Fody
       // private readonly object _value;
       new FieldDefinition("_value",
         FieldAttributes.Private | FieldAttributes.InitOnly,
-        ModuleDefinition.TypeSystem.Object);
+        TypeSystem.ObjectReference);
 
     [NotNull]
     MethodDefinition InjectValueConstructor([NotNull] FieldReference valueField)
@@ -50,16 +50,17 @@ namespace Vandelay.Fody
 
       // public void .ctor(object value)
       var constructor = new MethodDefinition(".ctor", methodAttributes,
-        ModuleDefinition.TypeSystem.Void);
+        TypeSystem.VoidReference);
       constructor.Parameters.Add(new ParameterDefinition(
-        ModuleDefinition.TypeSystem.Object));
+        TypeSystem.ObjectReference));
       constructor.CustomAttributes.MarkAsGeneratedCode();
 
       // base.ctor();
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call,
-        new MethodReference(".ctor", ModuleDefinition.TypeSystem.Void,
-          ModuleDefinition.TypeSystem.Object) {HasThis = true}));
+        new MethodReference(".ctor", TypeSystem.VoidReference,
+          TypeSystem.ObjectReference)
+        { HasThis = true }));
 
       // this._value = value;
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
@@ -76,7 +77,7 @@ namespace Vandelay.Fody
     {
       // public object GetValue()
       var func = new MethodDefinition("GetValue", MethodAttributes.Public,
-        ModuleDefinition.TypeSystem.Object);
+        TypeSystem.ObjectReference);
       func.CustomAttributes.MarkAsGeneratedCode();
 
       // return this._value;

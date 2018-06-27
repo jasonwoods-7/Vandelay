@@ -120,6 +120,7 @@ namespace Vandelay.Fody
       // Assert
     }
 
+#pragma warning disable 618
     [Test]
     public void PeVerify()
     {
@@ -131,5 +132,6 @@ namespace Vandelay.Fody
 
       // Assert
     }
+#pragma warning restore 618
   }
 }

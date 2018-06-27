@@ -99,6 +99,7 @@ namespace Vandelay.Fody
       Assert.That(imports, Has.Length.EqualTo(4));
     }
 
+#pragma warning disable 618
     [Test]
     public void PeVerify()
     {
@@ -113,6 +114,7 @@ namespace Vandelay.Fody
 
       // Assert
     }
+#pragma warning restore 618
 
     [NotNull]
     ModuleWeaverTestHelper GetTestHelper([NotNull] string className) =>

@@ -27,7 +27,7 @@ namespace Vandelay.Fody
           Info.OfConstructor("System.ComponentModel.Composition",
           "System.ComponentModel.Composition.ExportAttribute", "Type")));
         export.ConstructorArguments.Add(new CustomAttributeArgument(
-          ModuleDefinition.TypeSystem.TypedReference, exportType));
+          FindType("System.Type"), exportType));
 
         foreach (var type in ModuleDefinition.GetTypes().Where(t =>
           t.IsClass() && !t.IsAbstract && !t.ExportsType(exportType) &&

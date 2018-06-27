@@ -27,7 +27,7 @@ namespace Vandelay.Fody
         "Vandelay", "CompositionBatchHelper",
         TypeAttributes.AnsiClass | TypeAttributes.Sealed |
         TypeAttributes.AutoClass | TypeAttributes.Abstract,
-        ModuleDefinition.TypeSystem.Object);
+        TypeSystem.ObjectReference);
 
       var createCompositionBatch = InjectCreate();
       compositionBatch.Methods.Add(createCompositionBatch);
@@ -50,9 +50,9 @@ namespace Vandelay.Fody
       compositionBatch.Body.Variables.Add(new VariableDefinition(
         ModuleDefinition.ImportReference(typeof(CompositionBatch))));
       compositionBatch.Body.Variables.Add(new VariableDefinition(
-        ModuleDefinition.TypeSystem.Int32));
+        TypeSystem.Int32Reference));
       compositionBatch.Body.Variables.Add(new VariableDefinition(
-        ModuleDefinition.TypeSystem.Object));
+        TypeSystem.ObjectReference));
       compositionBatch.Body.Variables.Add(new VariableDefinition(
         ModuleDefinition.ImportReference(typeof(Type))));
       compositionBatch.Body.InitLocals = true;

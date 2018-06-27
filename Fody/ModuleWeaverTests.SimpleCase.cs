@@ -134,6 +134,7 @@ namespace Vandelay.Fody
       Assert.That(imports, Has.Length.EqualTo(1));
     }
 
+#pragma warning disable 618
     [Test]
     public void PeVerify()
     {
@@ -145,5 +146,6 @@ namespace Vandelay.Fody
 
       // Assert
     }
+#pragma warning restore 618
   }
 }

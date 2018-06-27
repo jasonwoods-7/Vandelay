@@ -26,7 +26,7 @@ namespace Vandelay.Fody
       // internal sealed class ImportTypeRetriever
       var targetType = new TypeDefinition("Vandelay",
         TargetName($"{importType.Name}Retriever", -1), typeAttributes,
-        ModuleDefinition.TypeSystem.Object);
+        TypeSystem.ObjectReference);
       ModuleDefinition.Types.Add(targetType);
 
       var fieldTuple = InjectImportsField(importType);
@@ -69,7 +69,7 @@ namespace Vandelay.Fody
         Info.OfConstructor("System.ComponentModel.Composition",
         "System.ComponentModel.Composition.ImportManyAttribute", "Type")));
       importAttribute.ConstructorArguments.Add(new CustomAttributeArgument(
-        ModuleDefinition.TypeSystem.TypedReference, importType));
+        FindType("System.Type"), importType));
 
       fieldDefinition.CustomAttributes.Add(importAttribute);
 
@@ -86,7 +86,7 @@ namespace Vandelay.Fody
 
       // private void .ctor(object[] array)
       var constructor = new MethodDefinition(".ctor", methodAttributes,
-        ModuleDefinition.TypeSystem.Void);
+        TypeSystem.VoidReference);
       constructor.Parameters.Add(new ParameterDefinition(
         ModuleDefinition.ImportReference(typeof(object[]))));
       constructor.CustomAttributes.MarkAsGeneratedCode();
@@ -101,8 +101,8 @@ namespace Vandelay.Fody
       // base.ctor();
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call,
-        new MethodReference(".ctor", ModuleDefinition.TypeSystem.Void,
-        ModuleDefinition.TypeSystem.Object)
+        new MethodReference(".ctor", TypeSystem.VoidReference,
+        TypeSystem.ObjectReference)
         { HasThis = true }));
 
       // using (var aggregateCatalog = new AggregateCatalog())
@@ -146,7 +146,7 @@ namespace Vandelay.Fody
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldloc_1));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldc_I4_1));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newarr,
-        ModuleDefinition.TypeSystem.Object));
+        TypeSystem.ObjectReference));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Dup));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldc_I4_0));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
@@ -197,7 +197,7 @@ namespace Vandelay.Fody
       }
       else
       {
-        constructor.Body.Variables.Add(new VariableDefinition(ModuleDefinition.TypeSystem.String));
+        constructor.Body.Variables.Add(new VariableDefinition(TypeSystem.StringReference));
 
         InjectCatalogPath(constructor);
         constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Stloc_2));

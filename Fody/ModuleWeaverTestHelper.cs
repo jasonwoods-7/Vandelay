@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Fody;
 using JetBrains.Annotations;
@@ -59,8 +58,8 @@ namespace Vandelay.Fody
           };
 
           var typeCache = CacheTypes(weavingTask);
-          var findType = Info.OfMethod("FodyHelpers", "TypeCache", "FindType", "String");
-          weavingTask.FindType = s => (TypeDefinition)findType.Invoke(typeCache, new object[] { s });
+          weavingTask.FindType = typeCache.FindType;
+          weavingTask.TypeSystem = new global::Fody.TypeSystem(typeCache.FindType, moduleDefinition);
 
           weavingTask.Execute();
           moduleDefinition.Write(AfterAssemblyPath);
@@ -74,21 +73,18 @@ namespace Vandelay.Fody
     public Type GetType([NotNull] string className) =>
       Assembly.GetType(className, true);
 
+#pragma warning disable 618
     [NotNull]
-    static object CacheTypes([NotNull] BaseModuleWeaver weavingTask)
+    static TypeCache CacheTypes([NotNull] BaseModuleWeaver weavingTask)
     {
-      var typeCache = Info.OfConstructor("FodyHelpers", "TypeCache").Invoke(null);
-
       var assemblyResolver = Info.OfConstructor("FodyHelpers", "Fody.MockAssemblyResolver").Invoke(null);
       var resolve = Info.OfMethod("FodyHelpers", "Fody.MockAssemblyResolver", "Resolve", "String");
-      Info.OfMethod("FodyHelpers", "TypeCache", "Initialise", "IEnumerable`1")
-        .Invoke(typeCache, new object[]
-        {
-          weavingTask.GetAssembliesForScanning()
-            .Select(a => (AssemblyDefinition)resolve.Invoke(assemblyResolver, new object[] {a}))
-            .Where(d => d != null)
-        });
+
+      var typeCache = new TypeCache(a => (AssemblyDefinition)resolve.Invoke(assemblyResolver, new object[] { a }));
+      typeCache.BuildAssembliesToScan(weavingTask);
+
       return typeCache;
     }
+#pragma warning restore 618
   }
 }
