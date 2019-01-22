@@ -26,7 +26,19 @@ namespace Vandelay.Fody
     {
       _multipleWeaver = new ModuleWeaverTestHelper(
         Path.Combine(TestContext.CurrentContext.TestDirectory,
-        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.MultipleExports.dll"));
+        @"..\..\..\..\AssemblyToProcess\bin" +
+#if DEBUG
+          @"\Debug" +
+#else
+          @"\Release" +
+#endif
+#if NET46
+          @"\net46" +
+#else
+          @"\netstandard2.0" +
+#endif
+        @"\AssemblyToProcess.MultipleExports.dll"));
+
       Assert.That(_multipleWeaver.Errors, Is.Null.Or.Empty);
 
       _fooExporterType = _multipleWeaver.GetType(

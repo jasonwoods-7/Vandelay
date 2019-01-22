@@ -28,12 +28,35 @@ namespace Vandelay.Fody
     {
       _unsignedWeaver = new ModuleWeaverTestHelper(
         Path.Combine(TestContext.CurrentContext.TestDirectory,
-        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.Unsigned.dll"));
+        @"..\..\..\..\AssemblyToProcess\bin" +
+#if DEBUG
+          @"\Debug" +
+#else
+          @"\Release" +
+#endif
+#if NET46
+          @"\net46" +
+#else
+          @"\netstandard2.0" +
+#endif
+        @"\AssemblyToProcess.Unsigned.dll"));
+
       Assert.That(_unsignedWeaver.Errors, Is.Null.Or.Empty);
 
       _signedWeaver = new ModuleWeaverTestHelper(
         Path.Combine(TestContext.CurrentContext.TestDirectory,
-        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.Signed.dll"));
+        @"..\..\..\..\AssemblyToProcess\bin" +
+#if DEBUG
+          @"\Debug" +
+#else
+          @"\Release" +
+#endif
+#if NET46
+          @"\net46" +
+#else
+          @"\netstandard2.0" +
+#endif
+        @"\AssemblyToProcess.Signed.dll"));
       Assert.That(_signedWeaver.Errors, Is.Null.Or.Empty);
 
       var directoryName = Path.GetDirectoryName(_unsignedWeaver.Assembly.Location);

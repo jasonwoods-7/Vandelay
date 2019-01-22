@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
+    <DebugType>portable</DebugType>
+    <Configurations>Debug;Release;Deployable</Configurations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net46|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Deployable|net46|AnyCPU'">
+    <DefineConstants>TRACE;Scalpel</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AssertMessage.Fody" Version="2.0.5" />
+    <PackageReference Include="Fody" Version="3.3.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FodyHelpers" Version="3.3.5" />
+    <PackageReference Include="InfoOf.Fody" Version="1.4.3" />
+    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="NUnit" Version="3.11.0" />
+    <PackageReference Include="Scalpel.Fody" Version="1.2.3" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vandelay\Vandelay.csproj" />
+  </ItemGroup>
+</Project>

@@ -25,7 +25,19 @@ namespace Vandelay.Fody
     {
       _simpleCaseWeaver = new ModuleWeaverTestHelper(
         Path.Combine(TestContext.CurrentContext.TestDirectory,
-        @"..\..\..\AssemblyToProcess\bin\Debug\AssemblyToProcess.SimpleCase.dll"));
+        @"..\..\..\..\AssemblyToProcess\bin" +
+#if DEBUG
+          @"\Debug" +
+#else
+          @"\Release" +
+#endif
+#if NET46
+          @"\net46" +
+#else
+          @"\netstandard2.0" +
+#endif
+          @"\AssemblyToProcess.SimpleCase.dll"));
+
       Assert.That(_simpleCaseWeaver.Errors, Is.Null.Or.Empty);
 
       _simpleCaseExportableType = _simpleCaseWeaver.GetType(

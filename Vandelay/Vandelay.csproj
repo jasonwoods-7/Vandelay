@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net452;netstandard2.0</TargetFrameworks>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Description>Fody add-in that helps with importing/exporting MEF interfaces.</Description>
+    <PackageTags>MEF, ILWeaving, Fody, Cecil</PackageTags>
+    <Authors>Jason Woods</Authors>
+    <PackageIconUrl />
+    <PackageProjectUrl>http://github.com/jasonwoods-7/Vandelay</PackageProjectUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net452|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Fody" Version="3.3.5" PrivateAssets="None" />
+    <PackageReference Include="FodyPackaging" Version="3.3.5" PrivateAssets="All" />
+  </ItemGroup>
+</Project>
