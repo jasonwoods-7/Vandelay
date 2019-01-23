@@ -37,7 +37,7 @@ namespace Vandelay.Fody
 #else
           @"\netstandard2.0" +
 #endif
-        @"\AssemblyToProcess.MultipleExports.dll"));
+          @"\AssemblyToProcess.MultipleExports.dll"));
 
       Assert.That(_multipleWeaver.Errors, Is.Null.Or.Empty);
 

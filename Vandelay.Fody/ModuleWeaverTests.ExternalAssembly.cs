@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.Composition;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Fody;
@@ -26,41 +25,29 @@ namespace Vandelay.Fody
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-      _unsignedWeaver = new ModuleWeaverTestHelper(
-        Path.Combine(TestContext.CurrentContext.TestDirectory,
-        @"..\..\..\..\AssemblyToProcess\bin" +
+      var directoryName = Path.GetFullPath(Path.Combine(
+        TestContext.CurrentContext.TestDirectory,
+        @"..\..\..\..\AssemblyToProcess\bin",
 #if DEBUG
-          @"\Debug" +
+        "Debug",
 #else
-          @"\Release" +
+        "Release",
 #endif
 #if NET46
-          @"\net46" +
+        "net46"
 #else
-          @"\netstandard2.0" +
+        "netstandard2.0"
 #endif
-        @"\AssemblyToProcess.Unsigned.dll"));
+      ));
+
+      _unsignedWeaver = new ModuleWeaverTestHelper(
+        Path.Combine(directoryName, "AssemblyToProcess.Unsigned.dll"));
 
       Assert.That(_unsignedWeaver.Errors, Is.Null.Or.Empty);
 
       _signedWeaver = new ModuleWeaverTestHelper(
-        Path.Combine(TestContext.CurrentContext.TestDirectory,
-        @"..\..\..\..\AssemblyToProcess\bin" +
-#if DEBUG
-          @"\Debug" +
-#else
-          @"\Release" +
-#endif
-#if NET46
-          @"\net46" +
-#else
-          @"\netstandard2.0" +
-#endif
-        @"\AssemblyToProcess.Signed.dll"));
+        Path.Combine(directoryName, "AssemblyToProcess.Signed.dll"));
       Assert.That(_signedWeaver.Errors, Is.Null.Or.Empty);
-
-      var directoryName = Path.GetDirectoryName(_unsignedWeaver.Assembly.Location);
-      Debug.Assert(null != directoryName);
 
       _coreExportableType = Assembly.LoadFile(Path.GetFullPath(
         Path.Combine(directoryName, "AssemblyToProcess.Core.dll")))

@@ -20,10 +20,10 @@ namespace Vandelay.Fody
     public readonly string AfterAssemblyPath;
 
     [NotNull]
-    public readonly Assembly Assembly;
+    public readonly List<string> Errors;
 
     [NotNull]
-    public readonly List<string> Errors;
+    readonly Assembly _assembly;
 
     public ModuleWeaverTestHelper([NotNull] string inputAssembly)
     {
@@ -63,21 +63,23 @@ namespace Vandelay.Fody
         }
       }
 
-      Assembly = Assembly.LoadFile(AfterAssemblyPath);
+      _assembly = Assembly.LoadFile(AfterAssemblyPath);
     }
 
     [NotNull]
     public Type GetType([NotNull] string className) =>
-      Assembly.GetType(className, true);
+      _assembly.GetType(className, true);
 
 #pragma warning disable 618
     [NotNull]
     static TypeCache CacheTypes([NotNull] BaseModuleWeaver weavingTask)
     {
       var assemblyResolver = Info.OfConstructor("FodyHelpers", "Fody.MockAssemblyResolver").Invoke(null);
-      var resolve = Info.OfMethod("FodyHelpers", "Fody.MockAssemblyResolver", "Resolve", "String");
+      var resolveInfo = Info.OfMethod("FodyHelpers", "Fody.MockAssemblyResolver", "Resolve", "String");
+      var resolveFunc = (Func<string, AssemblyDefinition>)resolveInfo.CreateDelegate(
+        typeof(Func<string, AssemblyDefinition>), assemblyResolver);
 
-      var typeCache = new TypeCache(a => (AssemblyDefinition)resolve.Invoke(assemblyResolver, new object[] { a }));
+      var typeCache = new TypeCache(resolveFunc);
       typeCache.BuildAssembliesToScan(weavingTask);
 
       return typeCache;
