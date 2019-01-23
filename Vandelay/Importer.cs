@@ -4,12 +4,12 @@ using System.Collections.Generic;
 namespace Vandelay
 {
   /// <summary>
-  ///
+  /// Static class to retrieve imports
   /// </summary>
   public static class Importer
   {
     /// <summary>
-    ///
+    /// Import all exported instances of a type.
     /// </summary>
     /// <param name="searchPatterns"></param>
     /// <param name="exports"></param>
