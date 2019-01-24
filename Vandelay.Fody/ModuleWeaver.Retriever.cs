@@ -46,7 +46,7 @@ namespace Vandelay.Fody
     string TargetName([NotNull] string targetName, int counter)
     {
       var suggestedName = -1 == counter ? targetName : $"{targetName}_{counter}";
-      if (null == ModuleDefinition.Types.FirstOrDefault(t => t.Name == suggestedName))
+      if (ModuleDefinition.Types.All(t => t.Name != suggestedName))
       {
         return suggestedName;
       }

@@ -10,6 +10,7 @@
     <Authors>Jason Woods</Authors>
     <PackageIconUrl />
     <PackageProjectUrl>http://github.com/jasonwoods-7/Vandelay</PackageProjectUrl>
+    <Configurations>Debug;Release;Deployable</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
