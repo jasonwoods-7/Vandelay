@@ -6,12 +6,11 @@ using Fody;
 using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Pdb;
-using Scalpel;
+using Vandelay.Fody;
 
-namespace Vandelay.Fody
+namespace Tests
 {
-  [Remove]
-  class ModuleWeaverTestHelper
+  public class ModuleWeaverTestHelper
   {
     [NotNull]
     public readonly string BeforeAssemblyPath;

@@ -40,12 +40,12 @@ namespace Vandelay.Fody
         return;
       }
 
-      if (methodReference.DeclaringType.FullName != $"Vandelay.{nameof(Importer)}")
+      if (methodReference.DeclaringType.FullName != "Vandelay.Importer")
       {
         return;
       }
 
-      if (methodReference.Name != nameof(Importer.ImportMany))
+      if (methodReference.Name != "ImportMany")
       {
         throw new WeavingException($"Unsupported method '{methodReference.FullName}'.")
         {

@@ -29,10 +29,12 @@ namespace Vandelay.Fody
     {
       yield return "mscorlib";
       yield return "System";
+      yield return "netstandard";
       yield return "System.Core";
-      yield return "System.Runtime";
       yield return "System.Diagnostics.Tools";
       yield return "System.Diagnostics.Debug";
+      yield return "System.Runtime";
+      yield return "System.ComponentModel.Composition";
     }
 
     void FindReferences()

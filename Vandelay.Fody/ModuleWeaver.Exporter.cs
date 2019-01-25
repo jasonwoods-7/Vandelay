@@ -9,7 +9,7 @@ namespace Vandelay.Fody
   {
     void HandleExports()
     {
-      var exporterName = $"Vandelay.{nameof(ExporterAttribute)}";
+      const string exporterName = "Vandelay.ExporterAttribute";
       foreach (var exportable in ModuleDefinition.Assembly.CustomAttributes.Where(a =>
         a.AttributeType.FullName == exporterName))
       {
