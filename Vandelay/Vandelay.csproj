@@ -10,10 +10,6 @@
     <Authors>Jason Woods</Authors>
     <PackageIconUrl />
     <PackageProjectUrl>http://github.com/jasonwoods-7/Vandelay</PackageProjectUrl>
-    <Configurations>Debug;Release;Deployable</Configurations>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Fody" Version="3.3.5" PrivateAssets="None" />
