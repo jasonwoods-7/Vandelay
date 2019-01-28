@@ -1,5 +1,6 @@
 ﻿using JetBrains.Annotations;
 using Mono.Cecil;
+using Mono.Cecil.Rocks;
 
 namespace Vandelay.Fody.Extensions
 {
@@ -24,6 +25,27 @@ namespace Vandelay.Fody.Extensions
       }
 
       return true;
+    }
+
+    public static MethodReference MakeGeneric([NotNull] this MethodReference methodReference,
+      [NotNull] params TypeReference[] paramTypes)
+    {
+      var reference = new MethodReference(
+        methodReference.Name,
+        methodReference.ReturnType,
+        methodReference.DeclaringType.MakeGenericInstanceType(paramTypes));
+
+      foreach (var parameter in methodReference.Parameters)
+      {
+        reference.Parameters.Add(parameter);
+      }
+
+      foreach (var genericParam in methodReference.GenericParameters)
+      {
+        reference.GenericParameters.Add(new GenericParameter(genericParam.Name, reference));
+      }
+
+      return reference;
     }
   }
 }
