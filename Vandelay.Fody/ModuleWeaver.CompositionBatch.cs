@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition.Hosting;
+﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Mono.Cecil;
@@ -42,19 +40,19 @@ namespace Vandelay.Fody
       // public static CompositionBatch Create(object[] array)
       var compositionBatch = new MethodDefinition("Create",
         MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Static,
-        ModuleDefinition.ImportReference(typeof(CompositionBatch)));
+        _import.System.ComponentModel.Composition.Hosting.CompositionBatch.Type);
       compositionBatch.Parameters.Add(new ParameterDefinition(
-        ModuleDefinition.ImportReference(typeof(object[]))));
-      compositionBatch.CustomAttributes.MarkAsGeneratedCode();
+        _import.System.Object.ArrayType));
+      compositionBatch.CustomAttributes.MarkAsGeneratedCode(ModuleDefinition, _import);
 
       compositionBatch.Body.Variables.Add(new VariableDefinition(
-        ModuleDefinition.ImportReference(typeof(CompositionBatch))));
+        _import.System.ComponentModel.Composition.Hosting.CompositionBatch.Type));
       compositionBatch.Body.Variables.Add(new VariableDefinition(
         TypeSystem.Int32Reference));
       compositionBatch.Body.Variables.Add(new VariableDefinition(
         TypeSystem.ObjectReference));
       compositionBatch.Body.Variables.Add(new VariableDefinition(
-        ModuleDefinition.ImportReference(typeof(Type))));
+        _import.System.Type.Type));
       compositionBatch.Body.InitLocals = true;
 
       foreach (var instruction in GetInstructions())
@@ -70,9 +68,7 @@ namespace Vandelay.Fody
     {
       // var compositionBatch = new CompositionBatch();
       yield return Instruction.Create(OpCodes.Newobj,
-        ModuleDefinition.ImportReference(Info.OfConstructor(
-          "System.ComponentModel.Composition",
-          "System.ComponentModel.Composition.Hosting.CompositionBatch")));
+        _import.System.ComponentModel.Composition.Hosting.CompositionBatch.Constructor);
       yield return Instruction.Create(OpCodes.Stloc_0);
 
       // var i = 0;
@@ -96,39 +92,32 @@ namespace Vandelay.Fody
       // var type = obj.GetType();
       yield return Instruction.Create(OpCodes.Ldloc_2);
       yield return Instruction.Create(OpCodes.Callvirt,
-        ModuleDefinition.ImportReference(Info.OfMethod(
-          "mscorlib", "System.Object", "GetType")));
+        _import.System.Object.GetType);
       yield return Instruction.Create(OpCodes.Stloc_3);
 
       // var contractName = AttributedModelServices.GetContractName(type);
       yield return Instruction.Create(OpCodes.Ldloc_0);
       yield return Instruction.Create(OpCodes.Ldloc_3);
       yield return Instruction.Create(OpCodes.Call,
-        ModuleDefinition.ImportReference(Info.OfMethod(
-          "System.ComponentModel.Composition",
-          "System.ComponentModel.Composition.AttributedModelServices",
-          "GetContractName", "Type")));
+        _import.System.ComponentModel.Composition.AttributedModelServices.GetContractName);
 
       // var metaData = new Dictionary<string, object>
       // {
       //   ["ExportTypeIdentity"] = AttributedModelServices.GetTypeIdentity(type)
       // }
       yield return Instruction.Create(OpCodes.Newobj,
-        ModuleDefinition.ImportReference(Info.OfConstructor("mscorlib", "System.Collections.Generic.Dictionary`2<" +
-          "mscorlib|System.String,mscorlib|System.Object>")));
+        ModuleDefinition.ImportReference(
+          _import.System.Collections.Generic.Dictionary.Constructor.MakeGeneric(
+            TypeSystem.StringReference, TypeSystem.ObjectReference)));
       yield return Instruction.Create(OpCodes.Dup);
       yield return Instruction.Create(OpCodes.Ldstr,
         "ExportTypeIdentity");
       yield return Instruction.Create(OpCodes.Ldloc_3);
       yield return Instruction.Create(OpCodes.Call,
-        ModuleDefinition.ImportReference(Info.OfMethod(
-          "System.ComponentModel.Composition",
-          "System.ComponentModel.Composition.AttributedModelServices",
-          "GetTypeIdentity", "Type")));
-      yield return Instruction.Create(OpCodes.Callvirt,
-        ModuleDefinition.ImportReference(Info.OfPropertySet("mscorlib",
-        "System.Collections.Generic.Dictionary`2<" +
-        "mscorlib|System.String,mscorlib|System.Object>", "Item")));
+        _import.System.ComponentModel.Composition.AttributedModelServices.GetTypeIdentity);
+      yield return Instruction.Create(OpCodes.Callvirt, ModuleDefinition.ImportReference(
+        _import.System.Collections.Generic.Dictionary.SetItem.MakeGeneric(
+          TypeSystem.StringReference, TypeSystem.ObjectReference)));
 
       // var valueProvider = new ExportValueProvider(obj);
       yield return Instruction.Create(OpCodes.Ldloc_2);
@@ -138,23 +127,16 @@ namespace Vandelay.Fody
       // var valueFunc = new Func<object>(valueProvider.GetValue);
       yield return Instruction.Create(OpCodes.Ldftn,
         ExportValueProvider.Methods.First(m => !m.IsConstructor));
-      yield return Instruction.Create(OpCodes.Newobj,
-        ModuleDefinition.ImportReference(Info.OfConstructor("mscorlib",
-        "System.Func`1<mscorlib|System.Object>", "Object,IntPtr")));
+      yield return Instruction.Create(OpCodes.Newobj, ModuleDefinition.ImportReference(
+        _import.System.Func.Constructor.MakeGeneric(TypeSystem.ObjectReference)));
 
       // var export = new Export(contractName, metaData, valueFunc);
       yield return Instruction.Create(OpCodes.Newobj,
-        ModuleDefinition.ImportReference(Info.OfConstructor(
-          "System.ComponentModel.Composition",
-          "System.ComponentModel.Composition.Primitives.Export",
-          "String,IDictionary`2,Func`1")));
+        _import.System.ComponentModel.Composition.Primitives.Export.Constructor);
 
       // compositionBatch.AddExport(export);
       yield return Instruction.Create(OpCodes.Callvirt,
-        ModuleDefinition.ImportReference(Info.OfMethod(
-          "System.ComponentModel.Composition",
-          "System.ComponentModel.Composition.Hosting.CompositionBatch",
-          "AddExport", "Export")));
+        _import.System.ComponentModel.Composition.Hosting.CompositionBatch.AddExport);
       yield return Instruction.Create(OpCodes.Pop);
 
       // i++;

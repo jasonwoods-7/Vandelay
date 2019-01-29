@@ -33,7 +33,10 @@ namespace Vandelay.Fody.Extensions
       var reference = new MethodReference(
         methodReference.Name,
         methodReference.ReturnType,
-        methodReference.DeclaringType.MakeGenericInstanceType(paramTypes));
+        methodReference.DeclaringType.MakeGenericInstanceType(paramTypes))
+      {
+        HasThis = methodReference.HasThis
+      };
 
       foreach (var parameter in methodReference.Parameters)
       {

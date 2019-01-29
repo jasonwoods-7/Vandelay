@@ -29,10 +29,10 @@ namespace Tests
 #else
           @"\Release" +
 #endif
-#if NET46
-          @"\net46" +
-#else
+#if NETCOREAPP
           @"\netstandard2.0" +
+#else
+          @"\net46" +
 #endif
           @"\AssemblyToProcess.SimpleCase.dll"));
 

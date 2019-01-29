@@ -53,7 +53,7 @@ namespace Vandelay.Fody
         TypeSystem.VoidReference);
       constructor.Parameters.Add(new ParameterDefinition(
         TypeSystem.ObjectReference));
-      constructor.CustomAttributes.MarkAsGeneratedCode();
+      constructor.CustomAttributes.MarkAsGeneratedCode(ModuleDefinition, _import);
 
       // base.ctor();
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
@@ -78,7 +78,7 @@ namespace Vandelay.Fody
       // public object GetValue()
       var func = new MethodDefinition("GetValue", MethodAttributes.Public,
         TypeSystem.ObjectReference);
-      func.CustomAttributes.MarkAsGeneratedCode();
+      func.CustomAttributes.MarkAsGeneratedCode(ModuleDefinition, _import);
 
       // return this._value;
       func.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));

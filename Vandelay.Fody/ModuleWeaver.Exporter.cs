@@ -23,9 +23,8 @@ namespace Vandelay.Fody
           continue;
         }
 
-        var export = new CustomAttribute(ModuleDefinition.ImportReference(
-          Info.OfConstructor("System.ComponentModel.Composition",
-          "System.ComponentModel.Composition.ExportAttribute", "Type")));
+        var export = new CustomAttribute(
+          _import.System.ComponentModel.Composition.ExportAttribute.Constructor);
         export.ConstructorArguments.Add(new CustomAttributeArgument(
           FindType("System.Type"), exportType));
 

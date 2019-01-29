@@ -9,32 +9,37 @@ namespace Vandelay.Fody.Extensions
   static class CollectionCustomAttributeExtensions
   {
     public static void MarkAsGeneratedCode(
-      [NotNull] this Collection<CustomAttribute> customAttributes)
+      [NotNull] this Collection<CustomAttribute> customAttributes,
+      [NotNull] ModuleDefinition moduleDefinition,
+      [NotNull] Import import)
     {
-      AddCustomAttributeArgument(customAttributes);
-      AddDebuggerNonUserCodeAttribute(customAttributes);
+      AddDebuggerNonUserCodeAttribute(customAttributes, import);
+      AddCustomAttributeArgument(customAttributes, moduleDefinition, import);
     }
 
     static void AddDebuggerNonUserCodeAttribute(
-      [NotNull] ICollection<CustomAttribute> customAttributes)
+      [NotNull] ICollection<CustomAttribute> customAttributes,
+      [NotNull] Import import)
     {
-      var debuggerAttribute = new CustomAttribute(ReferenceFinder
-        .DebuggerNonUserCodeAttribute.Constructor);
+      var debuggerAttribute = new CustomAttribute(
+        import.System.Diagnostics.DebuggerNonUserCodeAttribute.Constructor);
       customAttributes.Add(debuggerAttribute);
     }
 
     static void AddCustomAttributeArgument(
-      [NotNull] ICollection<CustomAttribute> customAttributes)
+      [NotNull] ICollection<CustomAttribute> customAttributes,
+      [NotNull] ModuleDefinition moduleDefinition,
+      [NotNull] Import import)
     {
       var version = typeof(ModuleWeaver).Assembly.GetName().Version.ToString();
       var name = typeof(ModuleWeaver).Assembly.GetName().Name;
 
       var generatedAttribute = new CustomAttribute(
-        ReferenceFinder.GeneratedCodeAttribute.ConstructorStringString);
+        import.System.CodeDom.Compiler.GeneratedCodeAttribute.Constructor);
       generatedAttribute.ConstructorArguments.Add(new CustomAttributeArgument(
-        ReferenceFinder.String.TypeReference, name));
+        moduleDefinition.TypeSystem.String, name));
       generatedAttribute.ConstructorArguments.Add(new CustomAttributeArgument(
-        ReferenceFinder.String.TypeReference, version));
+        moduleDefinition.TypeSystem.String, version));
       customAttributes.Add(generatedAttribute);
     }
 

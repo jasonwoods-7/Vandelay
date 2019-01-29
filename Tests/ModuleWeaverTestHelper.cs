@@ -55,7 +55,7 @@ namespace Tests
 
           var typeCache = CacheTypes(weavingTask);
           weavingTask.FindType = typeCache.FindType;
-          weavingTask.TypeSystem = new global::Fody.TypeSystem(typeCache.FindType, moduleDefinition);
+          weavingTask.TypeSystem = new Fody.TypeSystem(typeCache.FindType, moduleDefinition);
 
           weavingTask.Execute();
           moduleDefinition.Write(AfterAssemblyPath);
