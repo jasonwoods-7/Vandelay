@@ -1,46 +1,37 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel.Composition;
-using System.IO;
 using System.Linq;
 using System.Reflection;
+using FluentAssertions;
 using Fody;
 using JetBrains.Annotations;
+using Vandelay.Fody;
 using Xunit;
 
-namespace Tests
+#pragma warning disable 618
+
+namespace SimpleCaseTests
 {
   [UsedImplicitly]
   public class SimpleCaseSetup
   {
     [NotNull]
-    public ModuleWeaverTestHelper SimpleCaseWeaver { get; }
+    public TestResult SimpleCaseWeaver { get; }
 
     [NotNull]
     public Type SimpleCaseExportableType { get; }
 
     public SimpleCaseSetup()
     {
-      SimpleCaseWeaver = new ModuleWeaverTestHelper(
-        Path.Combine(Environment.CurrentDirectory,
-        @"..\..\..\..\AssemblyToProcess\bin" +
-#if DEBUG
-          @"\Debug" +
-#else
-          @"\Release" +
-#endif
-#if NETCOREAPP
-          @"\netstandard2.0" +
-#else
-          @"\net46" +
-#endif
-          @"\AssemblyToProcess.SimpleCase.dll"));
+      var weaver = new ModuleWeaver();
+      SimpleCaseWeaver = weaver.ExecuteTestRun(
+        "AssemblyToProcess.SimpleCase.dll");
 
-      Assert.NotNull(SimpleCaseWeaver.Errors);
-      Assert.Empty(SimpleCaseWeaver.Errors);
+      SimpleCaseWeaver.Errors.Should().BeEmpty();
 
-      SimpleCaseExportableType = SimpleCaseWeaver.GetType(
-        "AssemblyToProcess.SimpleCase.IExportable");
+      SimpleCaseExportableType = SimpleCaseWeaver.Assembly.GetType(
+        "AssemblyToProcess.SimpleCase.IExportable", true);
     }
   }
 
@@ -55,14 +46,13 @@ namespace Tests
     public void AbstractTest([NotNull] string className)
     {
       // Arrange
-      var type = _setup.SimpleCaseWeaver.GetType(className);
+      var type = _setup.SimpleCaseWeaver.Assembly.GetType(className, true);
 
       // Act
       var exports = type.GetCustomAttributes<ExportAttribute>(false).ToArray();
 
       // Assert
-      Assert.NotNull(exports);
-      Assert.Empty(exports);
+      exports.Should().BeEmpty();
     }
 
     [Theory]
@@ -73,18 +63,16 @@ namespace Tests
     public void InstanceTest([NotNull] string className)
     {
       // Arrange
-      var type = _setup.SimpleCaseWeaver.GetType(className);
+      var type = _setup.SimpleCaseWeaver.Assembly.GetType(className, true);
 
       // Act
       var exports = type.GetCustomAttributes<ExportAttribute>(false).ToArray();
 
       // Assert
-      Assert.NotNull(exports);
-      Assert.Single(exports);
+      exports.Should().HaveCount(1);
 
       var attribute = exports[0];
-      Assert.NotNull(attribute);
-      Assert.Equal(_setup.SimpleCaseExportableType, attribute.ContractType);
+      attribute.ContractType.Should().Be(_setup.SimpleCaseExportableType);
     }
 
     [Theory]
@@ -93,81 +81,59 @@ namespace Tests
     public void ImportMany([NotNull] string searchPattern)
     {
       // Arrange
-      var importsType = _setup.SimpleCaseWeaver.GetType(searchPattern);
-      var importsInstance = (dynamic)Activator.CreateInstance(importsType);
+      var importsInstance = _setup.SimpleCaseWeaver.GetInstance(searchPattern);
 
       // Act
-      var imports = importsInstance.Imports;
+      var imports = (ICollection)importsInstance.Imports;
 
       // Assert
-      Assert.NotNull(imports);
-      Assert.Equal(4, imports.Length);
+      imports.Should().HaveCount(4);
     }
 
     [Fact]
     public void ImportManyWithImport()
     {
       // Arrange
-      var importsType = _setup.SimpleCaseWeaver.GetType(
+      var importsInstance = _setup.SimpleCaseWeaver.GetInstance(
         "AssemblyToProcess.SimpleCase.ImporterSingleSearchPatternWithImport");
-      var importsInstance = (dynamic)Activator.CreateInstance(importsType);
 
       // Act
       var imports = (ICollection)importsInstance.Imports;
 
       // Assert
-      Assert.NotNull(imports);
-      Assert.Equal(5, imports.Count);
+      imports.Should().HaveCount(5);
 
-      var greeting = (dynamic)imports.Cast<object>().First(i => i.GetType().Name == "ExportableWithImport");
-      Assert.NotNull(greeting.Greeting);
-      Assert.NotEmpty(greeting.Greeting);
+      var greeting = (string)((dynamic)imports.Cast<object>().First(i =>
+        i.GetType().Name == "ExportableWithImport")).Greeting;
+      greeting.Should().NotBeNullOrEmpty();
     }
 
     [Fact]
     public void ImportInheritsBase()
     {
       // Arrange
-      var importsType = _setup.SimpleCaseWeaver.GetType(
+      var importsInstance = _setup.SimpleCaseWeaver.GetInstance(
         "AssemblyToProcess.SimpleCase.ImporterInheritsBase");
-      var importsInstance = (dynamic)Activator.CreateInstance(importsType);
 
       // Act
       var imports = (ICollection)importsInstance.Imports;
 
       // Assert
-      Assert.NotNull(imports);
-      Assert.Single(imports);
+      imports.Should().HaveCount(1);
     }
 
     [Fact]
     public void ImportInheritedExport()
     {
       // Arrange
-      var importsType = _setup.SimpleCaseWeaver.GetType(
+      var importsInstance = _setup.SimpleCaseWeaver.GetInstance(
         "AssemblyToProcess.SimpleCase.ImporterInheritedExport");
-      var importsInstance = (dynamic)Activator.CreateInstance(importsType);
 
       // Act
       var imports = (ICollection)importsInstance.Imports;
 
       // Assert
-      Assert.NotNull(imports);
-      Assert.Single(imports);
+      imports.Should().HaveCount(1);
     }
-
-#pragma warning disable 618
-    [Fact]
-    public void PeVerify()
-    {
-      // Arrange
-
-      // Act
-      PeVerifier.ThrowIfDifferent(_setup.SimpleCaseWeaver.BeforeAssemblyPath,
-        _setup.SimpleCaseWeaver.AfterAssemblyPath);
-
-      // Assert
-    }
-#pragma warning restore 618
   }
 }

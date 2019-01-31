@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using System.Linq;
+﻿using System.Linq;
 using JetBrains.Annotations;
 using Mono.Cecil;
 
@@ -15,7 +14,7 @@ namespace Vandelay.Fody.Extensions
     public static bool ExportsType([NotNull] this TypeDefinition typeDefinition,
       [NotNull] TypeReference exportedType) =>
       typeDefinition.CustomAttributes.Any(a =>
-        a.AttributeType.FullName == typeof(ExportAttribute).FullName &&
+        a.AttributeType.FullName == "System.ComponentModel.Composition.ExportAttribute" &&
         a.ConstructorArguments.Any(c => ((TypeReference)c.Value).FullName == exportedType.FullName));
 
     public static bool ImplementsInterface([CanBeNull] this TypeDefinition typeDefinition,

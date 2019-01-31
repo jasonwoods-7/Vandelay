@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using System.Linq;
+﻿using System.Linq;
 using Mono.Cecil;
 using Vandelay.Fody.Extensions;
 
@@ -13,11 +12,10 @@ namespace Vandelay.Fody
       foreach (var exportable in ModuleDefinition.Assembly.CustomAttributes.Where(a =>
         a.AttributeType.FullName == exporterName))
       {
-        var exportType = ModuleDefinition.ImportReference(
-          (TypeReference)exportable.ConstructorArguments[0].Value);
+        var exportType = (TypeReference)exportable.ConstructorArguments[0].Value;
 
         if (exportType.Resolve().CustomAttributes.Any(a =>
-          a.AttributeType.FullName == typeof(InheritedExportAttribute).FullName &&
+          a.AttributeType.FullName == "System.ComponentModel.Composition.InheritedExportAttribute" &&
           a.ConstructorArguments.Count == 0))
         {
           continue;

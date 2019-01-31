@@ -1,54 +1,47 @@
 ﻿using System;
+using System.Collections;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using FluentAssertions;
 using Fody;
 using JetBrains.Annotations;
+using Vandelay.Fody;
 using Xunit;
 
-namespace Tests
+#pragma warning disable 618
+
+namespace ExternalAssemblyTests
 {
   [UsedImplicitly]
   public class ExternalAssemblySetup
   {
     [NotNull]
-    public ModuleWeaverTestHelper UnsignedWeaver { get; }
+    public TestResult UnsignedWeaver { get; }
 
     [NotNull]
-    public ModuleWeaverTestHelper SignedWeaver { get; }
+    public TestResult SignedWeaver { get; }
 
     [NotNull]
     public Type CoreExportableType { get; }
 
     public ExternalAssemblySetup()
     {
-      var directoryName = Path.GetFullPath(Path.Combine(
-        Environment.CurrentDirectory,
-        @"..\..\..\..\AssemblyToProcess\bin",
-#if DEBUG
-        "Debug",
-#else
-        "Release",
-#endif
-#if NETCOREAPP
-        "netstandard2.0"
-#else
-        "net46"
-#endif
-      ));
+      var weaver = new ModuleWeaver();
 
-      UnsignedWeaver = new ModuleWeaverTestHelper(
-        Path.Combine(directoryName, "AssemblyToProcess.Unsigned.dll"));
+      UnsignedWeaver = weaver.ExecuteTestRun(
+        "AssemblyToProcess.Unsigned.dll");
+      UnsignedWeaver.Errors.Should().BeEmpty();
 
-      Assert.NotNull(UnsignedWeaver.Errors);
-      Assert.Empty(UnsignedWeaver.Errors);
+      var directoryName = UnsignedWeaver.AssemblyPath;
 
-      SignedWeaver = new ModuleWeaverTestHelper(
-        Path.Combine(directoryName, "AssemblyToProcess.Signed.dll"));
+      SignedWeaver = weaver.ExecuteTestRun(
+        "AssemblyToProcess.Signed.dll");
+      SignedWeaver.Errors.Should().BeEmpty();
 
-      Assert.NotNull(SignedWeaver.Errors);
-      Assert.Empty(SignedWeaver.Errors);
+      File.Copy("AssemblyToProcessCore.dll",
+        Path.Combine(directoryName, "AssemblyToProcessCore.dll"));
 
       CoreExportableType = Assembly.LoadFile(Path.GetFullPath(
         Path.Combine(directoryName, "AssemblyToProcess.Core.dll")))
@@ -71,14 +64,13 @@ namespace Tests
     public void AbstractTest([NotNull] string className)
     {
       // Arrange
-      var type = GetTestHelper(className).GetType(className);
+      var type = GetTestHelper(className).Assembly.GetType(className, true);
 
       // Act
       var exports = type.GetCustomAttributes<ExportAttribute>(false);
 
       // Assert
-      Assert.NotNull(exports);
-      Assert.Empty(exports);
+      exports.Should().BeEmpty();
     }
 
     [Theory]
@@ -89,18 +81,16 @@ namespace Tests
     public void InstanceTest([NotNull] string className)
     {
       // Arrange
-      var type = GetTestHelper(className).GetType(className);
+      var type = GetTestHelper(className).Assembly.GetType(className, true);
 
       // Act
       var exports = type.GetCustomAttributes<ExportAttribute>(false).ToArray();
 
       // Assert
-      Assert.NotNull(exports);
-      Assert.Single(exports);
+      exports.Should().HaveCount(1);
 
       var attribute = exports[0];
-      Assert.NotNull(attribute);
-      Assert.Equal(_setup.CoreExportableType, attribute.ContractType);
+      attribute.ContractType.Should().Be(_setup.CoreExportableType);
     }
 
     [Theory]
@@ -109,37 +99,17 @@ namespace Tests
     public void ImportMany([NotNull] string className)
     {
       // Arrange
-      var importsType = GetTestHelper(className).GetType(className);
-      var importsInstance = (dynamic)Activator.CreateInstance(importsType);
+      var importsInstance = GetTestHelper(className).GetInstance(className);
 
       // Act
-      var imports = importsInstance.Imports;
+      var imports = (ICollection)importsInstance.Imports;
 
       // Assert
-      Assert.NotNull(imports);
-      Assert.NotEmpty(imports);
-      Assert.Equal(4, imports.Length);
+      imports.Should().HaveCount(4);
     }
-
-#pragma warning disable 618
-    [Fact]
-    public void PeVerify()
-    {
-      // Arrange
-
-      // Act
-      PeVerifier.ThrowIfDifferent(_setup.UnsignedWeaver.BeforeAssemblyPath,
-        _setup.UnsignedWeaver.AfterAssemblyPath);
-
-      PeVerifier.ThrowIfDifferent(_setup.SignedWeaver.BeforeAssemblyPath,
-        _setup.SignedWeaver.AfterAssemblyPath);
-
-      // Assert
-    }
-#pragma warning restore 618
 
     [NotNull]
-    ModuleWeaverTestHelper GetTestHelper([NotNull] string className) =>
+    TestResult GetTestHelper([NotNull] string className) =>
       className.Contains("Unsigned") ? _setup.UnsignedWeaver : _setup.SignedWeaver;
   }
 }

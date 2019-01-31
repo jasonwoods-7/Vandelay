@@ -4,7 +4,6 @@ using Mono.Cecil;
 using Mono.Cecil.Rocks;
 using Vandelay.Fody.Extensions;
 
-// ReSharper disable MissingAnnotation
 namespace Vandelay.Fody
 {
   class Import
@@ -43,7 +42,7 @@ namespace Vandelay.Fody
       public CodeDomImports CodeDom { get; }
       public ObjectImports Object { get; }
       public FuncImports Func { get; }
-      public TypeImports Type { get; private set; }
+      public TypeImports Type { get; }
 
       internal class CollectionsImport
       {
@@ -72,6 +71,7 @@ namespace Vandelay.Fody
             public DictionaryImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
             {
               var dictionaryType = findType("System.Collections.Generic.Dictionary`2");
+              moduleDefinition.ImportReference(dictionaryType);
               Constructor = dictionaryType.FindMethod(".ctor");
               SetItem = dictionaryType.FindMethod("set_Item", "TKey", "TValue");
             }
@@ -85,6 +85,7 @@ namespace Vandelay.Fody
             public ICollectionImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
             {
               var collectionType = findType("System.Collections.Generic.ICollection`1");
+              moduleDefinition.ImportReference(collectionType);
               Add = collectionType.FindMethod("Add", "T");
             }
 
@@ -95,7 +96,8 @@ namespace Vandelay.Fody
           {
             public IEnumerableImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
             {
-              Type = moduleDefinition.ImportReference(findType("System.Collections.Generic.IEnumerable`1"));
+              var enumerableType = findType("System.Collections.Generic.IEnumerable`1");
+              Type = moduleDefinition.ImportReference(enumerableType);
             }
 
             public TypeReference Type { get; }
@@ -134,6 +136,7 @@ namespace Vandelay.Fody
             public ImportManyAttributeImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
             {
               var importManyType = findType("System.ComponentModel.Composition.ImportManyAttribute");
+              moduleDefinition.ImportReference(importManyType);
               Constructor = moduleDefinition.ImportReference(importManyType.FindMethod(".ctor", "Type"));
             }
 
@@ -192,6 +195,7 @@ namespace Vandelay.Fody
               public DirectoryCatalogImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
               {
                 var catalogType = findType("System.ComponentModel.Composition.Hosting.DirectoryCatalog");
+                moduleDefinition.ImportReference(catalogType);
                 ConstructorString = moduleDefinition.ImportReference(catalogType.FindMethod(".ctor",
                   "String"));
                 ConstructorStringString = moduleDefinition.ImportReference(catalogType.FindMethod(".ctor",
@@ -223,6 +227,7 @@ namespace Vandelay.Fody
               {
                 var exportType = findType("System.ComponentModel.Composition.Hosting.ExportProvider");
                 Type = moduleDefinition.ImportReference(exportType);
+                moduleDefinition.ImportReference(exportType.MakeArrayType());
               }
 
               public TypeReference Type { get; }
@@ -234,6 +239,7 @@ namespace Vandelay.Fody
             public AttributedModelServicesImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
             {
               var servicesType = findType("System.ComponentModel.Composition.AttributedModelServices");
+              moduleDefinition.ImportReference(servicesType);
               ComposeParts = moduleDefinition.ImportReference(servicesType.FindMethod("ComposeParts", "CompositionContainer", "Object[]"));
               GetContractName = moduleDefinition.ImportReference(servicesType.FindMethod("GetContractName", "Type"));
               GetTypeIdentity = moduleDefinition.ImportReference(servicesType.FindMethod("GetTypeIdentity", "Type"));
@@ -271,6 +277,7 @@ namespace Vandelay.Fody
               public ExportImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
               {
                 var exportType = findType("System.ComponentModel.Composition.Primitives.Export");
+                moduleDefinition.ImportReference(exportType);
                 Constructor = moduleDefinition.ImportReference(exportType.FindMethod(".ctor", "String", "IDictionary`2", "Func`1"));
               }
 
@@ -283,6 +290,7 @@ namespace Vandelay.Fody
             public ExportAttributeImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
             {
               var attributeType = findType("System.ComponentModel.Composition.ExportAttribute");
+              moduleDefinition.ImportReference(attributeType);
               Constructor = moduleDefinition.ImportReference(attributeType.FindMethod(".ctor", "Type"));
             }
 
@@ -305,6 +313,7 @@ namespace Vandelay.Fody
           public AssemblyImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
           {
             var assemblyType = findType("System.Reflection.Assembly");
+            moduleDefinition.ImportReference(assemblyType);
             GetExecutingAssembly = moduleDefinition.ImportReference(assemblyType.FindMethod("GetExecutingAssembly"));
             GetEscapedCodeBase = moduleDefinition.ImportReference(assemblyType.FindMethod("get_EscapedCodeBase"));
           }
@@ -319,6 +328,7 @@ namespace Vandelay.Fody
         public UriImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
         {
           var uriType = findType("System.Uri");
+          moduleDefinition.ImportReference(uriType);
           Constructor = moduleDefinition.ImportReference(uriType.FindMethod(".ctor", "String"));
           GetLocalPath = moduleDefinition.ImportReference(uriType.FindMethod("get_LocalPath"));
         }
@@ -343,6 +353,7 @@ namespace Vandelay.Fody
           public DirectoryImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
           {
             var directoryType = findType("System.IO.Directory");
+            moduleDefinition.ImportReference(directoryType);
             GetParent = moduleDefinition.ImportReference(directoryType.FindMethod("GetParent", "String"));
           }
 
@@ -354,6 +365,7 @@ namespace Vandelay.Fody
           public FileSystemInfoImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
           {
             var infoType = findType("System.IO.FileSystemInfo");
+            moduleDefinition.ImportReference(infoType);
             GetFullName = moduleDefinition.ImportReference(infoType.FindMethod("get_FullName"));
           }
 
@@ -366,6 +378,7 @@ namespace Vandelay.Fody
         public IDisposableImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
         {
           var disposableType = findType("System.IDisposable");
+          moduleDefinition.ImportReference(disposableType);
           Dispose = moduleDefinition.ImportReference(disposableType.FindMethod("Dispose"));
         }
 
@@ -386,6 +399,7 @@ namespace Vandelay.Fody
           public DebuggerNonUserCodeAttributeImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
           {
             var attributeType = findType("System.Diagnostics.DebuggerNonUserCodeAttribute");
+            moduleDefinition.ImportReference(attributeType);
             Constructor = moduleDefinition.ImportReference(attributeType.FindMethod(".ctor"));
           }
 
@@ -416,6 +430,7 @@ namespace Vandelay.Fody
             public GeneratedCodeAttributeImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
             {
               var attributeType = findType("System.CodeDom.Compiler.GeneratedCodeAttribute");
+              moduleDefinition.ImportReference(attributeType);
               Constructor = moduleDefinition.ImportReference(attributeType.FindMethod(".ctor", "String", "String"));
             }
 
@@ -429,9 +444,10 @@ namespace Vandelay.Fody
         public ObjectImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
         {
           var objectType = findType("System.Object");
+          moduleDefinition.ImportReference(objectType);
           GetType = moduleDefinition.ImportReference(objectType.FindMethod("GetType"));
 
-          ArrayType = objectType.MakeArrayType();
+          ArrayType = moduleDefinition.ImportReference(objectType.MakeArrayType());
         }
 
         public new MethodReference GetType { get; }
@@ -443,6 +459,7 @@ namespace Vandelay.Fody
         public FuncImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
         {
           var funcType = findType("System.Func`1");
+          moduleDefinition.ImportReference(funcType);
           Constructor = funcType.FindMethod(".ctor", "Object", "IntPtr");
         }
 

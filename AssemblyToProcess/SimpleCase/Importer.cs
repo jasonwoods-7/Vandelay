@@ -13,7 +13,7 @@ namespace AssemblyToProcess.SimpleCase
   {
     public IEnumerable<IExportable> Imports { get; } =
       Importer.ImportMany<IExportable>(
-        "AssemblyToProcess.SimpleCase2.dll");
+        "AssemblyToProcess.SimpleCase.dll");
   }
 
   public class ImporterSingleSearchPatternWithImport
@@ -23,7 +23,7 @@ namespace AssemblyToProcess.SimpleCase
       var greetingExport = "Hello, World";
 
       Imports = Importer.ImportMany<IExportable>(
-        "AssemblyToProcess.SimpleCase2.dll",
+        "AssemblyToProcess.SimpleCase.dll",
         greetingExport);
     }
 
@@ -34,21 +34,21 @@ namespace AssemblyToProcess.SimpleCase
   {
     public IEnumerable<IExportable> Imports { get; } =
       Importer.ImportMany<IExportable>(
-        "AssemblyToProcess.SimpleCase2.dll|" +
-        "AssemblyToProcess.SimpleCase2.exe");
+        "AssemblyToProcess.SimpleCase.dll|" +
+        "AssemblyToProcess.SimpleCase.exe");
   }
 
   public class ImporterInheritsBase
   {
     public IEnumerable<ExportBase> Imports { get; } =
       Importer.ImportMany<ExportBase>(
-        "AssemblyToProcess.SimpleCase2.dll");
+        "AssemblyToProcess.SimpleCase.dll");
   }
 
   public class ImporterInheritedExport
   {
     public IEnumerable<IInheritedExport> Imports { get; } =
       Importer.ImportMany<IInheritedExport>(
-        "AssemblyToProcess.SimpleCase2.dll");
+        "AssemblyToProcess.SimpleCase.dll");
   }
 }

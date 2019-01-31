@@ -2,17 +2,23 @@
 {
   public class FooBarImporter
   {
-    public void IterateFooBars()
+    public int IterateFooBars()
     {
+      var count = 0;
+
       foreach (var _ in Vandelay.Importer.ImportMany<IFooExporter>(
-        "AssemblyToProcess.MultipleExports2.dll"))
+        "AssemblyToProcess.MultipleExports.dll"))
       {
+        ++count;
       }
 
       foreach (var _ in Vandelay.Importer.ImportMany<IBarExporter>(
-        "AssemblyToProcess.MultipleExports2.dll"))
+        "AssemblyToProcess.MultipleExports.dll"))
       {
+        ++count;
       }
+
+      return count;
     }
   }
 }
