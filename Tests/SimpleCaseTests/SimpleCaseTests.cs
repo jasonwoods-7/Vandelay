@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
@@ -25,8 +26,14 @@ namespace SimpleCaseTests
     public SimpleCaseSetup()
     {
       var weaver = new ModuleWeaver();
-      SimpleCaseWeaver = weaver.ExecuteTestRun(
-        "AssemblyToProcess.SimpleCase.dll");
+      SimpleCaseWeaver = weaver.ExecuteTestRun(Path.Combine(
+          Path.GetDirectoryName(typeof(SimpleCaseSetup).Assembly.GetAssemblyLocation()),
+          "AssemblyToProcess.SimpleCase.dll"),
+        assemblyName: "AssemblyToProcess.SimpleCase2"
+#if NETCOREAPP
+        , runPeVerify: false
+#endif
+      );
 
       SimpleCaseWeaver.Errors.Should().BeEmpty();
 

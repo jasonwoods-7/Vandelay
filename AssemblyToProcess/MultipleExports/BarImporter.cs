@@ -6,6 +6,6 @@ namespace AssemblyToProcess.MultipleExports
   {
     public IEnumerable<IBarExporter> Imports { get; } =
       Vandelay.Importer.ImportMany<IBarExporter>(
-        "AssemblyToProcess.MultipleExports.dll");
+        "AssemblyToProcess.MultipleExports2.dll");
   }
 }

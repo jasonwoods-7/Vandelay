@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using FluentAssertions;
@@ -28,9 +29,14 @@ namespace MultipleExportsTests
     public MultipleExportsSetup()
     {
       var weaver = new ModuleWeaver();
-      MultipleWeaver = weaver.ExecuteTestRun(
-        "AssemblyToProcess.MultipleExports.dll",
-        assemblyName: "AssemblyToProcess.MultipleExports2");
+      MultipleWeaver = weaver.ExecuteTestRun(Path.Combine(
+          Path.GetDirectoryName(typeof(MultipleExportsSetup).Assembly.GetAssemblyLocation()),
+          "AssemblyToProcess.MultipleExports.dll"),
+        assemblyName: "AssemblyToProcess.MultipleExports2"
+#if NETCOREAPP
+        , runPeVerify: false
+#endif
+      );
 
       MultipleWeaver.Errors.Should().BeEmpty();
 

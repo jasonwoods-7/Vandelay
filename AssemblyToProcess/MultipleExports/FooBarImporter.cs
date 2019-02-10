@@ -7,13 +7,13 @@
       var count = 0;
 
       foreach (var _ in Vandelay.Importer.ImportMany<IFooExporter>(
-        "AssemblyToProcess.MultipleExports.dll"))
+        "AssemblyToProcess.MultipleExports2.dll"))
       {
         ++count;
       }
 
       foreach (var _ in Vandelay.Importer.ImportMany<IBarExporter>(
-        "AssemblyToProcess.MultipleExports.dll"))
+        "AssemblyToProcess.MultipleExports2.dll"))
       {
         ++count;
       }

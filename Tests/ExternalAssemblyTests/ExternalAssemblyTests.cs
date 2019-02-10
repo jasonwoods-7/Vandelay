@@ -28,27 +28,51 @@ namespace ExternalAssemblyTests
 
     public ExternalAssemblySetup()
     {
-      var weaver = new ModuleWeaver();
+      var currentDirectory = Path.GetDirectoryName(typeof(ExternalAssemblySetup)
+        .Assembly.GetAssemblyLocation());
 
-      UnsignedWeaver = weaver.ExecuteTestRun(
-        "AssemblyToProcess.Unsigned.dll");
-      UnsignedWeaver.Errors.Should().BeEmpty();
+      {
+        var unsignedWeaver = new ModuleWeaver();
+        UnsignedWeaver = unsignedWeaver.ExecuteTestRun(Path.Combine(
+            currentDirectory, "AssemblyToProcess.Unsigned.dll"),
+          assemblyName: "AssemblyToProcess.Unsigned2"
+#if NETCOREAPP
+          , runPeVerify: false
+#endif
+        );
+        UnsignedWeaver.Errors.Should().BeEmpty();
+      }
 
-      var directoryName = UnsignedWeaver.AssemblyPath;
+      {
+        var signedWeaver = new ModuleWeaver();
+        SignedWeaver = signedWeaver.ExecuteTestRun(Path.Combine(
+            currentDirectory, "AssemblyToProcess.Signed.dll"),
+          assemblyName: "AssemblyToProcess.Signed2"
+#if NETCOREAPP
+          , runPeVerify: false
+#endif
+        );
+        SignedWeaver.Errors.Should().BeEmpty();
+      }
 
-      SignedWeaver = weaver.ExecuteTestRun(
-        "AssemblyToProcess.Signed.dll");
-      SignedWeaver.Errors.Should().BeEmpty();
-
-      File.Copy("AssemblyToProcessCore.dll",
-        Path.Combine(directoryName, "AssemblyToProcessCore.dll"));
-
-      CoreExportableType = Assembly.LoadFile(Path.GetFullPath(
-        Path.Combine(directoryName, "AssemblyToProcess.Core.dll")))
+      CoreExportableType = Assembly.LoadFile("AssemblyToProcess.Core.dll")
         .GetType("AssemblyToProcess.Core.IExportable", true);
 
-      AppDomain.CurrentDomain.AssemblyResolve += (_, e) => Assembly.LoadFile(
-        Path.Combine(directoryName, $"{e.Name.Split(',')[0]}.dll"));
+      AppDomain.CurrentDomain.AssemblyResolve += (_, e) =>
+      {
+        var assemblyName = new AssemblyName(e.Name).Name;
+
+        var assemblyPath = Path.Combine(GetAssemblyDirectory(), $"{assemblyName}.dll");
+
+        return !File.Exists(assemblyPath) ? null : Assembly.LoadFile(assemblyPath);
+
+        string GetAssemblyDirectory() =>
+          assemblyName.Contains("Unsigned")
+            ? UnsignedWeaver.AssemblyPath
+            : assemblyName.Contains("Signed")
+              ? SignedWeaver.AssemblyPath
+              : currentDirectory;
+      };
     }
   }
 
