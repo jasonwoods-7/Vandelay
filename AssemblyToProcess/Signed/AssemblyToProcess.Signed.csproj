@@ -7,9 +7,6 @@
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Composition" Version="4.5.0" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\Vandelay\Vandelay.csproj" />
     <ProjectReference Include="..\Core\AssemblyToProcess.Core.csproj" />
   </ItemGroup>

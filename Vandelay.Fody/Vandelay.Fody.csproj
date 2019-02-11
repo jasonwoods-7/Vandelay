@@ -6,6 +6,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FodyHelpers" Version="4.0.1" />
-    <PackageReference Include="System.ComponentModel.Composition" Version="4.5.0" />
   </ItemGroup>
+  <Target Name="GetTargetPath" Returns="@(_FakeOutputPath)">
+    <ItemGroup>
+      <_FakeOutputPath Include="$(MSBuildProjectDirectory)\$(PackageOutputPath)\$(AssemblyName).UNK" />
+    </ItemGroup>
+  </Target>
 </Project>
