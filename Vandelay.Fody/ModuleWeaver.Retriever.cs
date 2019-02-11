@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
@@ -15,9 +14,8 @@ namespace Vandelay.Fody
 {
   partial class ModuleWeaver
   {
-    [NotNull]
-    MethodDefinition InjectRetriever([NotNull] TypeReference importType,
-      [NotNull] IReadOnlyCollection<string> searchPatterns)
+    MethodDefinition InjectRetriever(TypeReference importType,
+      IReadOnlyCollection<string> searchPatterns)
     {
       const TypeAttributes typeAttributes = TypeAttributes.AnsiClass |
         TypeAttributes.Sealed | TypeAttributes.AutoClass;
@@ -41,8 +39,7 @@ namespace Vandelay.Fody
       return retrieverProperty;
     }
 
-    [NotNull]
-    string TargetName([NotNull] string targetName, int counter)
+    string TargetName(string targetName, int counter)
     {
       var suggestedName = -1 == counter ? targetName : $"{targetName}_{counter}";
       if (ModuleDefinition.Types.All(t => t.Name != suggestedName))
@@ -53,9 +50,8 @@ namespace Vandelay.Fody
       return TargetName(targetName, counter + 1);
     }
 
-    [NotNull]
     Tuple<FieldDefinition, GenericInstanceType>
-      InjectImportsField([NotNull] TypeReference importType)
+      InjectImportsField(TypeReference importType)
     {
       // [ImportMany(typeof(ImportType))]
       // private IEnumerable<ImportType> _imports;
@@ -76,9 +72,8 @@ namespace Vandelay.Fody
       return Tuple.Create(fieldDefinition, importerCollectionType);
     }
 
-    [NotNull]
     MethodDefinition InjectConstructor(
-      [NotNull] IReadOnlyCollection<string> searchPatterns)
+      IReadOnlyCollection<string> searchPatterns)
     {
       const MethodAttributes methodAttributes = MethodAttributes.SpecialName |
         MethodAttributes.RTSpecialName | MethodAttributes.HideBySig |
@@ -160,8 +155,8 @@ namespace Vandelay.Fody
       return constructor;
     }
 
-    void InjectSearchPatterns([NotNull] MethodDefinition constructor,
-      [NotNull] IReadOnlyCollection<string> searchPatterns)
+    void InjectSearchPatterns(MethodDefinition constructor,
+      IReadOnlyCollection<string> searchPatterns)
     {
       if (searchPatterns.Count == 0)
       {
@@ -200,7 +195,7 @@ namespace Vandelay.Fody
       }
     }
 
-    void InjectCatalogPath([NotNull] MethodDefinition constructor)
+    void InjectCatalogPath(MethodDefinition constructor)
     {
       // var catalogPath = Directory.GetParent(new Uri(Assembly.GetExecutingAssembly()
       //   .EscapedCodeBase).LocalPath).FullName;
@@ -218,8 +213,8 @@ namespace Vandelay.Fody
         _import.System.IO.FileSystemInfo.GetFullName));
     }
 
-    void InjectUsingStatement([NotNull] MethodBody methodBody, [NotNull] Instruction bodyStart,
-      OpCode loadLocation, [NotNull] Instruction handlerEnd, [NotNull] Instruction leave)
+    void InjectUsingStatement(MethodBody methodBody, Instruction bodyStart,
+      OpCode loadLocation, Instruction handlerEnd, Instruction leave)
     {
       var startFinally = Instruction.Create(loadLocation);
       var endFinally = Instruction.Create(OpCodes.Endfinally);
@@ -245,10 +240,9 @@ namespace Vandelay.Fody
       methodBody.ExceptionHandlers.Add(handler);
     }
 
-    [NotNull]
-    MethodDefinition InjectRetrieverProperty([NotNull] MemberReference importerType,
-      [NotNull] TypeReference importerCollectionType, [NotNull] MethodReference ctor,
-      [NotNull] FieldReference fieldDefinition)
+    MethodDefinition InjectRetrieverProperty(MemberReference importerType,
+      TypeReference importerCollectionType, MethodReference ctor,
+      FieldReference fieldDefinition)
     {
       // public static IEnumerable<ImportType> ImportTypeRetriever(object[] array)
       var retriever = new MethodDefinition($"{importerType.Name}Retriever",

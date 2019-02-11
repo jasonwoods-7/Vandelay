@@ -1,24 +1,23 @@
 ﻿using System.Linq;
-using JetBrains.Annotations;
 using Mono.Cecil;
 
 namespace Vandelay.Fody.Extensions
 {
   static class TypeDefinitionExtensions
   {
-    public static bool IsClass([NotNull] this TypeDefinition typeDefinition) =>
+    public static bool IsClass(this TypeDefinition typeDefinition) =>
       typeDefinition.BaseType != null &&
         !typeDefinition.IsEnum &&
         !typeDefinition.IsInterface;
 
-    public static bool ExportsType([NotNull] this TypeDefinition typeDefinition,
-      [NotNull] TypeReference exportedType) =>
+    public static bool ExportsType(this TypeDefinition typeDefinition,
+      TypeReference exportedType) =>
       typeDefinition.CustomAttributes.Any(a =>
         a.AttributeType.FullName == "System.ComponentModel.Composition.ExportAttribute" &&
         a.ConstructorArguments.Any(c => ((TypeReference)c.Value).FullName == exportedType.FullName));
 
-    public static bool ImplementsInterface([CanBeNull] this TypeDefinition typeDefinition,
-      [NotNull] TypeReference interfaceType)
+    public static bool ImplementsInterface(this TypeDefinition typeDefinition,
+      TypeReference interfaceType)
     {
       if (!interfaceType.Resolve().IsInterface)
       {
@@ -39,8 +38,8 @@ namespace Vandelay.Fody.Extensions
       return typeDefinition.BaseType.Resolve().ImplementsInterface(interfaceType);
     }
 
-    public static bool InheritsBase([CanBeNull] this TypeDefinition typeDefinition,
-      [NotNull] TypeReference baseType)
+    public static bool InheritsBase(this TypeDefinition typeDefinition,
+      TypeReference baseType)
     {
       if (baseType.Resolve().IsInterface)
       {
@@ -60,11 +59,10 @@ namespace Vandelay.Fody.Extensions
       return typeDefinition.BaseType.Resolve().InheritsBase(baseType);
     }
 
-    [NotNull]
     public static MethodDefinition FindMethod(
-      [NotNull] this TypeDefinition typeDefinition,
-      [NotNull] string method,
-      [NotNull] params string[] paramTypes) =>
+      this TypeDefinition typeDefinition,
+      string method,
+      params string[] paramTypes) =>
       typeDefinition.Methods.First(x =>
         x.Name == method &&
         x.IsMatch(paramTypes));

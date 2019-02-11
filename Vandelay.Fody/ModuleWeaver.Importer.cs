@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Fody;
-using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Vandelay.Fody.Extensions;
@@ -21,7 +20,7 @@ namespace Vandelay.Fody
       }
     }
 
-    void Process([NotNull] MethodDefinition method)
+    void Process(MethodDefinition method)
     {
       var instructions = method.Body.Instructions
         .Where(i => i.OpCode == OpCodes.Call).ToList();
@@ -32,8 +31,8 @@ namespace Vandelay.Fody
       }
     }
 
-    void ProcessInstruction([NotNull] MethodDefinition method,
-      [NotNull] Instruction instruction)
+    void ProcessInstruction(MethodDefinition method,
+      Instruction instruction)
     {
       if (!(instruction.Operand is GenericInstanceMethod methodReference))
       {
@@ -56,8 +55,8 @@ namespace Vandelay.Fody
       ProcessImportMany(method, instruction, methodReference);
     }
 
-    void ProcessImportMany([NotNull] MethodDefinition method,
-      [NotNull] Instruction instruction, [NotNull] IGenericInstance methodReference)
+    void ProcessImportMany(MethodDefinition method,
+      Instruction instruction, IGenericInstance methodReference)
     {
       InjectExportValueProvider();
       InjectCompositionBatchHelper();
@@ -73,8 +72,7 @@ namespace Vandelay.Fody
       method.Body.GetILProcessor().Remove(searchPatternInstruction);
     }
 
-    [NotNull]
-    static Instruction SearchPatternInstruction([NotNull] Instruction instruction)
+    static Instruction SearchPatternInstruction(Instruction instruction)
     {
       if (Code.Ldstr == instruction.OpCode.Code)
       {

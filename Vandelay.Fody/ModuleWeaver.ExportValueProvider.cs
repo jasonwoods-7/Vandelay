@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Mono.Cecil;
+﻿using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Vandelay.Fody.Extensions;
 
@@ -7,7 +6,6 @@ namespace Vandelay.Fody
 {
   partial class ModuleWeaver
   {
-    [CanBeNull]
     TypeDefinition ExportValueProvider { get; set; }
 
     void InjectExportValueProvider()
@@ -35,15 +33,13 @@ namespace Vandelay.Fody
       ModuleDefinition.Types.Add(ExportValueProvider);
     }
 
-    [NotNull]
     FieldDefinition InjectValueField() =>
       // private readonly object _value;
       new FieldDefinition("_value",
         FieldAttributes.Private | FieldAttributes.InitOnly,
         TypeSystem.ObjectReference);
 
-    [NotNull]
-    MethodDefinition InjectValueConstructor([NotNull] FieldReference valueField)
+    MethodDefinition InjectValueConstructor(FieldReference valueField)
     {
       const MethodAttributes methodAttributes = MethodAttributes.SpecialName |
         MethodAttributes.RTSpecialName | MethodAttributes.HideBySig;
@@ -72,8 +68,7 @@ namespace Vandelay.Fody
       return constructor;
     }
 
-    [NotNull]
-    MethodDefinition InjectValueFunc([NotNull] FieldReference valueField)
+    MethodDefinition InjectValueFunc(FieldReference valueField)
     {
       // public object GetValue()
       var func = new MethodDefinition("GetValue", MethodAttributes.Public,

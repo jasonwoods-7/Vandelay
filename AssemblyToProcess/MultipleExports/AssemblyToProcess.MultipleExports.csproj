@@ -4,13 +4,6 @@
     <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <DisableFody>true</DisableFody>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\bin\Release</OutputPath>
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Vandelay\Vandelay.csproj" />
   </ItemGroup>

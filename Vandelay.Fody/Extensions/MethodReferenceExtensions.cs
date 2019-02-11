@@ -1,13 +1,12 @@
-﻿using JetBrains.Annotations;
-using Mono.Cecil;
+﻿using Mono.Cecil;
 using Mono.Cecil.Rocks;
 
 namespace Vandelay.Fody.Extensions
 {
   static class MethodReferenceExtensions
   {
-    public static bool IsMatch([NotNull] this MethodReference methodReference,
-      [NotNull] params string[] paramTypes)
+    public static bool IsMatch(this MethodReference methodReference,
+      params string[] paramTypes)
     {
       if (methodReference.Parameters.Count != paramTypes.Length)
       {
@@ -27,8 +26,8 @@ namespace Vandelay.Fody.Extensions
       return true;
     }
 
-    public static MethodReference MakeGeneric([NotNull] this MethodReference methodReference,
-      [NotNull] params TypeReference[] paramTypes)
+    public static MethodReference MakeGeneric(this MethodReference methodReference,
+      params TypeReference[] paramTypes)
     {
       var reference = new MethodReference(
         methodReference.Name,

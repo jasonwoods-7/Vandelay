@@ -1,13 +1,12 @@
 ﻿using System.Linq;
-using JetBrains.Annotations;
 using Mono.Cecil.Cil;
 
 namespace Vandelay.Fody.Extensions
 {
   static class MethodBodyExtensions
   {
-    public static void UpdateInstructions([NotNull] this MethodBody body,
-      [NotNull] Instruction oldInstruction, [NotNull] Instruction newInstruction)
+    public static void UpdateInstructions(this MethodBody body,
+      Instruction oldInstruction, Instruction newInstruction)
     {
       foreach (var updateInstruction in body.Instructions
         .Where(i => i.Operand == oldInstruction))

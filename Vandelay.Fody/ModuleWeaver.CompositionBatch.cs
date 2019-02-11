@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
@@ -10,7 +9,6 @@ namespace Vandelay.Fody
 {
   partial class ModuleWeaver
   {
-    [CanBeNull]
     MethodReference CreateCompositionBatch { get; set; }
 
     void InjectCompositionBatchHelper()
@@ -34,7 +32,6 @@ namespace Vandelay.Fody
       ModuleDefinition.Types.Add(compositionBatch);
     }
 
-    [NotNull]
     MethodDefinition InjectCreate()
     {
       // public static CompositionBatch Create(object[] array)
@@ -63,7 +60,6 @@ namespace Vandelay.Fody
       return compositionBatch;
     }
 
-    [NotNull]
     IEnumerable<Instruction> GetInstructions()
     {
       // var compositionBatch = new CompositionBatch();
