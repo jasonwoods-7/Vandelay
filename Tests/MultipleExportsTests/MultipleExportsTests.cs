@@ -7,6 +7,7 @@ using System.Reflection;
 using FluentAssertions;
 using Fody;
 using JetBrains.Annotations;
+using TestCore;
 using Vandelay.Fody;
 using Xunit;
 
@@ -29,7 +30,7 @@ namespace MultipleExportsTests
     public MultipleExportsSetup()
     {
       var weaver = new ModuleWeaver();
-      MultipleWeaver = weaver.ExecuteTestRun(Path.Combine(
+      MultipleWeaver = weaver.ExecuteVandelayTestRun(Path.Combine(
           Path.GetDirectoryName(typeof(MultipleExportsSetup).Assembly.GetAssemblyLocation()),
           "AssemblyToProcess.MultipleExports.dll"),
         assemblyName: "AssemblyToProcess.MultipleExports2"

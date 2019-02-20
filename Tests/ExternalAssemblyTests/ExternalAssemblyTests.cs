@@ -7,6 +7,7 @@ using System.Reflection;
 using FluentAssertions;
 using Fody;
 using JetBrains.Annotations;
+using TestCore;
 using Vandelay.Fody;
 using Xunit;
 
@@ -14,7 +15,7 @@ using Xunit;
 
 namespace ExternalAssemblyTests
 {
-  [UsedImplicitly]
+    [UsedImplicitly]
   public class ExternalAssemblySetup
   {
     [NotNull]
@@ -33,7 +34,7 @@ namespace ExternalAssemblyTests
 
       {
         var unsignedWeaver = new ModuleWeaver();
-        UnsignedWeaver = unsignedWeaver.ExecuteTestRun(Path.Combine(
+        UnsignedWeaver = unsignedWeaver.ExecuteVandelayTestRun(Path.Combine(
             currentDirectory, "AssemblyToProcess.Unsigned.dll"),
           assemblyName: "AssemblyToProcess.Unsigned2"
 #if NETCOREAPP
@@ -45,17 +46,23 @@ namespace ExternalAssemblyTests
 
       {
         var signedWeaver = new ModuleWeaver();
-        SignedWeaver = signedWeaver.ExecuteTestRun(Path.Combine(
+        SignedWeaver = signedWeaver.ExecuteVandelayTestRun(Path.Combine(
             currentDirectory, "AssemblyToProcess.Signed.dll"),
           assemblyName: "AssemblyToProcess.Signed2"
 #if NETCOREAPP
           , runPeVerify: false
 #endif
+          , purgeTempDir: false
+#if NETFRAMEWORK
+          , strongNameKeyPair: new StrongNameKeyPair(File.ReadAllBytes(
+              @"..\..\..\..\..\AssemblyToProcess\Signed\key.snk"))
+#endif
         );
         SignedWeaver.Errors.Should().BeEmpty();
       }
 
-      CoreExportableType = Assembly.LoadFile("AssemblyToProcess.Core.dll")
+      CoreExportableType = Assembly.Load(AssemblyName.GetAssemblyName(
+          Path.Combine(currentDirectory, "AssemblyToProcess.Core.dll")))
         .GetType("AssemblyToProcess.Core.IExportable", true);
 
       AppDomain.CurrentDomain.AssemblyResolve += (_, e) =>

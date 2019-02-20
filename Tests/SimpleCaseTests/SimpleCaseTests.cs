@@ -7,6 +7,7 @@ using System.Reflection;
 using FluentAssertions;
 using Fody;
 using JetBrains.Annotations;
+using TestCore;
 using Vandelay.Fody;
 using Xunit;
 
@@ -26,7 +27,7 @@ namespace SimpleCaseTests
     public SimpleCaseSetup()
     {
       var weaver = new ModuleWeaver();
-      SimpleCaseWeaver = weaver.ExecuteTestRun(Path.Combine(
+      SimpleCaseWeaver = weaver.ExecuteVandelayTestRun(Path.Combine(
           Path.GetDirectoryName(typeof(SimpleCaseSetup).Assembly.GetAssemblyLocation()),
           "AssemblyToProcess.SimpleCase.dll"),
         assemblyName: "AssemblyToProcess.SimpleCase2"
