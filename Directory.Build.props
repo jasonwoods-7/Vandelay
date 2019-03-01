@@ -4,5 +4,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>latest</LangVersion>
     <Version>0.7.0</Version>
+    <Copyright>Copyright © 2015 - 2019</Copyright>
   </PropertyGroup>
 </Project>
