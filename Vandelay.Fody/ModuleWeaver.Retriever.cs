@@ -64,7 +64,7 @@ namespace Vandelay.Fody
       var importAttribute = new CustomAttribute(
         _import.System.ComponentModel.Composition.ImportManyAttribute.Constructor);
       importAttribute.ConstructorArguments.Add(new CustomAttributeArgument(
-        FindType("System.Type"), importType));
+        _import.System.Type.Type, importType));
 
       fieldDefinition.CustomAttributes.Add(importAttribute);
 
