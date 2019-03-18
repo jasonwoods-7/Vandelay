@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -26,14 +25,14 @@ namespace Vandelay.Fody
         TypeSystem.ObjectReference);
       ModuleDefinition.Types.Add(targetType);
 
-      var fieldTuple = InjectImportsField(importType);
-      targetType.Fields.Add(fieldTuple.Item1);
+      var (definition, collectionType) = InjectImportsField(importType);
+      targetType.Fields.Add(definition);
 
       var constructor = InjectConstructor(searchPatterns);
       targetType.Methods.Add(constructor);
 
-      var retrieverProperty = InjectRetrieverProperty(importType, fieldTuple.Item2,
-        constructor, fieldTuple.Item1);
+      var retrieverProperty = InjectRetrieverProperty(importType, collectionType,
+        constructor, definition);
       targetType.Methods.Add(retrieverProperty);
 
       return retrieverProperty;
@@ -50,7 +49,7 @@ namespace Vandelay.Fody
       return TargetName(targetName, counter + 1);
     }
 
-    Tuple<FieldDefinition, GenericInstanceType>
+    (FieldDefinition defintion, GenericInstanceType collectionType)
       InjectImportsField(TypeReference importType)
     {
       // [ImportMany(typeof(ImportType))]
@@ -69,7 +68,7 @@ namespace Vandelay.Fody
 
       fieldDefinition.CustomAttributes.Add(importAttribute);
 
-      return Tuple.Create(fieldDefinition, importerCollectionType);
+      return (fieldDefinition, importerCollectionType);
     }
 
     MethodDefinition InjectConstructor(
