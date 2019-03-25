@@ -9,6 +9,10 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using TypeSystem = Fody.TypeSystem;
 
+#if NETSTANDARD
+using StrongNameKeyPair = System.Reflection.StrongNameKeyPair;
+#endif
+
 #pragma warning disable 618
 
 namespace TestCore
