@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using Fody;
-using JetBrains.Annotations;
 using TestCore;
 using Vandelay.Fody;
 using Xunit;
@@ -15,16 +14,12 @@ using Xunit;
 
 namespace ExternalAssemblyTests
 {
-    [UsedImplicitly]
   public class ExternalAssemblySetup
   {
-    [NotNull]
     public TestResult UnsignedWeaver { get; }
 
-    [NotNull]
     public TestResult SignedWeaver { get; }
 
-    [NotNull]
     public Type CoreExportableType { get; }
 
     public ExternalAssemblySetup()
@@ -92,7 +87,7 @@ namespace ExternalAssemblyTests
     [Theory]
     [InlineData("AssemblyToProcess.Unsigned.AbstractExportable")]
     [InlineData("AssemblyToProcess.Signed.AbstractExportable")]
-    public void AbstractTest([NotNull] string className)
+    public void AbstractTest(string className)
     {
       // Arrange
       var type = GetTestHelper(className).Assembly.GetType(className, true);
@@ -109,7 +104,7 @@ namespace ExternalAssemblyTests
     [InlineData("AssemblyToProcess.Unsigned.AlreadyExportedInstance")]
     [InlineData("AssemblyToProcess.Signed.ExportableInstance")]
     [InlineData("AssemblyToProcess.Signed.AlreadyExportedInstance")]
-    public void InstanceTest([NotNull] string className)
+    public void InstanceTest(string className)
     {
       // Arrange
       var type = GetTestHelper(className).Assembly.GetType(className, true);
@@ -127,7 +122,7 @@ namespace ExternalAssemblyTests
     [Theory]
     [InlineData("AssemblyToProcess.Unsigned.Importer")]
     [InlineData("AssemblyToProcess.Signed.Importer")]
-    public void ImportMany([NotNull] string className)
+    public void ImportMany(string className)
     {
       // Arrange
       var importsInstance = GetTestHelper(className).GetInstance(className);
@@ -139,8 +134,7 @@ namespace ExternalAssemblyTests
       imports.Should().HaveCount(4);
     }
 
-    [NotNull]
-    TestResult GetTestHelper([NotNull] string className) =>
+    TestResult GetTestHelper(string className) =>
       className.Contains("Unsigned") ? _setup.UnsignedWeaver : _setup.SignedWeaver;
   }
 }

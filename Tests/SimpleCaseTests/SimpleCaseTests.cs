@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using Fody;
-using JetBrains.Annotations;
 using TestCore;
 using Vandelay.Fody;
 using Xunit;
@@ -15,13 +14,10 @@ using Xunit;
 
 namespace SimpleCaseTests
 {
-  [UsedImplicitly]
   public class SimpleCaseSetup
   {
-    [NotNull]
     public TestResult SimpleCaseWeaver { get; }
 
-    [NotNull]
     public Type SimpleCaseExportableType { get; }
 
     public SimpleCaseSetup()
@@ -51,7 +47,7 @@ namespace SimpleCaseTests
 
     [Theory]
     [InlineData("AssemblyToProcess.SimpleCase.AbstractExportable")]
-    public void AbstractTest([NotNull] string className)
+    public void AbstractTest(string className)
     {
       // Arrange
       var type = _setup.SimpleCaseWeaver.Assembly.GetType(className, true);
@@ -68,7 +64,7 @@ namespace SimpleCaseTests
     [InlineData("AssemblyToProcess.SimpleCase.AlreadyExportedInstance")]
     [InlineData("AssemblyToProcess.SimpleCase.NonPublicExported")]
     [InlineData("AssemblyToProcess.SimpleCase.ImplementsExtended")]
-    public void InstanceTest([NotNull] string className)
+    public void InstanceTest(string className)
     {
       // Arrange
       var type = _setup.SimpleCaseWeaver.Assembly.GetType(className, true);
@@ -86,7 +82,7 @@ namespace SimpleCaseTests
     [Theory]
     [InlineData("AssemblyToProcess.SimpleCase.ImporterSingleSearchPattern")]
     [InlineData("AssemblyToProcess.SimpleCase.ImporterMultipleSearchPatterns")]
-    public void ImportMany([NotNull] string searchPattern)
+    public void ImportMany(string searchPattern)
     {
       // Arrange
       var importsInstance = _setup.SimpleCaseWeaver.GetInstance(searchPattern);

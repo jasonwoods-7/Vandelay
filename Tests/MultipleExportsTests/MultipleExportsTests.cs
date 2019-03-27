@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using Fody;
-using JetBrains.Annotations;
 using TestCore;
 using Vandelay.Fody;
 using Xunit;
@@ -15,16 +14,12 @@ using Xunit;
 
 namespace MultipleExportsTests
 {
-  [UsedImplicitly]
   public class MultipleExportsSetup
   {
-    [NotNull]
     public TestResult MultipleWeaver { get; }
 
-    [NotNull]
     public Type FooExporterType { get; }
 
-    [NotNull]
     public Type BarExporterType { get; }
 
     public MultipleExportsSetup()
@@ -57,7 +52,7 @@ namespace MultipleExportsTests
     [Theory]
     [InlineData("AssemblyToProcess.MultipleExports.FooExporterA")]
     [InlineData("AssemblyToProcess.MultipleExports.FooExporterB")]
-    public void InstanceTest_Foo([NotNull] string className)
+    public void InstanceTest_Foo(string className)
     {
       // Arrange
       var type = _setup.MultipleWeaver.Assembly.GetType(className, true);
@@ -76,7 +71,7 @@ namespace MultipleExportsTests
     [Theory]
     [InlineData("AssemblyToProcess.MultipleExports.BarExporterA")]
     [InlineData("AssemblyToProcess.MultipleExports.BarExporterB")]
-    public void InstanceTest_Bar([NotNull] string className)
+    public void InstanceTest_Bar(string className)
     {
       // Arrange
       var type = _setup.MultipleWeaver.Assembly.GetType(className, true);
@@ -111,7 +106,7 @@ namespace MultipleExportsTests
     [Theory]
     [InlineData("AssemblyToProcess.MultipleExports.BarImporter")]
     [InlineData("AssemblyToProcess.MultipleExports.FooImporter")]
-    public void Importer([NotNull] string className)
+    public void Importer(string className)
     {
       // Arrange
       var instance = _setup.MultipleWeaver.GetInstance(className);
