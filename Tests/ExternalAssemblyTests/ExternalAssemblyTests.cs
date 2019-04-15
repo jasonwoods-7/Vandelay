@@ -48,10 +48,8 @@ namespace ExternalAssemblyTests
           , runPeVerify: false
 #endif
           , purgeTempDir: false
-#if NETFRAMEWORK
-          , strongNameKeyPair: new StrongNameKeyPair(File.ReadAllBytes(
+          , strongNameKeyPair: new Mono.Cecil.StrongNameKeyPair(File.ReadAllBytes(
               @"..\..\..\..\..\AssemblyToProcess\Signed\key.snk"))
-#endif
         );
         SignedWeaver.Errors.Should().BeEmpty();
       }
