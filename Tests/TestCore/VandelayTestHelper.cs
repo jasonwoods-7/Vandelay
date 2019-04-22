@@ -36,11 +36,17 @@ namespace TestCore
 
       if (purgeTempDir)
       {
-        var ioHelperType = typeof(BaseModuleWeaver).Assembly.GetType("IoHelper");
-        var purgeDirectoryInfo = ioHelperType.GetMethod("PurgeDirectory");
-        Debug.Assert(purgeDirectoryInfo != null, $"{nameof(purgeDirectoryInfo)} != null");
-        var purger = purgeDirectoryInfo.CreateDelegate<Action<string>>();
-        purger(fodyTempDir);
+        var info = new DirectoryInfo(fodyTempDir);
+
+        foreach (var file in info.GetFiles())
+        {
+          file.Delete();
+        }
+
+        foreach (var directory in info.GetDirectories())
+        {
+          directory.Delete(true);
+        }
       }
 
       string targetFileName;
