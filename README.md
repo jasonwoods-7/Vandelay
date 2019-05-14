@@ -10,7 +10,9 @@ Vandelay is an extension to the [Fody](https://github.com/Fody/Fody) aspect weav
 
 https://www.nuget.org/packages/Vandelay.Fody/
 
-    PM> Install-Package Vandelay.Fody
+```powershell
+PM> Install-Package Vandelay.Fody
+```
 
 ## What type of problem does Vandelay solve?
 
