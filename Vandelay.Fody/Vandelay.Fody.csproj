@@ -5,7 +5,7 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FodyHelpers" Version="5.0.6" />
+    <PackageReference Include="FodyHelpers" Version="5.1.0" />
   </ItemGroup>
   <Target Name="GetTargetPath" Returns="@(_FakeOutputPath)">
     <ItemGroup>
