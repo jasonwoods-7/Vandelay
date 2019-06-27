@@ -1,4 +1,5 @@
 # Vandelay
+[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=jasonwoods-7/Vandelay)](https://dependabot.com)
 
 ## What is Vandelay?
 
