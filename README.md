@@ -1,17 +1,15 @@
-# Vandelay
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=jasonwoods-7/Vandelay)](https://dependabot.com)
+# Vandelay [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=jasonwoods-7/Vandelay)](https://dependabot.com) [![Build status](https://ci.appveyor.com/api/projects/status/uvm747hjwyus7wba?svg=true)](https://ci.appveyor.com/project/jasonwoods-7/vandelay)
 
 ## What is Vandelay?
 
 Vandelay is an extension to the [Fody](https://github.com/Fody/Fody) aspect weaving project framework.  Vandelay is an Importer\Exporter.
-
-## AppVeyor Build Status [![Build status](https://ci.appveyor.com/api/projects/status/uvm747hjwyus7wba?svg=true)](https://ci.appveyor.com/project/jasonwoods-7/vandelay)
 
 ## The NuGet Package [![NuGet Status](http://img.shields.io/nuget/v/Vandelay.Fody.svg?style=flat)](https://www.nuget.org/packages/Vandelay.Fody/)
 
 https://www.nuget.org/packages/Vandelay.Fody/
 
 ```powershell
+PM> Install-Package Fody
 PM> Install-Package Vandelay.Fody
 ```
 
