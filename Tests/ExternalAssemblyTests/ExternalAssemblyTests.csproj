@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.9.0" />
-    <PackageReference Include="FodyHelpers" Version="6.0.4" />
+    <PackageReference Include="FodyHelpers" Version="6.0.5" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
     <PackageReference Include="System.ComponentModel.Composition" Version="4.6.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
