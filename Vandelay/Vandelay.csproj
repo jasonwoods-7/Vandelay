@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -9,12 +9,13 @@
     <PackageTags>MEF, ILWeaving, Fody, Cecil</PackageTags>
     <Authors>Jason Woods</Authors>
     <PackageIconUrl />
-    <PackageProjectUrl>http://github.com/jasonwoods-7/Vandelay</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/jasonwoods-7/Vandelay</PackageProjectUrl>
     <PackageOutputPath>$(SolutionDir)nugets</PackageOutputPath>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Fody" Version="6.0.8" PrivateAssets="None" />
-    <PackageReference Include="FodyPackaging" Version="6.0.8" PrivateAssets="All" />
+    <PackageReference Include="Fody" Version="6.1.0" PrivateAssets="None" />
+    <PackageReference Include="FodyPackaging" Version="6.1.0" PrivateAssets="All" />
     <PackageReference Include="System.ComponentModel.Composition" Version="4.7.0" />
   </ItemGroup>
 </Project>

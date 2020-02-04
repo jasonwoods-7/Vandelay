@@ -486,7 +486,7 @@ namespace Vandelay.Fody
     {
       if (null == _import)
       {
-        _import = new Import(FindType, ModuleDefinition);
+        _import = new Import(FindTypeDefinition, ModuleDefinition);
       }
     }
   }
