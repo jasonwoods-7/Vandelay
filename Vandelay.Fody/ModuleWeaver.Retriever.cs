@@ -49,13 +49,12 @@ namespace Vandelay.Fody
       return TargetName(targetName, counter + 1);
     }
 
-    (FieldDefinition defintion, GenericInstanceType collectionType)
+    (FieldDefinition defintion, ArrayType collectionType)
       InjectImportsField(TypeReference importType)
     {
       // [ImportMany(typeof(ImportType))]
-      // private IEnumerable<ImportType> _imports;
-      var importerCollectionType = _import.System.Collections.Generic.IEnumerable.Type
-        .MakeGenericInstanceType(importType);
+      // private ImportType[] _imports;
+      var importerCollectionType = importType.MakeArrayType();
       ModuleDefinition.ImportReference(importerCollectionType);
 
       var fieldDefinition = new FieldDefinition("_imports",
@@ -243,7 +242,7 @@ namespace Vandelay.Fody
       TypeReference importerCollectionType, MethodReference ctor,
       FieldReference fieldDefinition)
     {
-      // public static IEnumerable<ImportType> ImportTypeRetriever(object[] array)
+      // public static ImportType[] ImportTypeRetriever(object[] array)
       var retriever = new MethodDefinition($"{importerType.Name}Retriever",
         MethodAttributes.Public | MethodAttributes.Static |
         MethodAttributes.HideBySig, importerCollectionType);

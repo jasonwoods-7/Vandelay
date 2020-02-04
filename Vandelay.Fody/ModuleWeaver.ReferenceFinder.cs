@@ -59,12 +59,10 @@ namespace Vandelay.Fody
           {
             Dictionary = new DictionaryImports(findType, moduleDefinition);
             ICollection = new ICollectionImports(findType, moduleDefinition);
-            IEnumerable  =new IEnumerableImports(findType, moduleDefinition);
           }
 
           public DictionaryImports Dictionary { get; }
           public ICollectionImports ICollection { get; }
-          public IEnumerableImports IEnumerable { get; }
 
           internal class DictionaryImports
           {
@@ -90,17 +88,6 @@ namespace Vandelay.Fody
             }
 
             public MethodReference Add { get; }
-          }
-
-          internal class IEnumerableImports
-          {
-            public IEnumerableImports(Func<string, TypeDefinition> findType, ModuleDefinition moduleDefinition)
-            {
-              var enumerableType = findType("System.Collections.Generic.IEnumerable`1");
-              Type = moduleDefinition.ImportReference(enumerableType);
-            }
-
-            public TypeReference Type { get; }
           }
         }
       }

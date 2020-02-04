@@ -15,7 +15,7 @@ namespace Vandelay
     /// <param name="exports"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static IEnumerable<T> ImportMany<T>(
+    public static IReadOnlyList<T> ImportMany<T>(
       string searchPatterns, params object[] exports)
     {
       throw new NotSupportedException();

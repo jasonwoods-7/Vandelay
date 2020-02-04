@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>latest</LangVersion>
-    <Version>0.7.0</Version>
-    <Copyright>Copyright © 2015 - 2019</Copyright>
+    <Version>0.8.0</Version>
+    <Copyright>Copyright © 2015 - 2020</Copyright>
   </PropertyGroup>
 </Project>

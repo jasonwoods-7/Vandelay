@@ -2,7 +2,7 @@
 
 ## What is Vandelay?
 
-Vandelay is an extension to the [Fody](https://github.com/Fody/Fody) aspect weaving project framework.  Vandelay is an Importer\Exporter.
+Vandelay is an add-in to the [Fody](https://github.com/Fody/Fody) IL weaving project framework.  Vandelay is an Importer\Exporter.
 
 ## The NuGet Package [![NuGet Status](http://img.shields.io/nuget/v/Vandelay.Fody.svg?style=flat)](https://www.nuget.org/packages/Vandelay.Fody/)
 
@@ -114,7 +114,7 @@ internal static class CompositionBatchHelper
 internal sealed class IFooRetriever
 {
   [ImportMany(typeof(IFoo))]
-  private IEnumerable<IFoo> _imports;
+  private IFoo[] _imports;
 
   private IFooRetriever(object[] exports)
   {
@@ -132,7 +132,7 @@ internal sealed class IFooRetriever
     }
   }
 
-  public static IEnumerable<IFoo> IFooRetriever(object[] exports)
+  public static IFoo[] IFooRetriever(object[] exports)
   {
     return new IFooRetriever(exports)._imports;
   }
@@ -176,7 +176,7 @@ public class FooWithImport : IFoo
 
 public class Importer
 {
-  public IEnumerable<IFoo> Imports { get; } =
+  public IReadOnlyList<IFoo> Imports { get; } =
     Vandelay.Importer.ImportMany<IFoo>("*.dll", new Bar());
 }
 ```
@@ -185,27 +185,27 @@ the Imports collection will contain a FooWithImport object with the MyBar proper
 
 ### Are there limitation to what I can export?
 
-Yes, there are currently a few limitations to mention.
+1. Objects which contain a string in the constructor aren't currently working when you inline the object array.  The current work-around would be to create the array before the call to ImportMany such as:
 
-First, objects which contain a string in the constructor aren't currently working when you inline the object array.  The current work-around would be to create the array before the call to ImportMany such as:
+   ``` c#
+   var exports = new object[]
+   {
+     "string export",
+     42,
+     new Bar()
+   };
+   
+   var imports = Vandelay.Importer.ImportMany<IFoo>("*.dll", exports);
+   ```
 
-``` c#
-var exports = new object[]
-{
-  "string export",
-  42,
-  new Bar()
-};
+2. You cannot currently specify the contract name or type, so if you had an import expecting a type of IBar you would have to explicitly specify the contract name and type, such as:
 
-var imports = Vandelay.Importer.ImportMany<IFoo>("*.dll", exports);
-```
+   ``` c#
+   [Import("Fully.Qualified.Namespace.Bar", typeof(Bar))]
+   IBar MyBar { get; set; }
+   ```
 
-Another limitation is that you cannot currently specify the contract name or type, so if you had an import expecting a type of IBar you would have to explicitly specify the contract name and type, such as:
-
-``` c#
-[Import("Fully.Qualified.Namespace.Bar", typeof(Bar))]
-IBar MyBar { get; set; }
-```
+3. If you're using .Net Core and your assembly's runtime path contains a `$`, Vandelay won't be able to find the assemblies to scan.
 
 ## Will Vandelay be my latex salesman?
 

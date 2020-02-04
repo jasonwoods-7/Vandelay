@@ -5,13 +5,13 @@ namespace AssemblyToProcess.SimpleCase
 {
   public class ImporterEmptySearchPattern
   {
-    public IEnumerable<IExportable> Imports { get; } =
+    public IReadOnlyList<IExportable> Imports { get; } =
       Importer.ImportMany<IExportable>("");
   }
 
   public class ImporterSingleSearchPattern
   {
-    public IEnumerable<IExportable> Imports { get; } =
+    public IReadOnlyList<IExportable> Imports { get; } =
       Importer.ImportMany<IExportable>(
         "AssemblyToProcess.SimpleCase2.dll");
   }
@@ -27,12 +27,12 @@ namespace AssemblyToProcess.SimpleCase
         greetingExport);
     }
 
-    public IEnumerable<IExportable> Imports { get; }
+    public IReadOnlyList<IExportable> Imports { get; }
   }
 
   public class ImporterMultipleSearchPatterns
   {
-    public IEnumerable<IExportable> Imports { get; } =
+    public IReadOnlyList<IExportable> Imports { get; } =
       Importer.ImportMany<IExportable>(
         "AssemblyToProcess.SimpleCase2.dll|" +
         "AssemblyToProcess.SimpleCase2.exe");
@@ -40,14 +40,14 @@ namespace AssemblyToProcess.SimpleCase
 
   public class ImporterInheritsBase
   {
-    public IEnumerable<ExportBase> Imports { get; } =
+    public IReadOnlyList<ExportBase> Imports { get; } =
       Importer.ImportMany<ExportBase>(
         "AssemblyToProcess.SimpleCase2.dll");
   }
 
   public class ImporterInheritedExport
   {
-    public IEnumerable<IInheritedExport> Imports { get; } =
+    public IReadOnlyList<IInheritedExport> Imports { get; } =
       Importer.ImportMany<IInheritedExport>(
         "AssemblyToProcess.SimpleCase2.dll");
   }
