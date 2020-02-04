@@ -205,7 +205,7 @@ the Imports collection will contain a FooWithImport object with the MyBar proper
    IBar MyBar { get; set; }
    ```
 
-3. If you're using .Net Core and your assembly's runtime path contains a `$`, Vandelay won't be able to find the assemblies to scan.
+3. If you're using .Net Core and your assembly's runtime path contains a `#`, Vandelay won't be able to find the assemblies to scan.
 
 ## Will Vandelay be my latex salesman?
 
