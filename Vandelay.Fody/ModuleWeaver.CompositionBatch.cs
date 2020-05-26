@@ -9,7 +9,7 @@ namespace Vandelay.Fody
 {
   partial class ModuleWeaver
   {
-    MethodReference CreateCompositionBatch { get; set; }
+    MethodReference? CreateCompositionBatch { get; set; }
 
     void InjectCompositionBatchHelper()
     {
@@ -37,7 +37,7 @@ namespace Vandelay.Fody
       // public static CompositionBatch Create(object[] array)
       var compositionBatch = new MethodDefinition("Create",
         MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Static,
-        _import.System.ComponentModel.Composition.Hosting.CompositionBatch.Type);
+        _import!.System.ComponentModel.Composition.Hosting.CompositionBatch.Type);
       compositionBatch.Parameters.Add(new ParameterDefinition(
         _import.System.Object.ArrayType));
       compositionBatch.CustomAttributes.MarkAsGeneratedCode(ModuleDefinition, _import);
@@ -64,7 +64,7 @@ namespace Vandelay.Fody
     {
       // var compositionBatch = new CompositionBatch();
       yield return Instruction.Create(OpCodes.Newobj,
-        _import.System.ComponentModel.Composition.Hosting.CompositionBatch.Constructor);
+        _import!.System.ComponentModel.Composition.Hosting.CompositionBatch.Constructor);
       yield return Instruction.Create(OpCodes.Stloc_0);
 
       // var i = 0;
@@ -122,7 +122,7 @@ namespace Vandelay.Fody
 
       // var valueFunc = new Func<object>(valueProvider.GetValue);
       yield return Instruction.Create(OpCodes.Ldftn,
-        ExportValueProvider.Methods.First(m => !m.IsConstructor));
+        ExportValueProvider!.Methods.First(m => !m.IsConstructor));
       yield return Instruction.Create(OpCodes.Newobj, ModuleDefinition.ImportReference(
         _import.System.Func.Constructor.MakeGeneric(TypeSystem.ObjectReference)));
 

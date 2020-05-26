@@ -6,7 +6,7 @@ namespace Vandelay.Fody
 {
   partial class ModuleWeaver
   {
-    TypeDefinition ExportValueProvider { get; set; }
+    TypeDefinition? ExportValueProvider { get; set; }
 
     void InjectExportValueProvider()
     {
@@ -49,7 +49,7 @@ namespace Vandelay.Fody
         TypeSystem.VoidReference);
       constructor.Parameters.Add(new ParameterDefinition(
         TypeSystem.ObjectReference));
-      constructor.CustomAttributes.MarkAsGeneratedCode(ModuleDefinition, _import);
+      constructor.CustomAttributes.MarkAsGeneratedCode(ModuleDefinition, _import!);
 
       // base.ctor();
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));
@@ -73,7 +73,7 @@ namespace Vandelay.Fody
       // public object GetValue()
       var func = new MethodDefinition("GetValue", MethodAttributes.Public,
         TypeSystem.ObjectReference);
-      func.CustomAttributes.MarkAsGeneratedCode(ModuleDefinition, _import);
+      func.CustomAttributes.MarkAsGeneratedCode(ModuleDefinition, _import!);
 
       // return this._value;
       func.Body.Instructions.Add(Instruction.Create(OpCodes.Ldarg_0));

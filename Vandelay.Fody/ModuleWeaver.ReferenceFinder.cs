@@ -468,7 +468,7 @@ namespace Vandelay.Fody
 
   partial class ModuleWeaver
   {
-    Import _import;
+    Import? _import;
 
     public override IEnumerable<string> GetAssembliesForScanning()
     {
@@ -484,10 +484,7 @@ namespace Vandelay.Fody
 
     void FindReferences()
     {
-      if (null == _import)
-      {
-        _import = new Import(FindTypeDefinition, ModuleDefinition);
-      }
+      _import ??= new Import(FindTypeDefinition, ModuleDefinition);
     }
   }
 }

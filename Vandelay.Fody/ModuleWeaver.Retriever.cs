@@ -61,7 +61,7 @@ namespace Vandelay.Fody
         FieldAttributes.Private, importerCollectionType);
 
       var importAttribute = new CustomAttribute(
-        _import.System.ComponentModel.Composition.ImportManyAttribute.Constructor);
+        _import!.System.ComponentModel.Composition.ImportManyAttribute.Constructor);
       importAttribute.ConstructorArguments.Add(new CustomAttributeArgument(
         _import.System.Type.Type, importType));
 
@@ -81,7 +81,7 @@ namespace Vandelay.Fody
       var constructor = new MethodDefinition(".ctor", methodAttributes,
         TypeSystem.VoidReference);
       constructor.Parameters.Add(new ParameterDefinition(
-        _import.System.Object.ArrayType));
+        _import!.System.Object.ArrayType));
       constructor.CustomAttributes.MarkAsGeneratedCode(ModuleDefinition, _import);
 
       constructor.Body.MaxStackSize = 5;
@@ -161,7 +161,7 @@ namespace Vandelay.Fody
         // aggregateCatalog.Catalogs.Add(new DirectoryCatalog(catalogPath));
         constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldloc_0));
         constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
-          _import.System.ComponentModel.Composition.Hosting.AggregateCatalog.GetCatalogs));
+          _import!.System.ComponentModel.Composition.Hosting.AggregateCatalog.GetCatalogs));
         InjectCatalogPath(constructor);
         constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj,
           _import.System.ComponentModel.Composition.Hosting.DirectoryCatalog.ConstructorString));
@@ -181,7 +181,7 @@ namespace Vandelay.Fody
           // aggregateCatalog.Catalogs.Add(new DirectoryCatalog(catalogPath, "search.pattern"));
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldloc_0));
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
-            _import.System.ComponentModel.Composition.Hosting.AggregateCatalog.GetCatalogs));
+            _import!.System.ComponentModel.Composition.Hosting.AggregateCatalog.GetCatalogs));
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldloc_2));
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Ldstr, searchPattern));
           constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj,
@@ -198,7 +198,7 @@ namespace Vandelay.Fody
       // var catalogPath = Directory.GetParent(new Uri(Assembly.GetExecutingAssembly()
       //   .EscapedCodeBase).LocalPath).FullName;
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Call,
-        _import.System.Reflection.Assembly.GetExecutingAssembly));
+        _import!.System.Reflection.Assembly.GetExecutingAssembly));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
         _import.System.Reflection.Assembly.GetEscapedCodeBase));
       constructor.Body.Instructions.Add(Instruction.Create(OpCodes.Newobj,
@@ -223,7 +223,7 @@ namespace Vandelay.Fody
 
       methodBody.Instructions.Add(Instruction.Create(loadLocation));
       methodBody.Instructions.Add(Instruction.Create(OpCodes.Callvirt,
-        _import.System.IDisposable.Dispose));
+        _import!.System.IDisposable.Dispose));
 
       methodBody.Instructions.Add(endFinally);
 
@@ -247,7 +247,7 @@ namespace Vandelay.Fody
         MethodAttributes.Public | MethodAttributes.Static |
         MethodAttributes.HideBySig, importerCollectionType);
       retriever.Parameters.Add(new ParameterDefinition(
-        _import.System.Object.ArrayType));
+        _import!.System.Object.ArrayType));
       retriever.CustomAttributes.MarkAsGeneratedCode(ModuleDefinition, _import);
 
       // return new ImportTypeRetriever(array)._imports;

@@ -22,7 +22,7 @@ namespace Vandelay.Fody
         }
 
         var export = new CustomAttribute(
-          _import.System.ComponentModel.Composition.ExportAttribute.Constructor);
+          _import!.System.ComponentModel.Composition.ExportAttribute.Constructor);
         export.ConstructorArguments.Add(new CustomAttributeArgument(
           _import.System.Type.Type, exportType));
 
