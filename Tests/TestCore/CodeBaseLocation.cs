@@ -18,7 +18,7 @@ namespace TestCore
 
     public static string GetAssemblyLocation(this Assembly assembly)
     {
-      Guard.AgainstNull(nameof(assembly), assembly);
+      Fody.Guard.AgainstNull(nameof(assembly), assembly);
       var uri = new UriBuilder(assembly.CodeBase);
       return Uri.UnescapeDataString(uri.Path);
     }
