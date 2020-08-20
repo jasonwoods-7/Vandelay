@@ -25,14 +25,14 @@ namespace Vandelay.Fody
         TypeSystem.ObjectReference);
       ModuleDefinition.Types.Add(targetType);
 
-      var (definition, collectionType) = InjectImportsField(importType);
-      targetType.Fields.Add(definition);
+      var importFields = InjectImportsField(importType);
+      targetType.Fields.Add(importFields.Definition);
 
       var constructor = InjectConstructor(searchPatterns);
       targetType.Methods.Add(constructor);
 
-      var retrieverProperty = InjectRetrieverProperty(importType, collectionType,
-        constructor, definition);
+      var retrieverProperty = InjectRetrieverProperty(importType,
+        importFields.CollectionType, constructor, importFields.Definition);
       targetType.Methods.Add(retrieverProperty);
 
       return retrieverProperty;
@@ -49,8 +49,7 @@ namespace Vandelay.Fody
       return TargetName(targetName, counter + 1);
     }
 
-    (FieldDefinition defintion, ArrayType collectionType)
-      InjectImportsField(TypeReference importType)
+    ImportFields InjectImportsField(TypeReference importType)
     {
       // [ImportMany(typeof(ImportType))]
       // private ImportType[] _imports;
@@ -67,7 +66,20 @@ namespace Vandelay.Fody
 
       fieldDefinition.CustomAttributes.Add(importAttribute);
 
-      return (fieldDefinition, importerCollectionType);
+      return new ImportFields(
+        fieldDefinition, importerCollectionType);
+    }
+
+    class ImportFields
+    {
+      public ImportFields(FieldDefinition definition, ArrayType collectionType)
+      {
+        Definition = definition;
+        CollectionType = collectionType;
+      }
+
+      public FieldDefinition Definition { get; }
+      public ArrayType CollectionType { get; }
     }
 
     MethodDefinition InjectConstructor(
