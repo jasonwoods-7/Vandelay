@@ -140,7 +140,7 @@ namespace TestCore
 
         if (runPeVerify && IsWindows())
         {
-          var ignoreList = ignoreCodes == null ? new List<string>() : ignoreCodes.ToList();
+          var ignoreList = ignoreCodes?.ToList() ?? (IReadOnlyList<string>)Array.Empty<string>();
 
           PeVerifier.ThrowIfDifferent(assemblyPath, targetAssemblyPath, ignoreList,
             Path.GetDirectoryName(assemblyPath));
