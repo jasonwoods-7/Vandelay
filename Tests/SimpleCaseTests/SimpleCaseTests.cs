@@ -91,7 +91,7 @@ namespace SimpleCaseTests
       var imports = (ICollection)importsInstance.Imports;
 
       // Assert
-      imports.Should().HaveCount(4);
+      imports.Cast<object>().Should().HaveCount(4);
     }
 
     [Fact]
@@ -105,7 +105,7 @@ namespace SimpleCaseTests
       var imports = (ICollection)importsInstance.Imports;
 
       // Assert
-      imports.Should().HaveCount(5);
+      imports.Cast<object>().Should().HaveCount(5);
 
       var greeting = (string)((dynamic)imports.Cast<object>().First(i =>
         i.GetType().Name == "ExportableWithImport")).Greeting;
@@ -123,7 +123,7 @@ namespace SimpleCaseTests
       var imports = (ICollection)importsInstance.Imports;
 
       // Assert
-      imports.Should().HaveCount(1);
+      imports.Cast<object>().Should().HaveCount(1);
     }
 
     [Fact]
@@ -137,7 +137,7 @@ namespace SimpleCaseTests
       var imports = (ICollection)importsInstance.Imports;
 
       // Assert
-      imports.Should().HaveCount(1);
+      imports.Cast<object>().Should().HaveCount(1);
     }
   }
 }

@@ -129,7 +129,7 @@ namespace ExternalAssemblyTests
       var imports = (ICollection)importsInstance.Imports;
 
       // Assert
-      imports.Should().HaveCount(4);
+      imports.Cast<object>().Should().HaveCount(4);
     }
 
     TestResult GetTestHelper(string className) =>

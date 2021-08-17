@@ -115,7 +115,7 @@ namespace MultipleExportsTests
       var imports = (IEnumerable)instance.Imports;
 
       // Assert
-      imports.Should().HaveCount(3);
+      imports.Cast<object>().Should().HaveCount(3);
     }
 
     [Fact]
