@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FodyHelpers" Version="6.5.3" />
+    <PackageReference Include="FodyHelpers" Version="6.5.5" />
   </ItemGroup>
   <Target Name="GetTargetPath" Returns="@(_FakeOutputPath)">
     <ItemGroup>
