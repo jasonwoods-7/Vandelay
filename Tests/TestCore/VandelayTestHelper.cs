@@ -124,8 +124,8 @@ namespace TestCore
           var cleanReferencesInfo = referenceCleanerType.GetMethod("CleanReferences");
           Debug.Assert(cleanReferencesInfo != null, nameof(cleanReferencesInfo) + " != null");
           var cleaner = cleanReferencesInfo
-            .CreateDelegate<Action<ModuleDefinition, BaseModuleWeaver, Action<string>>>();
-          cleaner(module, weaver, weaver.LogDebug);
+            .CreateDelegate<Action<ModuleDefinition, BaseModuleWeaver, List<string>, List<string>, Action<string>>>();
+          cleaner(module, weaver, weaver.ReferenceCopyLocalPaths, weaver.ReferenceCopyLocalPaths, weaver.LogDebug);
 
           afterExecuteCallback?.Invoke(module);
 
