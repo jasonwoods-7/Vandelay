@@ -3,9 +3,8 @@ using Vandelay;
 
 [assembly: Exporter(typeof(IExportable))]
 
-namespace AssemblyToProcess.SimpleCase
+namespace AssemblyToProcess.SimpleCase;
+
+public interface IExportable
 {
-  public interface IExportable
-  {
-  }
 }

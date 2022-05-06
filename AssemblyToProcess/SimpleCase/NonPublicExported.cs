@@ -1,6 +1,5 @@
-﻿namespace AssemblyToProcess.SimpleCase
+﻿namespace AssemblyToProcess.SimpleCase;
+
+class NonPublicExported : IExportable
 {
-  class NonPublicExported : IExportable
-  {
-  }
 }

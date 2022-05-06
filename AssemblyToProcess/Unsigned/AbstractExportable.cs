@@ -1,8 +1,7 @@
 ﻿using AssemblyToProcess.Core;
 
-namespace AssemblyToProcess.Unsigned
+namespace AssemblyToProcess.Unsigned;
+
+public abstract class AbstractExportable : IExportable
 {
-  public abstract class AbstractExportable : IExportable
-  {
-  }
 }

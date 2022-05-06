@@ -1,6 +1,5 @@
-﻿namespace AssemblyToProcess.SimpleCase
+﻿namespace AssemblyToProcess.SimpleCase;
+
+public class InheritedExport : IInheritedExport
 {
-  public class InheritedExport : IInheritedExport
-  {
-  }
 }

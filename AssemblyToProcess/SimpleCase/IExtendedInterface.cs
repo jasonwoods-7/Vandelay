@@ -1,6 +1,5 @@
-﻿namespace AssemblyToProcess.SimpleCase
+﻿namespace AssemblyToProcess.SimpleCase;
+
+public interface IExtendedInterface : IExportable
 {
-  public interface IExtendedInterface : IExportable
-  {
-  }
 }

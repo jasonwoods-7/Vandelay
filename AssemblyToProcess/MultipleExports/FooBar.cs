@@ -1,6 +1,5 @@
-﻿namespace AssemblyToProcess.MultipleExports
+﻿namespace AssemblyToProcess.MultipleExports;
+
+public class FooBar : IFooExporter, IBarExporter
 {
-  public class FooBar : IFooExporter, IBarExporter
-  {
-  }
 }

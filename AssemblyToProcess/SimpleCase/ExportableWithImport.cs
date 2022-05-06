@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.Composition;
 
-namespace AssemblyToProcess.SimpleCase
+namespace AssemblyToProcess.SimpleCase;
+
+public class ExportableWithImport : IExportable
 {
-  public class ExportableWithImport : IExportable
-  {
-    [Import]
-    public string Greeting { get; set; }
-  }
+  [Import]
+  public string? Greeting { get; set; }
 }
