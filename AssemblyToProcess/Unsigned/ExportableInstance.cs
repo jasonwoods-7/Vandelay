@@ -1,6 +1,5 @@
-﻿namespace AssemblyToProcess.Unsigned
+﻿namespace AssemblyToProcess.Unsigned;
+
+public class ExportableInstance : AbstractExportable
 {
-  public class ExportableInstance : AbstractExportable
-  {
-  }
 }

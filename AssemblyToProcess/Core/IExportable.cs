@@ -1,6 +1,5 @@
-﻿namespace AssemblyToProcess.Core
+﻿namespace AssemblyToProcess.Core;
+
+public interface IExportable
 {
-  public interface IExportable
-  {
-  }
 }

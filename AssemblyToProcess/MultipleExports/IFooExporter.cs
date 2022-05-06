@@ -3,9 +3,8 @@ using Vandelay;
 
 [assembly: Exporter(typeof(IFooExporter))]
 
-namespace AssemblyToProcess.MultipleExports
+namespace AssemblyToProcess.MultipleExports;
+
+public interface IFooExporter
 {
-  public interface IFooExporter
-  {
-  }
 }

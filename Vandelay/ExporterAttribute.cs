@@ -1,19 +1,16 @@
-﻿using System;
+﻿namespace Vandelay;
 
-namespace Vandelay
+/// <summary>
+/// Assembly attribute to apply exports to a type
+/// </summary>
+[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
+public class ExporterAttribute : Attribute
 {
   /// <summary>
-  /// Assembly attribute to apply exports to a type
+  /// Class constructor
   /// </summary>
-  [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-  public class ExporterAttribute : Attribute
+  /// <param name="exportType"></param>
+  public ExporterAttribute(Type exportType)
   {
-    /// <summary>
-    /// Class constructor
-    /// </summary>
-    /// <param name="exportType"></param>
-    public ExporterAttribute(Type exportType)
-    {
-    }
   }
 }

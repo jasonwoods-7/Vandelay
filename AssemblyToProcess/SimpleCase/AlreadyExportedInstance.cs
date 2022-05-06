@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.Composition;
 
-namespace AssemblyToProcess.SimpleCase
+namespace AssemblyToProcess.SimpleCase;
+
+[Export(typeof(IExportable))]
+public class AlreadyExportedInstance : IExportable
 {
-  [Export(typeof(IExportable))]
-  public class AlreadyExportedInstance : IExportable
-  {
-  }
 }

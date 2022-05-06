@@ -1,20 +1,19 @@
 ﻿using Fody;
 using Vandelay.Fody.Extensions;
 
-namespace Vandelay.Fody
+namespace Vandelay.Fody;
+
+public partial class ModuleWeaver : BaseModuleWeaver
 {
-  public partial class ModuleWeaver : BaseModuleWeaver
+  public override void Execute()
   {
-    public override void Execute()
-    {
-      FindReferences();
+    FindReferences();
 
-      HandleExports();
-      HandleImports();
+    HandleExports();
+    HandleImports();
 
-      ModuleDefinition.Assembly.CustomAttributes.RemoveExporter();
-    }
-
-    public override bool ShouldCleanReference => true;
+    ModuleDefinition.Assembly.CustomAttributes.RemoveExporter();
   }
+
+  public override bool ShouldCleanReference => true;
 }

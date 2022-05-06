@@ -4,10 +4,9 @@ using Vandelay;
 
 [assembly: Exporter(typeof(IInheritedExport))]
 
-namespace AssemblyToProcess.SimpleCase
+namespace AssemblyToProcess.SimpleCase;
+
+[InheritedExport]
+public interface IInheritedExport
 {
-  [InheritedExport]
-  public interface IInheritedExport
-  {
-  }
 }

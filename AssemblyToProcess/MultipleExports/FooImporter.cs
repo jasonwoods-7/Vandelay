@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
+﻿namespace AssemblyToProcess.MultipleExports;
 
-namespace AssemblyToProcess.MultipleExports
+public class FooImporter
 {
-  public class FooImporter
-  {
-    public IReadOnlyList<IFooExporter> Imports { get; } =
-      Vandelay.Importer.ImportMany<IFooExporter>(
-        "AssemblyToProcess.MultipleExports2.dll");
-  }
+  public IReadOnlyList<IFooExporter> Imports { get; } =
+    Vandelay.Importer.ImportMany<IFooExporter>(
+      "AssemblyToProcess.MultipleExports2.dll");
 }

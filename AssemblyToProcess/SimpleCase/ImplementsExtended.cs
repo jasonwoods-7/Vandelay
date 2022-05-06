@@ -1,6 +1,5 @@
-﻿namespace AssemblyToProcess.SimpleCase
+﻿namespace AssemblyToProcess.SimpleCase;
+
+public class ImplementsExtended : IExtendedInterface
 {
-  public class ImplementsExtended : IExtendedInterface
-  {
-  }
 }

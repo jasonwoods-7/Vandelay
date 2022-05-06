@@ -3,9 +3,8 @@ using Vandelay;
 
 [assembly: Exporter(typeof(IBarExporter))]
 
-namespace AssemblyToProcess.MultipleExports
+namespace AssemblyToProcess.MultipleExports;
+
+public interface IBarExporter
 {
-  public interface IBarExporter
-  {
-  }
 }

@@ -1,85 +1,80 @@
-﻿using System;
-using System.Linq;
-using Fody;
-using Mono.Cecil;
-using Mono.Cecil.Cil;
+﻿using Fody;
 using Vandelay.Fody.Extensions;
 
-namespace Vandelay.Fody
+namespace Vandelay.Fody;
+
+partial class ModuleWeaver
 {
-  partial class ModuleWeaver
+  void HandleImports()
   {
-    void HandleImports()
+    foreach (var method in ModuleDefinition.GetTypes()
+      .Where(t => t.IsClass())
+      .SelectMany(t => t.Methods)
+      .Where(method => method.HasBody))
     {
-      foreach (var method in ModuleDefinition.GetTypes()
-        .Where(t => t.IsClass())
-        .SelectMany(t => t.Methods)
-        .Where(method => method.HasBody))
-      {
-        Process(method);
-      }
+      Process(method);
+    }
+  }
+
+  void Process(MethodDefinition method)
+  {
+    var instructions = method.Body.Instructions
+      .Where(i => i.OpCode == OpCodes.Call).ToList();
+
+    foreach (var instruction in instructions)
+    {
+      ProcessInstruction(method, instruction);
+    }
+  }
+
+  void ProcessInstruction(MethodDefinition method,
+    Instruction instruction)
+  {
+    if (!(instruction.Operand is GenericInstanceMethod methodReference))
+    {
+      return;
     }
 
-    void Process(MethodDefinition method)
+    if (methodReference.DeclaringType.FullName != "Vandelay.Importer")
     {
-      var instructions = method.Body.Instructions
-        .Where(i => i.OpCode == OpCodes.Call).ToList();
-
-      foreach (var instruction in instructions)
-      {
-        ProcessInstruction(method, instruction);
-      }
+      return;
     }
 
-    void ProcessInstruction(MethodDefinition method,
-      Instruction instruction)
+    if (methodReference.Name != "ImportMany")
     {
-      if (!(instruction.Operand is GenericInstanceMethod methodReference))
+      throw new WeavingException($"Unsupported method '{methodReference.FullName}'.")
       {
-        return;
-      }
-
-      if (methodReference.DeclaringType.FullName != "Vandelay.Importer")
-      {
-        return;
-      }
-
-      if (methodReference.Name != "ImportMany")
-      {
-        throw new WeavingException($"Unsupported method '{methodReference.FullName}'.")
-        {
-          SequencePoint = method.DebugInformation.GetSequencePoint(instruction)
-        };
-      }
-
-      ProcessImportMany(method, instruction, methodReference);
+        SequencePoint = method.DebugInformation.GetSequencePoint(instruction)
+      };
     }
 
-    void ProcessImportMany(MethodDefinition method,
-      Instruction instruction, IGenericInstance methodReference)
+    ProcessImportMany(method, instruction, methodReference);
+  }
+
+  void ProcessImportMany(MethodDefinition method,
+    Instruction instruction, IGenericInstance methodReference)
+  {
+    InjectExportValueProvider();
+    InjectCompositionBatchHelper();
+
+    var searchPatternInstruction = SearchPatternInstruction(instruction.Previous);
+    instruction.Operand = InjectRetriever(methodReference.GenericArguments[0],
+      (searchPatternInstruction.Operand as string ?? string.Empty)
+      .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
+
+    method.Body.UpdateInstructions(searchPatternInstruction,
+      searchPatternInstruction.Next);
+
+    method.Body.GetILProcessor().Remove(searchPatternInstruction);
+  }
+
+  static Instruction SearchPatternInstruction(Instruction instruction)
+  {
+    if (Code.Ldstr == instruction.OpCode.Code)
     {
-      InjectExportValueProvider();
-      InjectCompositionBatchHelper();
-
-      var searchPatternInstruction = SearchPatternInstruction(instruction.Previous);
-      instruction.Operand = InjectRetriever(methodReference.GenericArguments[0],
-        (searchPatternInstruction.Operand as string ?? string.Empty)
-        .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
-
-      method.Body.UpdateInstructions(searchPatternInstruction,
-        searchPatternInstruction.Next);
-
-      method.Body.GetILProcessor().Remove(searchPatternInstruction);
+      return instruction;
     }
 
-    static Instruction SearchPatternInstruction(Instruction instruction)
-    {
-      if (Code.Ldstr == instruction.OpCode.Code)
-      {
-        return instruction;
-      }
-
-      return SearchPatternInstruction(instruction.Previous);
-    }
+    return SearchPatternInstruction(instruction.Previous);
   }
 }

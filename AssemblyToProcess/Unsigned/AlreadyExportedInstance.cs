@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.Composition;
 using AssemblyToProcess.Core;
 
-namespace AssemblyToProcess.Unsigned
+namespace AssemblyToProcess.Unsigned;
+
+[Export(typeof(IExportable))]
+public class AlreadyExportedInstance : IExportable
 {
-  [Export(typeof(IExportable))]
-  public class AlreadyExportedInstance : IExportable
-  {
-  }
 }

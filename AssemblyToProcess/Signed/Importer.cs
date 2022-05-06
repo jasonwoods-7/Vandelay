@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using AssemblyToProcess.Core;
+﻿using AssemblyToProcess.Core;
 
-namespace AssemblyToProcess.Signed
+namespace AssemblyToProcess.Signed;
+
+public class Importer
 {
-  public class Importer
-  {
-    public IReadOnlyList<IExportable> Imports { get; } =
-      Vandelay.Importer.ImportMany<IExportable>(
-        "AssemblyToProcess.Signed2.dll|" +
-        "AssemblyToProcess.Unsigned2.dll");
-  }
+  public IReadOnlyList<IExportable> Imports { get; } =
+    Vandelay.Importer.ImportMany<IExportable>(
+      "AssemblyToProcess.Signed2.dll|" +
+      "AssemblyToProcess.Unsigned2.dll");
 }

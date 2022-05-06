@@ -1,6 +1,5 @@
-﻿namespace AssemblyToProcess.SimpleCase
+﻿namespace AssemblyToProcess.SimpleCase;
+
+public class ExportableInstance : AbstractExportable
 {
-  public class ExportableInstance : AbstractExportable
-  {
-  }
 }
