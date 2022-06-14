@@ -8,7 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FodyHelpers" Version="6.6.2" />
+    <PackageReference Include="FodyHelpers" Version="6.6.3" />
   </ItemGroup>
   <Target Name="GetTargetPath" Returns="@(_FakeOutputPath)">
     <ItemGroup>
