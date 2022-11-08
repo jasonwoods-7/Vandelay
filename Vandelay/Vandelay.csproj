@@ -19,6 +19,6 @@
   <ItemGroup>
     <PackageReference Include="Fody" Version="6.6.4" PrivateAssets="None" />
     <PackageReference Include="FodyPackaging" Version="6.6.4" PrivateAssets="All" />
-    <PackageReference Include="System.ComponentModel.Composition" Version="6.0.0" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="7.0.0" />
   </ItemGroup>
 </Project>
