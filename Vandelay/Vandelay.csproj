@@ -15,10 +15,15 @@
     <PackageProjectUrl>https://github.com/jasonwoods-7/Vandelay</PackageProjectUrl>
     <PackageOutputPath>$(SolutionDir)nugets</PackageOutputPath>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Fody" Version="6.6.4" PrivateAssets="None" />
     <PackageReference Include="FodyPackaging" Version="6.6.4" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.ComponentModel.Composition" Version="7.0.0" />
   </ItemGroup>
 </Project>
