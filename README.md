@@ -1,4 +1,4 @@
-# Vandelay [![Build status](https://ci.appveyor.com/api/projects/status/uvm747hjwyus7wba?svg=true)](https://ci.appveyor.com/project/jasonwoods-7/vandelay) [![Maintainability](https://api.codeclimate.com/v1/badges/3508b8042502b7125414/maintainability)](https://codeclimate.com/github/jasonwoods-7/Vandelay/maintainability)
+# Vandelay [![Maintainability](https://api.codeclimate.com/v1/badges/3508b8042502b7125414/maintainability)](https://codeclimate.com/github/jasonwoods-7/Vandelay/maintainability)
 
 ## What is Vandelay?
 
