@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <SignAssembly>True</SignAssembly>
@@ -17,6 +18,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Fody" Version="6.6.4" PrivateAssets="None" />
     <PackageReference Include="FodyPackaging" Version="6.6.4" PrivateAssets="All" />
@@ -26,4 +28,5 @@
     </PackageReference>
     <PackageReference Include="System.ComponentModel.Composition" Version="7.0.0" />
   </ItemGroup>
+
 </Project>
