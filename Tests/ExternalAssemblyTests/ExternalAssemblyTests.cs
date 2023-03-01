@@ -46,7 +46,7 @@ public class ExternalAssemblySetup
 #endif
         , purgeTempDir: false
         , strongNameKeyPair: new Mono.Cecil.StrongNameKeyPair(File.ReadAllBytes(
-          @"..\..\..\..\..\AssemblyToProcess\Signed\key.snk"))
+        string.Format("..{0}..{0}..{0}..{0}..{0}AssemblyToProcess{0}Signed{0}key.snk", Path.DirectorySeparatorChar)))
       );
       SignedWeaver.Errors.Should().BeEmpty();
     }
@@ -57,7 +57,7 @@ public class ExternalAssemblySetup
 
     AppDomain.CurrentDomain.AssemblyResolve += (_, e) =>
     {
-      var assemblyName = new AssemblyName(e.Name!).Name!;
+      var assemblyName = new AssemblyName(e.Name).Name!;
 
       var assemblyPath = Path.Combine(GetAssemblyDirectory(), $"{assemblyName}.dll");
 

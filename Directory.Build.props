@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>latest</LangVersion>
-    <Version>0.8.1</Version>
     <Copyright>Copyright © 2015 - $([System.DateTime]::Now.Year)</Copyright>
   </PropertyGroup>
 </Project>

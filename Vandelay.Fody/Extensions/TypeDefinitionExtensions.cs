@@ -21,7 +21,7 @@ static class TypeDefinitionExtensions
       return false;
     }
 
-    if (typeDefinition?.BaseType == null)
+    if (typeDefinition.BaseType == null)
     {
       return false;
     }
@@ -43,7 +43,7 @@ static class TypeDefinitionExtensions
       return false;
     }
 
-    if (typeDefinition?.BaseType == null)
+    if (typeDefinition.BaseType == null)
     {
       return false;
     }
