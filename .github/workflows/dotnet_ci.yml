@@ -21,3 +21,9 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - name: Upload nupkg
+      uses: actions/upload-artifact@v3
+      with:
+        name: nuget
+        path: nugets/*.nupkg
+        retention-days: 5
