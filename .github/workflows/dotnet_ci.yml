@@ -15,10 +15,28 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
+    - name: Semantic Release
+      uses: cycjimmy/semantic-release-action@v3
+      id: semantic
+      with:
+        dry_run: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Set Build Version
+      id: version
+      run: |
+        if [ -z $SEM_VER ]
+        then
+          echo "num=1.0.0" >> $GITHUB_OUTPUT
+        else
+          echo "num="$SEM_VER >> $GITHUB_OUTPUT
+        fi
+      env:
+        SEM_VER: ${{ steps.semantic.outputs.new_release_version }}
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore -p:VersionPrefix=${{ steps.version.outputs.num }}
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Upload nupkg
@@ -27,3 +45,7 @@ jobs:
         name: nuget
         path: nugets/*.nupkg
         retention-days: 5
+    - name: Semantic Release Tag
+      uses: cycjimmy/semantic-release-action@v3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
