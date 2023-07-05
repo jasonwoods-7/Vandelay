@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Fody" Version="6.8.0" PrivateAssets="None" />
-    <PackageReference Include="FodyPackaging" Version="6.7.0" PrivateAssets="All" />
+    <PackageReference Include="FodyPackaging" Version="6.8.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
