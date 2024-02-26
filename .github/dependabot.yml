@@ -10,3 +10,6 @@ updates:
     xunit:
       patterns:
         - "xunit*"
+    fody:
+      patterns:
+        - "fody*"
