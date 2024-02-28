@@ -33,7 +33,8 @@ public interface IFoo {}
 public class Foo : IFoo {}
 ```
 
-What gets compiled:
+<details>
+<summary>What gets compiled:</summary>
 
 ``` c#
 public interface IFoo {}
@@ -41,6 +42,7 @@ public interface IFoo {}
 [Export(typeof(IFoo))]
 public class Foo : IFoo {}
 ```
+</details>
 
 ### I have abstract classes which implement the interface type I want to have exported.  Will they be exported too?
 
@@ -65,7 +67,8 @@ public class SomeClass
 }
 ```
 
-What gets compiled:
+<details>
+<summary>What gets compiled:</summary>
 
 ``` c#
 public class SomeClass
@@ -138,6 +141,7 @@ internal sealed class IFooRetriever
   }
 }
 ```
+</details>
 
 ### What does the `string searchPatterns` argument in ImportMany do?
 
