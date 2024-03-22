@@ -1,12 +1,12 @@
 [*]
-end_of_line = crlf:error
-indent_style = space:error
-indent_size = 2:error
-trim_trailing_whitespace = true:error
-insert_final_newline = true:error
+end_of_line = crlf
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+insert_final_newline = true
 
 [*.cs]
-csharp_indent_case_contents = true:error
-csharp_indent_switch_labels = false:error
-csharp_prefer_braces = true:error
-csharp_space_after_keywords_in_control_flow_statements = true:error
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = false
+csharp_prefer_braces = true
+csharp_space_after_keywords_in_control_flow_statements = true
