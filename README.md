@@ -198,7 +198,7 @@ the Imports collection will contain a FooWithImport object with the MyBar proper
      42,
      new Bar()
    };
-   
+
    var imports = Vandelay.Importer.ImportMany<IFoo>("*.dll", exports);
    ```
 
