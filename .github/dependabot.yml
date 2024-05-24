@@ -13,3 +13,7 @@ updates:
     fody:
       patterns:
         - "fody*"
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+    interval: "weekly"
