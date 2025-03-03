@@ -45,8 +45,8 @@ public class ExternalAssemblySetup
         , runPeVerify: false
 #endif
         , purgeTempDir: false
-        , strongNameKeyPair: new Mono.Cecil.StrongNameKeyPair(File.ReadAllBytes(
-        string.Format("..{0}..{0}..{0}..{0}..{0}AssemblyToProcess{0}Signed{0}key.snk", Path.DirectorySeparatorChar)))
+        , strongNameKeyBlob: File.ReadAllBytes(Path.Combine(
+          "..", "..", "..", "..", "..", "AssemblyToProcess", "Signed", "key.snk"))
       );
       SignedWeaver.Errors.Should().BeEmpty();
     }

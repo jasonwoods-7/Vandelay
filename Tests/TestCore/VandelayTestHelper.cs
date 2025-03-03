@@ -3,7 +3,6 @@ using System.Reflection;
 using Fody;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using StrongNameKeyPair = Mono.Cecil.StrongNameKeyPair;
 using TypeSystem = Fody.TypeSystem;
 
 #pragma warning disable 618
@@ -24,7 +23,7 @@ public static class VandelayTestHelper
     string? assemblyName = null,
     IEnumerable<string>? ignoreCodes = null,
     bool purgeTempDir = true,
-    StrongNameKeyPair? strongNameKeyPair = null)
+    byte[]? strongNameKeyBlob = null)
   {
     assemblyPath = Path.Combine(CodeBaseLocation.CurrentDirectory, assemblyPath);
     var fodyTempDir = Path.Combine(Path.GetDirectoryName(assemblyPath)!, "fodytemp");
@@ -126,7 +125,7 @@ public static class VandelayTestHelper
 
       var writerParameters = new WriterParameters
       {
-        StrongNameKeyPair = strongNameKeyPair,
+        StrongNameKeyBlob = IsPrivateKeyFile(strongNameKeyBlob) ? strongNameKeyBlob : null,
         WriteSymbols = true
       };
 
@@ -177,4 +176,13 @@ public static class VandelayTestHelper
     typeCache.BuildAssembliesToScan(weaver);
     return typeCache;
   }
+
+  static bool IsPrivateKeyFile(byte[]? blob) =>
+    blob is not null &&
+    blob.Length >= 12 &&
+    blob[0] == 0x07 && // PRIVATEKEYBLOB (0x07)
+    blob[1] == 0x02 && // Version (0x02)
+    blob[2] == 0x00 && // Reserved (word)
+    blob[3] == 0x00 &&
+    BitConverter.ToUInt32(blob, 8) == 0x32415352; // DWORD magic = RSA2
 }
