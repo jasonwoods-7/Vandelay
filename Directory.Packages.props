@@ -8,9 +8,9 @@
 
   <ItemGroup>
     <PackageVersion Include="FluentAssertions" Version="7.2.0" />
-    <PackageVersion Include="Fody" Version="6.9.2" />
-    <PackageVersion Include="FodyHelpers" Version="6.9.2" />
-    <PackageVersion Include="FodyPackaging" Version="6.9.2" />
+    <PackageVersion Include="Fody" Version="6.9.3" />
+    <PackageVersion Include="FodyHelpers" Version="6.9.3" />
+    <PackageVersion Include="FodyPackaging" Version="6.9.3" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="9.0.6" />
