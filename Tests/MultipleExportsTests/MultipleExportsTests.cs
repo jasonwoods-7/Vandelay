@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.ComponentModel.Composition;
 using System.Reflection;
-using FluentAssertions;
+using Shouldly;
 using Fody;
 using TestCore;
 using Vandelay.Fody;
@@ -31,7 +31,7 @@ public class MultipleExportsSetup
 #endif
     );
 
-    MultipleWeaver.Errors.Should().BeEmpty();
+    MultipleWeaver.Errors.ShouldBeEmpty();
 
     FooExporterType = MultipleWeaver.Assembly.GetType(
       "AssemblyToProcess.MultipleExports.IFooExporter", true)!;
@@ -58,11 +58,11 @@ public class MultipleExportsTests : IClassFixture<MultipleExportsSetup>
     var exports = type.GetCustomAttributes<ExportAttribute>(false).ToArray();
 
     // Assert
-    exports.Should().HaveCount(1);
+    exports.Length.ShouldBe(1);
 
     var attribute = exports[0];
-    attribute.ContractType.Should().NotBeNull()
-      .And.Be(_setup.FooExporterType);
+    attribute.ContractType.ShouldNotBeNull();
+    attribute.ContractType.ShouldBe(_setup.FooExporterType);
   }
 
   [Theory]
@@ -77,11 +77,11 @@ public class MultipleExportsTests : IClassFixture<MultipleExportsSetup>
     var exports = type.GetCustomAttributes<ExportAttribute>(false).ToArray();
 
     // Assert
-    exports.Should().HaveCount(1);
+    exports.Length.ShouldBe(1);
 
     var attribute = exports[0];
-    attribute.ContractType.Should().NotBeNull()
-      .And.Be(_setup.BarExporterType);
+    attribute.ContractType.ShouldNotBeNull();
+    attribute.ContractType.ShouldBe(_setup.BarExporterType);
   }
 
   [Fact]
@@ -94,10 +94,10 @@ public class MultipleExportsTests : IClassFixture<MultipleExportsSetup>
     var exports = type.GetCustomAttributes<ExportAttribute>(false).ToArray();
 
     // Assert
-    exports.Should().HaveCount(2);
+    exports.Length.ShouldBe(2);
 
-    exports.Should().Contain(a => a.ContractType == _setup.BarExporterType)
-      .And.Contain(a => a.ContractType == _setup.FooExporterType);
+    exports.ShouldContain(a => a.ContractType == _setup.BarExporterType);
+    exports.ShouldContain(a => a.ContractType == _setup.FooExporterType);
   }
 
   [Theory]
@@ -112,7 +112,7 @@ public class MultipleExportsTests : IClassFixture<MultipleExportsSetup>
     var imports = (IEnumerable)instance.Imports;
 
     // Assert
-    imports.Cast<object>().Should().HaveCount(3);
+    imports.Cast<object>().Count().ShouldBe(3);
   }
 
   [Fact]
@@ -126,6 +126,6 @@ public class MultipleExportsTests : IClassFixture<MultipleExportsSetup>
     var result = (int)instance.IterateFooBars();
 
     // Assert
-    result.Should().Be(6);
+    result.ShouldBe(6);
   }
 }

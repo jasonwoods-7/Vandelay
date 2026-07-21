@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.ComponentModel.Composition;
 using System.Reflection;
-using FluentAssertions;
+using Shouldly;
 using Fody;
 using TestCore;
 using Vandelay.Fody;
@@ -29,7 +29,7 @@ public class SimpleCaseSetup
 #endif
     );
 
-    SimpleCaseWeaver.Errors.Should().BeEmpty();
+    SimpleCaseWeaver.Errors.ShouldBeEmpty();
 
     SimpleCaseExportableType = SimpleCaseWeaver.Assembly.GetType(
       "AssemblyToProcess.SimpleCase.IExportable", true)!;
@@ -53,7 +53,7 @@ public class SimpleCaseTests : IClassFixture<SimpleCaseSetup>
     var exports = type.GetCustomAttributes<ExportAttribute>(false).ToArray();
 
     // Assert
-    exports.Should().BeEmpty();
+    exports.ShouldBeEmpty();
   }
 
   [Theory]
@@ -70,10 +70,10 @@ public class SimpleCaseTests : IClassFixture<SimpleCaseSetup>
     var exports = type.GetCustomAttributes<ExportAttribute>(false).ToArray();
 
     // Assert
-    exports.Should().HaveCount(1);
+    exports.Length.ShouldBe(1);
 
     var attribute = exports[0];
-    attribute.ContractType.Should().Be(_setup.SimpleCaseExportableType);
+    attribute.ContractType.ShouldBe(_setup.SimpleCaseExportableType);
   }
 
   [Theory]
@@ -88,7 +88,7 @@ public class SimpleCaseTests : IClassFixture<SimpleCaseSetup>
     var imports = (ICollection)importsInstance.Imports;
 
     // Assert
-    imports.Cast<object>().Should().HaveCount(4);
+    imports.Cast<object>().Count().ShouldBe(4);
   }
 
   [Fact]
@@ -102,11 +102,11 @@ public class SimpleCaseTests : IClassFixture<SimpleCaseSetup>
     var imports = (ICollection)importsInstance.Imports;
 
     // Assert
-    imports.Cast<object>().Should().HaveCount(5);
+    imports.Cast<object>().Count().ShouldBe(5);
 
     var greeting = (string)((dynamic)imports.Cast<object>().First(i =>
       i.GetType().Name == "ExportableWithImport")).Greeting;
-    greeting.Should().NotBeNullOrEmpty();
+    greeting.ShouldNotBeNullOrEmpty();
   }
 
   [Fact]
@@ -120,7 +120,7 @@ public class SimpleCaseTests : IClassFixture<SimpleCaseSetup>
     var imports = (ICollection)importsInstance.Imports;
 
     // Assert
-    imports.Cast<object>().Should().HaveCount(1);
+    imports.Cast<object>().Count().ShouldBe(1);
   }
 
   [Fact]
@@ -134,6 +134,6 @@ public class SimpleCaseTests : IClassFixture<SimpleCaseSetup>
     var imports = (ICollection)importsInstance.Imports;
 
     // Assert
-    imports.Cast<object>().Should().HaveCount(1);
+    imports.Cast<object>().Count().ShouldBe(1);
   }
 }
