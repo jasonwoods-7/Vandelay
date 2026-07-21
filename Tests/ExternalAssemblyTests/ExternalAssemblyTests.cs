@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.ComponentModel.Composition;
 using System.Reflection;
-using FluentAssertions;
+using Shouldly;
 using Fody;
 using TestCore;
 using Vandelay.Fody;
@@ -33,7 +33,7 @@ public class ExternalAssemblySetup
         , runPeVerify: false
 #endif
       );
-      UnsignedWeaver.Errors.Should().BeEmpty();
+      UnsignedWeaver.Errors.ShouldBeEmpty();
     }
 
     {
@@ -48,7 +48,7 @@ public class ExternalAssemblySetup
         , strongNameKeyBlob: File.ReadAllBytes(Path.Combine(
           "..", "..", "..", "..", "..", "AssemblyToProcess", "Signed", "key.snk"))
       );
-      SignedWeaver.Errors.Should().BeEmpty();
+      SignedWeaver.Errors.ShouldBeEmpty();
     }
 
     CoreExportableType = Assembly.Load(AssemblyName.GetAssemblyName(
@@ -91,7 +91,7 @@ public class ExternalAssemblyTests : IClassFixture<ExternalAssemblySetup>
     var exports = type.GetCustomAttributes<ExportAttribute>(false);
 
     // Assert
-    exports.Should().BeEmpty();
+    exports.ShouldBeEmpty();
   }
 
   [Theory]
@@ -108,10 +108,10 @@ public class ExternalAssemblyTests : IClassFixture<ExternalAssemblySetup>
     var exports = type.GetCustomAttributes<ExportAttribute>(false).ToArray();
 
     // Assert
-    exports.Should().HaveCount(1);
+    exports.Length.ShouldBe(1);
 
     var attribute = exports[0];
-    attribute.ContractType.Should().Be(_setup.CoreExportableType);
+    attribute.ContractType.ShouldBe(_setup.CoreExportableType);
   }
 
   [Theory]
@@ -126,7 +126,7 @@ public class ExternalAssemblyTests : IClassFixture<ExternalAssemblySetup>
     var imports = (ICollection)importsInstance.Imports;
 
     // Assert
-    imports.Cast<object>().Should().HaveCount(4);
+    imports.Cast<object>().Count().ShouldBe(4);
   }
 
   TestResult GetTestHelper(string className) =>
